@@ -1,30 +1,35 @@
 const products = [
-  {name:'Tirzepatide',dose:'20mg',price:'$65',category:'weight',desc:'Weight-management research format.'},
-  {name:'Tirzepatide',dose:'40mg',price:'$98',category:'weight',desc:'Higher-volume weight-management research format.'},
-  {name:'Retatrutide',dose:'10mg',price:'$60',category:'weight',desc:'Metabolic research format.'},
-  {name:'Retatrutide',dose:'20mg',price:'$90',category:'weight',desc:'Expanded metabolic research format.'},
-  {name:'Klow Blend',dose:'Blend',price:'$115',category:'beauty',desc:'Curated beauty and skin-support research blend.'},
-  {name:'GHK-Cu',dose:'50mg / 100mg',price:'$55 / $95',category:'beauty',desc:'Copper peptide research formats.'},
-  {name:'NAD+',dose:'100mg',price:'$95',category:'beauty',desc:'Cellular-energy research format.'},
-  {name:'Glutathione',dose:'1200mg',price:'$45',category:'beauty',desc:'Antioxidant research format.'},
-  {name:'KPV',dose:'—',price:'$30',category:'recovery',desc:'Recovery and repair research format.'},
-  {name:'BPC-157',dose:'—',price:'$40',category:'recovery',desc:'Recovery research format.'},
-  {name:'TB-500',dose:'—',price:'$20',category:'recovery',desc:'Tissue research format.'},
-  {name:'Semax',dose:'—',price:'$20',category:'recovery',desc:'Focus research format.'},
-  {name:'NAD+',dose:'—',price:'$40',category:'energy',desc:'Energy research format.'},
-  {name:'5-AM',dose:'—',price:'$50',category:'energy',desc:'Metabolic research format.'},
-  {name:'MOTS-C',dose:'—',price:'$90',category:'energy',desc:'Mitochondrial research format.'},
-  {name:'Tesamorelin',dose:'—',price:'$40',category:'energy',desc:'Metabolic research format.'}
+  {name:'Tirzepatide',dose:'20mg',category:'weight',desc:'Material format for controlled metabolic-pathway research.'},
+  {name:'Tirzepatide',dose:'40mg',category:'weight',desc:'Alternate-quantity format for laboratory investigation.'},
+  {name:'Retatrutide',dose:'10mg',category:'weight',desc:'Material format for metabolic-pathway research.'},
+  {name:'Retatrutide',dose:'20mg',category:'weight',desc:'Alternate-quantity format for laboratory investigation.'},
+  {name:'Klow Blend',dose:'Blend',category:'beauty',desc:'Multi-component peptide research format.'},
+  {name:'GHK-Cu',dose:'50mg / 100mg',category:'beauty',desc:'Copper-peptide research formats.'},
+  {name:'NAD+',dose:'100mg',category:'beauty',desc:'Material format for cellular-pathway investigation.'},
+  {name:'Glutathione',dose:'1200mg',category:'beauty',desc:'Material format for biochemical research.'},
+  {name:'KPV',dose:'—',category:'recovery',desc:'Material format for laboratory tissue-pathway research.'},
+  {name:'BPC-157',dose:'—',category:'recovery',desc:'Material format for laboratory tissue-pathway research.'},
+  {name:'TB-500',dose:'—',category:'recovery',desc:'Material format for laboratory tissue-pathway research.'},
+  {name:'Semax',dose:'—',category:'recovery',desc:'Material format for controlled peptide research.'},
+  {name:'NAD+',dose:'—',category:'energy',desc:'Material format for cellular-pathway investigation.'},
+  {name:'5-AM',dose:'—',category:'energy',desc:'Material format for metabolic-pathway investigation.'},
+  {name:'MOTS-C',dose:'—',category:'energy',desc:'Material format for mitochondrial-pathway research.'},
+  {name:'Tesamorelin',dose:'—',category:'energy',desc:'Material format for controlled peptide research.'}
 ];
 const grid = document.getElementById('productGrid');
 function renderProducts(filter='all'){
-  grid.innerHTML = products.filter(p=>filter==='all'||p.category===filter).map(p=>`<article class="product-card reveal visible"><div class="product-visual"><div class="mini-vial"><span>EL</span><b>${p.name.toUpperCase()}</b><small>${p.dose}</small></div></div><div class="product-copy"><div class="dose">${p.dose}</div><h3>${p.name}</h3><p>${p.desc}</p><div class="product-bottom"><span class="price">${p.price}</span><button class="request-btn" data-product="${p.name} ${p.dose}">Request</button></div></div></article>`).join('');
+  grid.innerHTML = products.filter(p=>filter==='all'||p.category===filter).map(p=>`<article class="product-card reveal visible"><div class="product-visual"><div class="mini-vial"><span>EL</span><b>${p.name.toUpperCase()}</b><small>${p.dose}</small></div></div><div class="product-copy"><div class="dose">${p.dose}</div><h3>${p.name}</h3><p>${p.desc}</p><div class="product-bottom"><span class="quote-label">Documentation available</span><button class="request-btn" data-product="${p.name} ${p.dose}">Inquire</button></div></div></article>`).join('');
   bindRequestButtons();
 }
 function bindRequestButtons(){document.querySelectorAll('.request-btn').forEach(btn=>btn.addEventListener('click',()=>{document.getElementById('productField').value=btn.dataset.product||'';document.getElementById('contact').scrollIntoView({behavior:'smooth'});}));}
 document.querySelectorAll('.filter').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.filter').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderProducts(btn.dataset.filter);}));
-renderProducts();bindRequestButtons();
-const menu=document.querySelector('.menu-toggle'),nav=document.querySelector('.nav');menu.addEventListener('click',()=>{const open=nav.classList.toggle('open');menu.setAttribute('aria-expanded',open)});nav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>nav.classList.remove('open')));
-const observer=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')}),{threshold:.12});document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
-document.getElementById('inquiryForm').addEventListener('submit',e=>{e.preventDefault();const data=new FormData(e.currentTarget);const subject=encodeURIComponent(`Everlume research inquiry: ${data.get('product')||'General'}`);const body=encodeURIComponent(`Name: ${data.get('name')}\nEmail: ${data.get('email')}\nProduct: ${data.get('product')}\n\nMessage:\n${data.get('message')||''}\n\nI understand the products are for research use only.`);document.getElementById('formStatus').textContent='Your email application will open with the inquiry prepared.';window.location.href=`mailto:support@everlume.net?subject=${subject}&body=${body}`;});
+renderProducts();
+const menu=document.querySelector('.menu-toggle'),nav=document.querySelector('.nav');
+function setMenu(open){nav.classList.toggle('open',open);menu.setAttribute('aria-expanded',String(open));menu.setAttribute('aria-label',open?'Close menu':'Open menu');}
+menu.addEventListener('click',()=>setMenu(!nav.classList.contains('open')));
+nav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>setMenu(false)));
+document.addEventListener('keydown',event=>{if(event.key==='Escape'&&nav.classList.contains('open')){setMenu(false);menu.focus();}});
+const reducedMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+if('IntersectionObserver'in window&&!reducedMotion){const observer=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');observer.unobserve(e.target);}}),{threshold:.12});document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));}else{document.querySelectorAll('.reveal').forEach(el=>el.classList.add('visible'));}
+document.getElementById('inquiryForm').addEventListener('submit',async e=>{e.preventDefault();const form=e.currentTarget;const status=document.getElementById('formStatus');const button=form.querySelector('button[type="submit"]');button.disabled=true;button.textContent='Submitting…';status.textContent='';try{const response=await fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams(new FormData(form)).toString()});if(!response.ok)throw new Error('Submission failed');form.reset();status.textContent='Thank you. Your research inquiry has been received.';}catch(error){status.textContent='We could not submit your inquiry. Please try again shortly.';}finally{button.disabled=false;button.textContent='Submit inquiry';}});
 document.getElementById('year').textContent=new Date().getFullYear();

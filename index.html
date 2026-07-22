@@ -4,20 +4,29 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#f8f2e8">
+  <meta name="robots" content="noindex,nofollow,noarchive">
   <meta name="description" content="Everlume research catalog — premium research products presented with clarity, quality, and elevated service.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Everlume — Research Presented with Clarity">
+  <meta property="og:description" content="Laboratory research materials, documentation, and controlled inquiry.">
+  <meta name="twitter:card" content="summary">
   <title>Everlume — Research Catalog</title>
-  <link rel="icon" href="assets/favicon.svg">
+  <link rel="icon" type="image/svg+xml" href="assets/everlume-mark-v3.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500&family=Jost:wght@300;400;500;600&family=Pinyon+Script&display=swap" rel="stylesheet">
+  <script src="boot.js"></script>
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="logo.css">
+  <link rel="stylesheet" href="premium-theme.css">
 </head>
 <body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
   <div class="announcement">Research products only · Not for human consumption</div>
   <header class="site-header">
     <a class="brand" href="#top" aria-label="Everlume home">
-      <span class="brand-mark">EL</span>
-      <span><strong>EVERLUME</strong><small>RESEARCH</small></span>
+      <img class="brand-monogram" src="assets/everlume-mark-v3.svg" alt="" width="54" height="54">
+      <span class="brand-copy"><strong>EVERLUME</strong><small>PEPTIDES</small></span>
     </a>
     <button class="menu-toggle" aria-label="Open menu" aria-expanded="false">☰</button>
     <nav class="nav" aria-label="Primary navigation">
@@ -30,19 +39,19 @@
     </nav>
   </header>
 
-  <main id="top">
+  <main id="main-content" tabindex="-1">
     <section class="hero">
       <div class="hero-copy reveal">
-        <p class="eyebrow">Advanced wellness. Elevated standards.</p>
+        <p class="eyebrow">Independent research. Elevated standards.</p>
         <h1>Research presented<br>with <em>clarity.</em></h1>
-        <p class="hero-text">A refined research catalog organized around weight management, beauty support, recovery, energy, and metabolic research.</p>
+        <p class="hero-text">A refined catalog of research materials organized for metabolic, peptide, tissue, and cellular investigation.</p>
         <div class="hero-actions">
           <a class="btn btn-dark" href="#collection">Explore collection</a>
           <a class="btn btn-light" href="#catalog">View price catalog</a>
         </div>
         <div class="micro-trust">
           <span>Research-grade presentation</span>
-          <span>Discreet fulfillment</span>
+          <span>Documented fulfillment</span>
           <span>Responsive support</span>
         </div>
       </div>
@@ -60,7 +69,7 @@
       <div><b>01</b><span>Clear labeling</span></div>
       <div><b>02</b><span>Quality-first sourcing</span></div>
       <div><b>03</b><span>Secure inquiry process</span></div>
-      <div><b>04</b><span>Discreet packaging</span></div>
+      <div><b>04</b><span>Protective packaging</span></div>
     </section>
 
     <section class="section intro reveal">
@@ -75,10 +84,10 @@
         <a href="#catalog">See full catalog →</a>
       </div>
       <div class="category-grid">
-        <article class="category-card weight reveal"><span>01</span><h3>Weight Management</h3><p>Tirzepatide and Retatrutide research formats.</p><a href="#products">View products</a></article>
-        <article class="category-card beauty reveal"><span>02</span><h3>Beauty & Skin Support</h3><p>GHK-Cu, Klow Blend, NAD+, and Glutathione.</p><a href="#products">View products</a></article>
-        <article class="category-card recovery reveal"><span>03</span><h3>Recovery, Repair & Focus</h3><p>KPV, BPC-157, TB-500, and Semax.</p><a href="#products">View products</a></article>
-        <article class="category-card energy reveal"><span>04</span><h3>Energy & Metabolism</h3><p>NAD+, 5-AM, MOTS-C, and Tesamorelin.</p><a href="#products">View products</a></article>
+        <article class="category-card weight reveal"><span>01</span><h3>Metabolic Research</h3><p>Materials for controlled metabolic-pathway investigation.</p><a href="#products">View materials</a></article>
+        <article class="category-card beauty reveal"><span>02</span><h3>Peptide Research</h3><p>Copper-peptide and related research formats.</p><a href="#products">View materials</a></article>
+        <article class="category-card recovery reveal"><span>03</span><h3>Tissue Research</h3><p>Materials for laboratory tissue-pathway investigation.</p><a href="#products">View materials</a></article>
+        <article class="category-card energy reveal"><span>04</span><h3>Cellular Research</h3><p>Materials for cellular and mitochondrial investigation.</p><a href="#products">View materials</a></article>
       </div>
     </section>
 
@@ -87,10 +96,10 @@
         <div><p class="eyebrow">Introductory pricing</p><h2>Research collection</h2></div>
         <div class="filters" role="group" aria-label="Filter products">
           <button class="filter active" data-filter="all">All</button>
-          <button class="filter" data-filter="weight">Weight</button>
-          <button class="filter" data-filter="beauty">Beauty</button>
-          <button class="filter" data-filter="recovery">Recovery</button>
-          <button class="filter" data-filter="energy">Energy</button>
+          <button class="filter" data-filter="weight">Metabolic</button>
+          <button class="filter" data-filter="beauty">Peptide</button>
+          <button class="filter" data-filter="recovery">Tissue</button>
+          <button class="filter" data-filter="energy">Cellular</button>
         </div>
       </div>
       <div class="product-grid" id="productGrid"></div>
@@ -98,23 +107,23 @@
 
     <section class="section catalog" id="catalog">
       <div class="catalog-copy reveal">
-        <p class="eyebrow">Download-ready overview</p>
-        <h2>The complete Everlume research catalog.</h2>
-        <p>Review the full introductory price list, category organization, and signature wellness bundles in one polished reference.</p>
-        <a class="btn btn-dark" href="assets/everlume-research-catalog.png" target="_blank" rel="noopener">Open full catalog</a>
+        <p class="eyebrow">Controlled documentation</p>
+        <h2>Research information by request.</h2>
+        <p>Request current availability, specifications, handling documentation, and applicable purchasing requirements directly from Everlume.</p>
+        <a class="btn btn-dark" href="#contact">Request documentation</a>
       </div>
-      <a class="catalog-preview reveal" href="assets/everlume-research-catalog.png" target="_blank" rel="noopener" aria-label="Open the full Everlume research catalog">
-        <img src="assets/everlume-research-catalog.png" alt="Everlume research catalog price list">
-      </a>
+      <div class="catalog-standard reveal" aria-label="Everlume research-use standard">
+        <span>EL</span><strong>Research-use standard</strong><p>Identity, quantity, storage, and documentation details are confirmed during the inquiry process.</p>
+      </div>
     </section>
 
     <section class="section bundles" id="bundles">
-      <div class="section-head centered reveal"><div><p class="eyebrow">Curated collections</p><h2>Signature research bundles</h2></div></div>
+      <div class="section-head centered reveal"><div><p class="eyebrow">Research groupings</p><h2>Material inquiry sets</h2></div></div>
       <div class="bundle-grid">
-        <article class="bundle-card featured reveal"><span class="badge">Best value</span><h3>Weight Loss Starter Kit</h3><strong>$75</strong><p>20mg Tirzepatide, bacteriostatic water, syringes, and prep pads.</p><button class="request-btn" data-product="Weight Loss Starter Kit">Request availability</button></article>
-        <article class="bundle-card reveal"><h3>Beauty & Glow Starter Kit</h3><strong>$115</strong><p>GHK-Cu, Glutathione, bacteriostatic water, syringes, and prep pads.</p><button class="request-btn" data-product="Beauty & Glow Starter Kit">Request availability</button></article>
-        <article class="bundle-card reveal"><span class="badge gold">Most popular</span><h3>Energy & Recovery Starter Kit</h3><strong>$210</strong><p>NAD+, Wolverine Blend, bacteriostatic water, syringes, and prep pads.</p><button class="request-btn" data-product="Energy & Recovery Starter Kit">Request availability</button></article>
-        <article class="bundle-card reveal"><h3>Ultimate Wellness Starter Kit</h3><strong>$375</strong><p>A comprehensive research collection spanning metabolic, beauty, and recovery categories.</p><button class="request-btn" data-product="Ultimate Wellness Starter Kit">Request availability</button></article>
+        <article class="bundle-card featured reveal"><span class="badge">Research set</span><h3>Metabolic Pathway Set</h3><strong>Request quote</strong><p>A grouped inquiry for metabolic-pathway research materials and available documentation.</p><button class="request-btn" data-product="Metabolic Pathway Research Set">Request availability</button></article>
+        <article class="bundle-card reveal"><h3>Peptide Characterization Set</h3><strong>Request quote</strong><p>A grouped inquiry for copper-peptide and related research materials.</p><button class="request-btn" data-product="Peptide Characterization Research Set">Request availability</button></article>
+        <article class="bundle-card reveal"><span class="badge gold">Research set</span><h3>Cellular Pathway Set</h3><strong>Request quote</strong><p>A grouped inquiry for cellular and mitochondrial research materials.</p><button class="request-btn" data-product="Cellular Pathway Research Set">Request availability</button></article>
+        <article class="bundle-card reveal"><h3>Multi-Pathway Set</h3><strong>Request quote</strong><p>A custom material inquiry spanning multiple laboratory research categories.</p><button class="request-btn" data-product="Multi-Pathway Research Set">Request availability</button></article>
       </div>
     </section>
 
@@ -131,23 +140,26 @@
     <section class="contact" id="contact">
       <div class="contact-inner reveal">
         <div><p class="eyebrow">Questions or availability</p><h2>Connect with Everlume.</h2><p>Submit a research inquiry and include the products you are interested in.</p></div>
-        <form id="inquiryForm">
+        <form id="inquiryForm" name="research-inquiry" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+          <input type="hidden" name="form-name" value="research-inquiry">
+          <p class="honeypot"><label>Do not fill this out if you are human: <input name="bot-field"></label></p>
           <label>Name<input name="name" required autocomplete="name"></label>
+          <label>Organization<input name="organization" required autocomplete="organization"></label>
           <label>Email<input type="email" name="email" required autocomplete="email"></label>
           <label>Product or bundle<input name="product" id="productField" placeholder="Example: GHK-Cu 50mg"></label>
-          <label>Message<textarea name="message" rows="4" placeholder="Tell us what you are looking for."></textarea></label>
-          <label class="consent"><input type="checkbox" required> I understand these products are for research use only.</label>
-          <button class="btn btn-gold" type="submit">Prepare inquiry</button>
-          <p class="form-status" id="formStatus" aria-live="polite"></p>
+          <label>Intended research use<textarea name="message" rows="4" required placeholder="Briefly describe the intended laboratory research. Do not include medical or payment information."></textarea></label>
+          <label class="consent"><input type="checkbox" name="research-use-acknowledgment" value="accepted" required> I understand these products are for research use only.</label>
+          <button class="btn btn-gold" type="submit">Submit inquiry</button>
+          <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
         </form>
       </div>
     </section>
   </main>
 
   <footer>
-    <div class="footer-brand"><span class="brand-mark">EL</span><div><strong>EVERLUME</strong><small>Advanced wellness. Elevated standards.</small></div></div>
-    <div class="footer-links"><a href="#collection">Collection</a><a href="#catalog">Catalog</a><a href="#faq">FAQ</a><a href="#contact">Contact</a></div>
-    <p>© <span id="year"></span> Everlume. For research purposes only. Not for human consumption.</p>
+    <div class="footer-brand"><img class="footer-monogram" src="assets/everlume-mark-v3.svg" alt="" width="64" height="64"><div><strong>EVERLUME</strong><span>PEPTIDES</span><small>Elevate · Renew · Glow</small></div></div>
+    <div class="footer-links"><a href="#collection">Collection</a><a href="#catalog">Documentation</a><a href="#faq">FAQ</a><a href="research-use.html">Research-use policy</a><a href="privacy.html">Privacy</a><a href="#contact">Contact</a></div>
+    <p>© <span id="year"></span> Everlume. Laboratory research use only. Not for human or veterinary use. No medical claims are made.</p>
   </footer>
   <script src="app.js"></script>
 </body>
