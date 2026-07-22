@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" role="img" aria-labelledby="title desc">
+  <title id="title">Everlume EL monogram</title>
+  <desc id="desc">A refined interlocking EL monogram with a small sparkle.</desc>
+  <g fill="none" stroke="#9B7844" stroke-width="3.5" stroke-linecap="square" stroke-linejoin="miter">
+    <path d="M48 35h42M48 35v70M48 69h35M48 105h44"/>
+    <path d="M76 24v96h42"/>
+  </g>
+  <path d="M115 29l2.8 8.2 8.2 2.8-8.2 2.8-2.8 8.2-2.8-8.2-8.2-2.8 8.2-2.8z" fill="#C8A66A"/>
+</svg>

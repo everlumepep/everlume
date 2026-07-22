@@ -1,0 +1,349 @@
+:root {
+  --cream: #fbf7f0;
+  --paper: #fffdf9;
+  --ink: #3b3027;
+  --muted: #77695b;
+  --gold: #a47d47;
+  --line: #e7dbc9;
+  --olive: #7f866f;
+  --navy: #71838d;
+  --amber: #b7895f;
+  --purple: #8c7780;
+  --shadow: 0 26px 70px rgba(76, 55, 33, 0.11);
+}
+
+body {
+  background:
+    radial-gradient(circle at 8% 8%, rgba(230, 206, 184, 0.19), transparent 24rem),
+    var(--cream);
+}
+
+.skip-link {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 1000;
+  padding: 12px 18px;
+  color: #fff;
+  background: #33281f;
+  border-radius: 6px;
+  transform: translateY(-180%);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+summary:focus-visible {
+  outline: 3px solid rgba(164, 125, 71, 0.55);
+  outline-offset: 4px;
+}
+
+.reveal {
+  opacity: 1;
+  transform: none;
+}
+
+html.js .reveal {
+  opacity: 0;
+  transform: translateY(18px);
+}
+
+html.js .reveal.visible {
+  opacity: 1;
+  transform: none;
+}
+
+.announcement {
+  background: #a88758;
+  color: #fffaf1;
+  letter-spacing: 0.3em;
+}
+
+.site-header {
+  background: rgba(255, 252, 247, 0.92);
+  border-bottom-color: rgba(164, 125, 71, 0.16);
+  box-shadow: 0 8px 34px rgba(80, 61, 39, 0.04);
+}
+
+.brand-copy strong {
+  color: #3b3027;
+}
+
+.nav a:not(.nav-cta) {
+  color: #665748;
+}
+
+.nav a:not(.nav-cta):hover {
+  color: var(--gold);
+}
+
+.nav-cta,
+.btn-dark {
+  background: #44362c;
+  box-shadow: 0 10px 24px rgba(68, 54, 44, 0.14);
+}
+
+.nav-cta:hover,
+.btn-dark:hover {
+  background: #9b7844;
+}
+
+.hero {
+  background:
+    radial-gradient(circle at 79% 28%, rgba(224, 198, 164, 0.45), transparent 25%),
+    radial-gradient(circle at 18% 10%, rgba(234, 208, 213, 0.2), transparent 28%),
+    linear-gradient(145deg, #fffdf9, #f8f0e4);
+}
+
+.hero-copy {
+  max-width: 680px;
+}
+
+.hero h1 {
+  letter-spacing: -0.025em;
+}
+
+.hero-text {
+  max-width: 570px;
+}
+
+.arch {
+  background:
+    radial-gradient(circle at 50% 18%, rgba(255, 255, 255, 0.9), transparent 35%),
+    linear-gradient(150deg, #f1e3d1, #fffaf3);
+  border-color: #ddc9aa;
+}
+
+.hero-note,
+.category-card,
+.product-card,
+.bundle-card {
+  border-color: rgba(179, 145, 96, 0.26);
+}
+
+.trust-strip {
+  background: #4b3d32;
+}
+
+.trust-strip b {
+  color: #d7b881;
+}
+
+.intro h2 {
+  color: #44362c;
+}
+
+.category-card,
+.product-card,
+.bundle-card {
+  box-shadow: 0 16px 45px rgba(74, 52, 26, 0.055);
+}
+
+.category-card:hover,
+.bundle-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow);
+}
+
+.category-card,
+.bundle-card,
+.btn,
+.nav a,
+.request-btn {
+  transition: 180ms ease;
+}
+
+.products {
+  background:
+    radial-gradient(circle at 100% 0%, rgba(227, 198, 204, 0.18), transparent 28rem),
+    #f6ede1;
+}
+
+.filter:hover,
+.filter.active {
+  border-color: #44362c;
+  background: #44362c;
+  color: #fff;
+}
+
+.catalog-preview {
+  border: 8px solid rgba(255, 255, 255, 0.7);
+}
+
+.catalog-standard {
+  min-height: 410px;
+  display: grid;
+  place-content: center;
+  padding: 60px;
+  text-align: center;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: radial-gradient(circle at 50% 20%, #fff, #f3e6d5);
+  box-shadow: var(--shadow);
+}
+
+.catalog-standard span {
+  display: block;
+  color: var(--gold);
+  font: 500 80px/1 "Cormorant Garamond", serif;
+}
+
+.catalog-standard strong {
+  margin-top: 18px;
+  font: 600 30px "Cormorant Garamond", serif;
+}
+
+.catalog-standard p {
+  max-width: 460px;
+  color: var(--muted);
+  line-height: 1.8;
+}
+
+.quote-label {
+  color: var(--muted);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.bundles {
+  background:
+    radial-gradient(circle at 0% 100%, rgba(212, 222, 205, 0.22), transparent 30rem),
+    #fffaf4;
+}
+
+.badge {
+  background: #7e866f;
+}
+
+.badge.gold {
+  background: #a47d47;
+}
+
+.contact {
+  background:
+    radial-gradient(circle at 15% 20%, rgba(206, 174, 125, 0.13), transparent 30rem),
+    #493a30;
+}
+
+.contact input,
+.contact textarea {
+  border-color: rgba(232, 216, 194, 0.38);
+}
+
+.contact input:focus,
+.contact textarea:focus {
+  border-color: #d8b77e;
+  outline: 2px solid rgba(216, 183, 126, 0.16);
+}
+
+.contact label:nth-of-type(3),
+.contact label:nth-of-type(4) {
+  grid-column: auto;
+}
+
+.contact label:nth-of-type(5) {
+  grid-column: 1 / -1;
+}
+
+.honeypot {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.contact button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.btn-gold {
+  background: #d0ad72;
+}
+
+footer {
+  background: #2e261f;
+}
+
+.policy-page {
+  width: min(860px, calc(100% - 44px));
+  margin: 0 auto;
+  padding: 100px 0;
+}
+
+.policy-page h1 {
+  margin: 12px 0 22px;
+  color: var(--ink);
+  font: 500 clamp(54px, 8vw, 86px) / 0.95 "Cormorant Garamond", serif;
+}
+
+.policy-lead {
+  max-width: 720px;
+  margin-bottom: 64px;
+  color: var(--muted);
+  font-size: 18px;
+  line-height: 1.8;
+}
+
+.policy-page section {
+  padding: 30px 0;
+  border-top: 1px solid var(--line);
+}
+
+.policy-page h2 {
+  margin: 0 0 12px;
+  font: 600 30px "Cormorant Garamond", serif;
+}
+
+.policy-page section p,
+.policy-note {
+  color: var(--muted);
+  line-height: 1.85;
+}
+
+.not-found {
+  min-height: 100vh;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  padding: 44px;
+  text-align: center;
+}
+
+.not-found h1 {
+  max-width: 720px;
+  margin: 12px 0;
+  font: 500 clamp(48px, 8vw, 82px) / 0.95 "Cormorant Garamond", serif;
+}
+
+.not-found > p:not(.eyebrow) {
+  margin-bottom: 30px;
+  color: var(--muted);
+}
+
+.policy-note {
+  margin-top: 36px;
+  padding: 24px;
+  border-left: 3px solid var(--gold);
+  background: #f5ecdf;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
