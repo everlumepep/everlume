@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+<rect width="64" height="64" rx="14" fill="#FBF6EE"></rect>
+<circle cx="32" cy="33" r="21" fill="none" stroke="#B28E52" stroke-width="2"></circle>
+<text x="32" y="41" font-family="Georgia,&#39;Times New Roman&#39;,serif" font-size="24" font-weight="600" fill="#96733F" text-anchor="middle" letter-spacing="1">EL</text>
+<text x="49" y="17" font-family="Georgia,serif" font-size="14" fill="#B28E52" text-anchor="middle">✦</text>
+</svg>
