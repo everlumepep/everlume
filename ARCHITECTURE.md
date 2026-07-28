@@ -93,6 +93,32 @@ client UI.
    email confirmation ON.
 5. Promote the first admin: `update profiles set role = 'admin' where email = '<founder email>';`
 
+## Offline migration harness
+
+Runs the migrations against **real Postgres in-process** (PGlite, PG16) with a
+shim for the parts the Supabase platform supplies. No Docker, no cloud, no
+credentials:
+
+```bash
+npm install && npm run verify:migrations
+```
+
+Proves the migrations apply cleanly in order and that database-level
+invariants hold: provisioning triggers, rewards balance and append-only
+ledger, the 0007 account-deletion regression, inventory status derivation,
+order numbering, audit generation, and RLS for customer / staff / anonymous.
+
+**It does not replace live certification.** It cannot exercise GoTrue
+(signup, email verification, reset), PostgREST, edge functions, or webhooks.
+
+> **Implicit platform dependency, surfaced by this harness:** the migrations
+> assume Supabase's default `GRANT`s to the `anon` and `authenticated` roles
+> and never issue them. On a stock Supabase project this is correct. Applied
+> to plain Postgres, the tables would be *inaccessible* rather than
+> RLS-protected — a failure that looks like security but is actually a
+> permissions gap. Anything reusing these migrations outside Supabase must
+> supply those grants explicitly.
+
 ## Live verification battery (XCOP-001.14)
 
 Once the backend is connected, run the full security battery against the real
