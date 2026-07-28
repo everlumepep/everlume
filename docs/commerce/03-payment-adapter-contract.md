@@ -1,6 +1,6 @@
 # Payment Adapter Contract v1
 
-**Part of:** XCOP-COMMERCE-CONTRACT-v1 · **Status:** ENGINEERING READY
+**Part of:** XCOP-COMMERCE-CONTRACT-v1 · **Status:** FROZEN
 
 Everlume must not become architecturally married to any processor. This
 contract defines a **processor-neutral boundary**: the control plane owns all
@@ -38,16 +38,20 @@ Browser ──request──► Control Plane (edge fn) ──► PaymentAdapter 
 ```ts
 type Money = { amount_cents: number; currency: string };   // integer minor units only
 
+type CaptureStrategy = 'immediate' | 'authorize_then_capture';
+
 interface PaymentAdapter {
   readonly name: string;                       // 'stripe' | 'fake' | …
   readonly capabilities: {
-    authorizeThenCapture: boolean;             // split auth/capture supported?
+    supportedCaptureStrategies: CaptureStrategy[];   // at least one
     partialRefund: boolean;
-    maxAuthorizationWindowDays: number | null;
+    partialCapture: boolean;
+    maxAuthorizationWindowDays: number | null;       // null = not applicable
   };
 
   createCheckoutSession(input: {
     orderId: string; total: Money; lines: LineSummary[];
+    captureStrategy: CaptureStrategy;          // explicit per session
     returnUrl: string; cancelUrl: string; idempotencyKey: string;
   }): Promise<{ sessionRef: string; redirectUrl: string; expiresAt: string }>;
 
@@ -69,6 +73,37 @@ having received a webhook.
 
 ---
 
+## 2a. Capture strategy is configuration, not doctrine
+
+Per the **D-3 deferral**, XCOP does **not** lock a universal capture posture.
+The correct strategy depends on processor support, authorization windows,
+fulfillment duration, inventory characteristics, business model, and merchant
+risk rules — none of which are architectural constants.
+
+Both modes are first-class and **configured per client + processor**:
+
+| Strategy | Payment path | `commercial=confirmed` when | Capture fires |
+| --- | --- | --- | --- |
+| `immediate` | `pending → captured` | `payment = captured` | at checkout |
+| `authorize_then_capture` | `pending → authorized → captured` | `payment = authorized` | at dispatch (F5/F6) |
+
+Rules:
+
+- Configuration is validated at boot against
+  `capabilities.supportedCaptureStrategies`; an unsupported pairing **fails
+  closed** rather than silently degrading.
+- Cross-machine invariant **X2** reads the configured strategy to decide
+  whether `authorized` suffices for confirmation. **X3 is unconditional in
+  both modes: goods never ship against uncaptured funds.**
+- Under `authorize_then_capture`, orders approaching
+  `maxAuthorizationWindowDays` raise `authorization_expiring` before the
+  window lapses.
+- Switching strategy affects only new orders. In-flight orders complete under
+  the strategy they started with, recorded on the `payments` row.
+
+**Everlume's selection is deferred behind G2** — the processor's underwriting
+outcome may itself constrain which modes are available.
+
 ## 3. Canonical events
 
 Processor-neutral vocabulary. Adapters map into it; nothing downstream knows a
@@ -82,7 +117,7 @@ Each carries: `orderId`, `paymentRef`, `processorEventId`, `amount`, `currency`,
 `occurredAt`, `rawFingerprint` (hash of the verified payload — never the payload).
 
 Unmappable processor events are recorded as
-`attention_required(unmapped_payment_event)` — **never silently discarded.**
+`exception(unmapped_payment_event)` — **never silently discarded.**
 
 ---
 
@@ -92,7 +127,7 @@ Unmappable processor events are recorded as
    **no state change**, no order lookup. Verification precedes parsing.
 2. **Amount and currency cross-check.** Webhook amount must equal
    `orders.total_cents` in the same currency. Mismatch →
-   `attention_required(payment_amount_mismatch)`, never auto-confirm.
+   `exception(payment_amount_mismatch)`, never auto-confirm.
    A processor is authoritative about *money movement*, not about *what was owed*.
 3. **Totals recomputed server-side** from current DB prices under lock
    (Contract 02 §4). Client-supplied totals are input, never authority.
@@ -171,7 +206,7 @@ non-terminal payment and every payment touched in the last N days.
 
 Any divergence — captured at processor but not locally, refund unknown locally,
 amount drift — emits `reconciliation.mismatch_detected` and raises
-`attention_required`. **Webhooks are an optimization; reconciliation is the
+a blocking **exception**. **Webhooks are an optimization; reconciliation is the
 backstop.** A missed webhook must never mean permanently wrong money state.
 
 ---

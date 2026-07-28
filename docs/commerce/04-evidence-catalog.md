@@ -1,6 +1,6 @@
 # Commerce Evidence Catalog v1
 
-**Part of:** XCOP-COMMERCE-CONTRACT-v1 · **Status:** ENGINEERING READY
+**Part of:** XCOP-COMMERCE-CONTRACT-v1 · **Status:** FROZEN
 
 Every commerce fact is evidenced. Nothing changes state silently.
 
@@ -33,24 +33,28 @@ be softened for presentation. **A transition writes to both** (Contract 01, I6).
 | `payment.captured` | Funds captured | System | payment_ref, amount | C | processor_event_id |
 | `payment.failed` | Declined / error | System | failure_code | C *(sanitized)* | processor_event_id |
 | `payment.expired` | Session lapsed | System | session_ref | C | session_ref |
-| `order.confirmed` | T3 | System | payment_ref | C | order_id |
-| `order.processing` | T7 | Staff | — | C | order_id+status |
-| `order.ready` | T8 | Staff | — | C | order_id+status |
+| `order.confirmed` | C1 | System | payment_ref | C | order_id |
+| `order.processing` | F3 | Staff | — | C | order_id+status |
+| `order.ready` | F4 | Staff | — | C | order_id+status |
+| `order.partially_fulfilled` | F5 | Staff | shipped lines, carrier, tracking | C | order_id+shipment_seq |
+| `order.shipment_added` | F7 | Staff | shipped lines, carrier, tracking | C | order_id+shipment_seq |
+| `order.fulfillment_cancelled` | F8 | Manager+/System | reason | C | order_id |
+| `order.closed` | C4 | System | — | C | order_id |
 | `inventory.committed` | Stock deducted | System | movement_ids | A | reservation_id |
 | `inventory.released` | Reservation released | System | reason | A | reservation_id |
-| `order.fulfilled` | T9 | Staff | carrier, tracking | C | order_id |
+| `order.fulfilled` | F6 | Staff | carrier, tracking | C | order_id |
 | `rewards.earned` | At `fulfilled` | System | points, rule_key | C | order_id+rule_key |
-| `order.cancelled` | T2/T4/T10/T12 | varies | reason | C | order_id |
+| `order.cancelled` | C2/C3 | varies | reason | C | order_id |
 | `payment.refund_requested` | Refund initiated | Manager+ | amount, reason | C | refund_seq |
 | `payment.refunded` / `.partially_refunded` | Processor confirms | System | amount | C | processor_event_id |
 | `rewards.refund_adjusted` | Compensating ledger entry | System | points, order_id | C | order_id+refund_seq |
 | `payment.disputed` | Chargeback opened | System | amount | A | processor_event_id |
-| `order.attention_raised` | T6 | System/Staff | **typed** reason, previous_status | A *(status only to customer)* | order_id+reason+seq |
-| `order.attention_resolved` | T11 | Staff/Manager | resolution | A | order_id+seq |
+| `order.exception_raised` | Exception opened | System/Staff | **typed** reason, `blocking`, gated machines | A *(status only to customer)* | order_id+reason+seq |
+| `order.exception_resolved` | Exception closed | Staff/Manager | resolution | A | order_id+seq |
 | `reconciliation.mismatch_detected` | Processor ≠ local | System | field, local, processor | A | payment_ref+run |
 | `compliance.hold_applied` | Product left `approved` w/ open orders | System | product_id, orders[] | A | product_id+seq |
 
-### Exception taxonomy (`attention_reason`)
+### Exception taxonomy (`order_exceptions.reason`)
 
 `payment_failed` · `payment_amount_mismatch` · `authorization_expiring` ·
 `inventory_shortfall` · `inventory_commit_failed` · `address_invalid` ·
@@ -115,5 +119,5 @@ stock left). Nightly reconciliation asserts:
 - rewards earned equals the sum implied by fulfilled orders under active rules
 
 Any failure emits `reconciliation.mismatch_detected` **and** raises
-`attention_required`. Silent divergence between money, stock, and orders is
+a blocking **exception**. Silent divergence between money, stock, and orders is
 the single failure mode this catalog exists to prevent.

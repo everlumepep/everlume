@@ -1,115 +1,158 @@
 # Order State Machine v1
 
-**Part of:** XCOP-COMMERCE-CONTRACT-v1 · **Status:** ENGINEERING READY
-**Normative for:** Sonnet implementation. DDL below is a **specification
-sketch**, not an applied migration.
+**Part of:** XCOP-COMMERCE-CONTRACT-v1 · **Status:** FROZEN
+**Incorporates:** D-1 ruling (three independent machines) + cross-machine
+invariant requirement.
+**Normative for:** Sonnet implementation. DDL is a **specification sketch**,
+not an applied migration.
 
 Closes P0-15.2. Enforcement lives at the trusted data layer. **No UI, edge
 function, or client path may perform a transition the database would refuse.**
 
 ---
 
-## 1. Two machines, not one
+## 1. Three machines
 
-The ruling's indicative sequence (`pending → payment_pending → paid →
-processing → fulfilled`) conflates two independent lifecycles. **Recommended
-deviation, with rationale:**
+Per D-1: commercial, payment, and fulfillment lifecycles are **independent
+dimensions**. Collapsing them produces compound states
+(`fulfilled_partially_refunded`, then
+`partially_fulfilled_partially_refunded`, then multiple shipments, partial
+captures, returns…) that multiply without bound.
 
-A single enum cannot represent real combinations — a *fulfilled* order that is
-*partially refunded*, or a *confirmed* order whose payment was later *disputed*.
-Forcing both into one field produces compound states (`paid_but_shortfall`,
-`fulfilled_then_refunded`) that multiply combinatorially and make the legal
-transition matrix unmaintainable.
+> **Correction from the pre-freeze draft.** The earlier version proposed *two*
+> machines and labelled `order_status` "the fulfillment lifecycle" — it was in
+> fact a merged commercial+fulfillment enum, and had no way to express
+> `partially_fulfilled`. Multiple shipments were unrepresentable. The
+> three-way split below is the ruling as issued, not the draft as written.
 
-**v1 therefore separates:**
+| Machine | Question it answers | Column |
+| --- | --- | --- |
+| **Commercial** | Is the transaction commercially alive? | `commercial_status` |
+| **Payment** | What happened to the money? | `payment_status` |
+| **Fulfillment** | What happened physically? | `fulfillment_status` |
 
-- **`order_status`** — the *fulfillment* lifecycle (does the customer get goods?)
-- **`payment_status`** — the *money* lifecycle (what happened to the funds?)
+All three are columns on the **same `orders` row**, which means cross-machine
+invariants (§5) are enforceable by a single trigger in a single transaction —
+no distributed consistency problem.
 
-with an explicit legal-combination matrix (§5) constraining the pair. `paid` is
-expressed as `payment_status = 'captured'`, not an order state.
+### Core rule (normative)
 
-> **COMMAND decision required:** accept the two-machine model, or direct a
-> single-enum model. Everything downstream assumes two.
+**No state machine may impersonate another.**
+Payment state does not prove fulfillment. Fulfillment does not prove payment.
+Commercial state overrides neither. Permitted operations are derived from the
+**combination** plus policy.
 
-### Delta from `b9a3118`
-
-| Change | Reason |
-| --- | --- |
-| **+** `payment_pending` order state | Today there is no state for "checkout live, money in flight." Without it, abandoned and processing are indistinguishable. |
-| **−** `refunded` from `order_status` | A refunded order was still physically shipped. Refund is a money fact → `payment_status`. |
-| **+** `payment_status`, `attention_reason`, `previous_status` columns | Required by §3 and §6. |
-| **+** transition guard trigger | Closes P0-15.2. |
-
-Delivered as **migration 0008**, additive, at implementation time. `0001–0007`
-are not rewritten.
+`payment=captured` + `fulfillment=unfulfilled` means **ready to fulfill**, not
+"complete." `payment=partially_refunded` + `fulfillment=fulfilled` is valid
+historical truth, not an error.
 
 ---
 
 ## 2. States
 
-### `order_status` — fulfillment
+### `commercial_status` — is the transaction alive?
 
 | State | Meaning | Terminal |
 | --- | --- | --- |
-| `pending` | Order created from cart; payment not yet initiated | no |
-| `payment_pending` | Checkout session live; awaiting processor outcome | no |
-| `confirmed` | Payment verified per policy; order is real work | no |
+| `pending` | Order created; not yet commercially committed | no |
+| `confirmed` | Payment sufficient per capture strategy; order is real work | no |
+| `closed` | Fully fulfilled and financially settled | **terminal** |
+| `cancelled` | Will not proceed | **terminal** |
+
+`draft` is deliberately **absent**: pre-order state lives in `carts`, not in
+`orders`. An order exists only once intent is committed.
+
+### `payment_status` — money *(vocabulary preserved from the reviewed contract)*
+
+`none` · `pending` · `authorized` · `captured` · `partially_refunded` ·
+`refunded` · `failed` · `expired` · `disputed`
+
+Per the ruling, contract vocabulary is authoritative: `captured` (not `paid`),
+`none` (not `not_required`).
+
+### `fulfillment_status` — physical execution
+
+| State | Meaning | Terminal |
+| --- | --- | --- |
+| `unfulfilled` | Nothing held or shipped | no |
+| `reserved` | Stock held (Contract 02) | no |
 | `processing` | Being picked | no |
-| `ready` | Picked and packed; awaiting dispatch | no |
-| `fulfilled` | Dispatched | **terminal** (fulfillment) |
-| `cancelled` | Will not be fulfilled | **terminal** |
-| `attention_required` | Exception; holds `previous_status` | no (reversible) |
+| `ready` | Packed, awaiting dispatch | no |
+| `partially_fulfilled` | Some lines/quantities shipped | no |
+| `fulfilled` | All lines shipped | **terminal** |
+| `cancelled` | Will not ship; reservations released | **terminal** |
 
-### `payment_status` — money
+`partially_fulfilled` is what the merged model could not express. It is
+reachable from `ready` and returns to `partially_fulfilled` on each subsequent
+shipment until complete.
 
-`none` → `pending` → `authorized` → `captured` → `refunded` / `partially_refunded`
-with `failed`, `expired`, `disputed` as off-path outcomes.
+### Exceptions are **not** a state
 
-### Authorize-vs-capture policy
+`attention_required` is removed from the machines entirely. Under a three-way
+split, placing it in any one machine corrupts that machine's semantics — an
+order awaiting a compliance answer has not stopped being `confirmed`.
 
-For physical goods with a pick/pack delay, **authorize at checkout, capture at
-dispatch** is the recommended default: it avoids holding funds for goods not
-yet shipped. `confirmed` therefore requires `payment_status IN
-('authorized','captured')`, and capture fires on `ready → fulfilled`.
+Exceptions become **first-class rows** in `order_exceptions`: typed reason,
+`blocking` boolean, open/resolved, and the machines they gate. This also
+removes the `previous_status` bookkeeping the merged model required.
 
-> **COMMAND decision required (D-3):** authorize-at-checkout/capture-at-dispatch
-> (recommended) vs capture-at-checkout. Authorization windows are
-> processor-limited (commonly ~7 days); orders exceeding the window must raise
-> `attention_required(authorization_expiring)` before it lapses.
+### Delta from `b9a3118`
+
+`orders.status` → three columns; `refunded` leaves order state (money fact);
+`payment_pending` becomes `commercial=pending` + `payment=pending`;
+`attention_required` becomes `order_exceptions`; new `order_transitions` and
+`order_exceptions` tables. Delivered as **migration 0008**, additive.
+`0001–0007` are never rewritten.
 
 ---
 
-## 3. Legal transitions — exhaustive
+## 3. Machine-local legality
 
-Every pair not listed is **ILLEGAL** and must be refused.
+Every pair not listed is **ILLEGAL**.
 
-| # | From → To | Trigger | Authorized actor | Guard invariant | Failure path | Events emitted (Contract 04) |
-| --- | --- | --- | --- | --- | --- | --- |
-| T1 | `pending` → `payment_pending` | Customer starts checkout | **System** (edge fn, on customer request) | Active reservation exists; all lines purchasable (§G1); totals recomputed server-side | reservation unavailable → stay `pending`, typed error | `inventory.reserved`, `payment.session_created` *(or `inventory.unavailable` on failure)* |
-| T2 | `pending` → `cancelled` | Customer cancels / cart TTL | Customer (own) or System | — | already terminal → no-op | `order.cancelled`, `inventory.released` |
-| T3 | `payment_pending` → `confirmed` | **Verified** authorization/capture | **System only** | `payments` row verified; amount == `total_cents`; currency matches; reservation still active | amount mismatch → T6 | `payment.authorized` *(or `.captured`)*, `order.confirmed` |
-| T4 | `payment_pending` → `cancelled` | Session expired / customer abandoned | System | No successful auth exists | late auth arrives → T6 | `payment.expired`, `order.cancelled`, `inventory.released` |
-| T5 | `payment_pending` → `attention_required` | Payment failed ambiguously | System | reason typed | — | `payment.failed`, `order.attention_raised` |
-| T6 | *any* → `attention_required` | Exception detected | System, Staff | `attention_reason` + `previous_status` set | — | `order.attention_raised` *(typed reason)* |
-| T7 | `confirmed` → `processing` | Staff begins picking | Staff | Reservation active | shortfall → T6 | `order.processing` |
-| T8 | `processing` → `ready` | Picked and packed | Staff | All lines picked | partial → T6 | `order.ready` |
-| T9 | `ready` → `fulfilled` | Dispatched | Staff | Shipment recorded; destination permitted (G7); **capture succeeded**; reservations committed | capture fails → T6 | `payment.captured`, `inventory.committed`, `order.fulfilled`, `rewards.earned` |
-| T10 | `confirmed`/`processing`/`ready` → `cancelled` | Cancellation after payment | **Manager+** | Refund initiated; reservations released | refund fails → T6 | `payment.refund_requested`, `payment.refunded`, `inventory.released`, `order.cancelled` |
-| T11 | `attention_required` → `previous_status` | Exception resolved | Staff (Manager+ for money/compliance reasons) | Underlying condition cleared | — | `order.attention_resolved` |
-| T12 | `attention_required` → `cancelled` | Unresolvable | **Manager+** | Refund/release as applicable | — | `order.attention_resolved`, `order.cancelled` *(+ refund/release events as applicable)* |
-| T13 | `fulfilled` → `attention_required` | Refund request / dispute | System, Staff | — | — | `payment.refund_requested` *or* `payment.disputed`, `order.attention_raised` |
+### Commercial
 
-Per invariant **I6**, each transition emits **exactly one** `order_events` row
-and **one** `audit_events` row; where a row above lists several events, they
-correspond to distinct sub-operations (reservation, payment, rewards) each
-carrying its own dedupe key. The battery asserts the count, so a transition
-that emits two order events — or none — fails.
+| # | From → To | Trigger | Actor | Events (Contract 04) |
+| --- | --- | --- | --- | --- |
+| C1 | `pending` → `confirmed` | Payment sufficient per strategy (§X2) | **System only** | `order.confirmed` |
+| C2 | `pending` → `cancelled` | Customer cancels / checkout TTL | Customer (own), System | `order.cancelled` |
+| C3 | `confirmed` → `cancelled` | Cancellation after commitment | **Manager+** | `order.cancelled` |
+| C4 | `confirmed` → `closed` | Fulfilled and settled (§X7) | System | `order.closed` |
 
-**Explicitly impossible, tested exhaustively:** `pending → confirmed` (skips
-payment), `pending → processing`, **`pending → fulfilled`**, `confirmed →
-fulfilled` (skips pick/pack), `fulfilled → processing`, any → `pending`, and
-every transition out of `cancelled`.
+### Payment
+
+| # | From → To | Trigger | Actor | Events |
+| --- | --- | --- | --- | --- |
+| P1 | `none` → `pending` | Checkout session created | System | `payment.session_created` |
+| P2 | `pending` → `authorized` | Verified authorization | **System only** | `payment.authorized` |
+| P3 | `pending`/`authorized` → `captured` | Verified capture | **System only** | `payment.captured` |
+| P4 | `pending`/`authorized` → `failed` | Decline / capture failure | System | `payment.failed` |
+| P5 | `pending`/`authorized` → `expired` | Session or auth window lapsed | System | `payment.expired` |
+| P6 | `captured` → `partially_refunded` | Partial refund settled | **Manager+** → System | `payment.partially_refunded` |
+| P7 | `captured`/`partially_refunded` → `refunded` | Full refund settled | **Manager+** → System | `payment.refunded` |
+| P8 | `captured`/`partially_refunded` → `disputed` | Chargeback opened | System | `payment.disputed` |
+
+**Neither Customer nor Staff may cause P2, P3, P6, or P7.** Only a
+signature-verified processor event processed server-side moves payment state;
+Manager+ *requests* a refund, the processor event *effects* it.
+
+### Fulfillment
+
+| # | From → To | Trigger | Actor | Events |
+| --- | --- | --- | --- | --- |
+| F1 | `unfulfilled` → `reserved` | Reservation acquired | System | `inventory.reserved` |
+| F2 | `reserved` → `unfulfilled` | Reservation released/expired | System | `inventory.released` |
+| F3 | `reserved` → `processing` | Picking begins (§X1, §X4) | Staff | `order.processing` |
+| F4 | `processing` → `ready` | Picked and packed | Staff | `order.ready` |
+| F5 | `ready` → `partially_fulfilled` | Partial shipment dispatched (§X3) | Staff | `inventory.committed`, `order.partially_fulfilled` |
+| F6 | `ready`/`partially_fulfilled` → `fulfilled` | Final shipment dispatched (§X3) | Staff | `inventory.committed`, `order.fulfilled`, `rewards.earned` |
+| F7 | `partially_fulfilled` → `partially_fulfilled` | Additional shipment | Staff | `inventory.committed`, `order.shipment_added` |
+| F8 | `unfulfilled`/`reserved`/`processing`/`ready` → `cancelled` | Cancellation (§X6) | Manager+, System | `inventory.released`, `order.fulfillment_cancelled` |
+
+Per invariant **I6**, each accepted transition emits **exactly one**
+`order_events` row and **one** `audit_events` row; where a row lists several
+events they are distinct sub-operations, each with its own dedupe key. The
+battery asserts the count.
 
 ---
 
@@ -117,42 +160,52 @@ every transition out of `cancelled`.
 
 | Actor | May cause |
 | --- | --- |
-| **Customer** | T1 (request), T2 — own order only |
-| **System** (edge fn / webhook) | T1, T3, T4, T5, T6, T13 — **exclusively owns all payment-driven transitions** |
-| **Staff** | T6, T7, T8, T9, T11 (non-money reasons) |
-| **Manager+** | T10, T11 (money/compliance), T12, refunds |
-| **Admin** | No order-specific authority beyond Manager |
-
-**Neither Customer nor Staff may ever cause T3.** Only a signature-verified
-processor event, processed server-side, moves an order into `confirmed`.
+| **Customer** | C2 (own order only) |
+| **System** (edge fn / webhook) | C1, C4, all P*, F1, F2 — **exclusively owns every payment transition** |
+| **Staff** | F3–F7; raise/resolve non-money exceptions |
+| **Manager+** | C3, refund *requests* (P6/P7 effected by System), F8, resolve money/compliance exceptions |
 
 ---
 
-## 5. Legal `(order_status, payment_status)` combinations
+## 5. Cross-machine invariants
 
-| order_status | permitted payment_status |
-| --- | --- |
-| `pending` | `none`, `failed`, `expired` |
-| `payment_pending` | `pending`, `failed` |
-| `confirmed` / `processing` / `ready` | `authorized`, `captured` |
-| `fulfilled` | `captured`, `partially_refunded`, `refunded`, `disputed` |
-| `cancelled` | `none`, `failed`, `expired`, `refunded`, `partially_refunded` |
-| `attention_required` | any |
+**Independence must not mean every combination is legal.** These are enforced
+in the same trigger as machine-local legality.
 
-Enforced as a table CHECK. A `confirmed` order with `payment_status='none'` is
-unrepresentable.
+| # | Invariant | Rationale |
+| --- | --- | --- |
+| **X1** | Fulfillment may not advance beyond `reserved` unless `commercial = confirmed` | No picking work on an uncommitted order |
+| **X2** | `commercial = confirmed` requires `payment ∈ {authorized, captured}` per the configured capture strategy (Contract 03 §2a) | Confirmation must rest on verified money |
+| **X3** | `fulfillment ∈ {partially_fulfilled, fulfilled}` requires `payment = captured` | **Goods never ship against uncaptured funds** |
+| **X4** | `payment ∈ {failed, expired}` ⇒ fulfillment may not enter or remain in `processing`+; it must return to `reserved`/`unfulfilled` or raise a blocking exception | The ruling's named case |
+| **X5** | Inventory **commit** occurs only on F5/F6/F7 **and** `commercial = confirmed` **and** `payment = captured` | Stock never leaves on fulfillment state alone |
+| **X6** | `commercial = cancelled` ⇒ `fulfillment = cancelled`, all reservations released, and `payment ∈ {none, failed, expired, refunded, partially_refunded}` | No orphaned stock or funds |
+| **X7** | `commercial = closed` requires `fulfillment = fulfilled` **and** `payment ∈ {captured, partially_refunded, refunded}` | Closure means settled |
+| **X8** | No machine may advance while a **blocking** open exception exists | Exceptions gate, and gate all three |
+| **X9** | `payment = disputed` raises a blocking exception and freezes commercial + fulfillment advancement | Disputes stop the line |
+
+**Independence is about representation; governance is about combination.**
+Machine-local legality answers *may this machine move?*; X1–X9 answer *may it
+move given the others?* Both are required, both database-enforced.
+
+### Combination validity
+
+Rather than an exhaustive triple matrix (4 × 9 × 7 = 252 combinations, most
+meaningless), validity is defined by X1–X9 as **rules**, and the battery
+enumerates the full product to assert every combination is either reachable by
+a legal path or refused. Rules stay maintainable; coverage stays exhaustive.
 
 ---
 
-## 6. Invariants
+## 6. Invariants (machine-local)
 
-- **I1** — `confirmed`+ requires a verified `payments` row with amount equal to `orders.total_cents` in the same currency.
-- **I2** — `total_cents` equals the sum of line items (plus shipping/tax when introduced); never client-supplied.
-- **I3** — Transitions occur **only** through the guard function; direct `UPDATE orders SET status` is refused.
-- **I4** — `attention_required` always carries `attention_reason` and a non-null `previous_status`.
-- **I5** — `fulfilled` requires all reservations `committed`; `cancelled` requires all reservations `released`.
-- **I6** — Every accepted transition emits **exactly one** `order_events` row **and one** `audit_events` row (Contract 04).
-- **I7** — `cancelled` is absolutely terminal.
+- **I1** — `commercial = confirmed` requires a verified `payments` row equal to `orders.total_cents` in matching currency.
+- **I2** — `total_cents` equals the sum of line items; never client-supplied.
+- **I3** — Transitions occur **only** via the guard; direct `UPDATE orders SET …_status` is refused.
+- **I4** — Every exception carries a typed reason and the machines it gates.
+- **I5** — `fulfilled` requires all reservations `committed`; `cancelled` requires all `released`.
+- **I6** — Exactly one `order_events` + one `audit_events` per accepted transition.
+- **I7** — `closed` and `cancelled` are absolutely terminal in the commercial machine.
 - **I8** — Guard evaluation and side effects share one transaction: a refused transition leaves no partial evidence.
 
 ---
@@ -160,58 +213,83 @@ unrepresentable.
 ## 7. Enforcement sketch (normative, not applied)
 
 ```sql
--- Rejects illegal moves and unauthorized actors before any row changes.
-create or replace function public.guard_order_transition()
+create or replace function public.guard_order_state()
 returns trigger language plpgsql security definer set search_path = public as $$
 declare
-  v_actor_role text := coalesce(public.role_of(auth.uid()), 'system');
+  v_role text := coalesce(public.role_of(auth.uid()), 'system');
+  v_blocking int;
 begin
-  if new.status is not distinct from old.status then
-    return new;                      -- non-status edits handled elsewhere
+  -- 1 · machine-local legality, data-driven from order_transitions
+  perform public.assert_transition('commercial',  old.commercial_status,  new.commercial_status,  v_role);
+  perform public.assert_transition('payment',     old.payment_status,     new.payment_status,     v_role);
+  perform public.assert_transition('fulfillment', old.fulfillment_status, new.fulfillment_status, v_role);
+
+  -- 2 · X8/X9 · blocking exceptions gate every machine
+  select count(*) into v_blocking
+    from public.order_exceptions e
+   where e.order_id = new.id and e.status = 'open' and e.blocking;
+  if v_blocking > 0 and (new.commercial_status, new.payment_status, new.fulfillment_status)
+                     is distinct from (old.commercial_status, old.payment_status, old.fulfillment_status)
+     and not public.is_manager() then
+    raise exception 'blocked by % open exception(s)', v_blocking;
   end if;
 
-  if not exists (
-    select 1 from public.order_transitions t
-     where t.from_status = old.status
-       and t.to_status   = new.status
-       and (t.allowed_roles @> array[v_actor_role]::text[]
-            or (t.system_only and auth.uid() is null))
-  ) then
-    raise exception
-      'illegal order transition % -> % for role %', old.status, new.status, v_actor_role;
+  -- 3 · cross-machine invariants
+  if new.fulfillment_status in ('processing','ready','partially_fulfilled','fulfilled')
+     and new.commercial_status <> 'confirmed' then
+    raise exception 'X1: fulfillment beyond reserved requires commercial=confirmed';
   end if;
 
-  if new.status = 'attention_required' then
-    if new.attention_reason is null then
-      raise exception 'attention_required demands a typed reason';
-    end if;
-    new.previous_status := old.status;
+  if new.commercial_status = 'confirmed'
+     and new.payment_status not in ('authorized','captured') then
+    raise exception 'X2: confirmation requires authorized or captured payment';
   end if;
 
-  -- I1: money must be real before fulfillment work begins.
-  if new.status = 'confirmed' and not exists (
-    select 1 from public.payments p
-     where p.order_id = new.id
-       and p.status in ('authorized','captured')
-       and p.amount_cents = new.total_cents
-       and p.currency = new.currency
-  ) then
-    raise exception 'cannot confirm without a verified payment of matching amount';
+  if new.fulfillment_status in ('partially_fulfilled','fulfilled')
+     and new.payment_status <> 'captured' then
+    raise exception 'X3: goods may not ship against uncaptured funds';
+  end if;
+
+  if new.payment_status in ('failed','expired')
+     and new.fulfillment_status in ('processing','ready','partially_fulfilled','fulfilled') then
+    raise exception 'X4: fulfillment may not advance on failed or expired payment';
+  end if;
+
+  if new.commercial_status = 'closed'
+     and (new.fulfillment_status <> 'fulfilled'
+          or new.payment_status not in ('captured','partially_refunded','refunded')) then
+    raise exception 'X7: closure requires fulfilled and settled';
   end if;
 
   return new;
 end $$;
 ```
 
-`order_transitions` is a **data-driven** table (`from_status`, `to_status`,
-`allowed_roles[]`, `system_only`) seeded from §3 — so the matrix is auditable
-and testable as data rather than buried in procedural branches.
+`order_transitions` is a **data-driven** table (`machine`, `from_status`,
+`to_status`, `allowed_roles[]`, `system_only`) seeded from §3 — the matrix is
+auditable as data, not buried in branches. X5 and X6 are enforced in the
+reservation/cancellation functions (Contract 02), which own the stock side.
+
+```sql
+create table public.order_exceptions (
+  id uuid primary key default gen_random_uuid(),
+  order_id uuid not null references public.orders (id) on delete cascade,
+  reason text not null,                       -- Contract 04 taxonomy
+  blocking boolean not null default true,
+  gates text[] not null default '{commercial,payment,fulfillment}',
+  status text not null default 'open' check (status in ('open','resolved')),
+  raised_by uuid, resolved_by uuid,
+  raised_at timestamptz not null default now(), resolved_at timestamptz
+);
+```
 
 ---
 
 ## 8. Battery obligations
 
-Contract 05 must prove: the full illegal-transition matrix is refused; a
-customer cannot reach `confirmed`; staff cannot refund; `pending → fulfilled`
-fails; `attention_required` round-trips to `previous_status`; and I1 blocks
-confirmation when the payment amount is altered.
+Contract 05 must prove: each machine's illegal-transition matrix is refused;
+**X1–X9 each fail closed**; the full state-triple product is either reachable
+or refused; `payment=failed` cannot drive `processing` (X4); goods cannot ship
+uncaptured (X3); a blocking exception freezes all three machines (X8); partial
+shipment sequences reach `fulfilled` correctly; and no actor but System can
+move payment state.

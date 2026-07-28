@@ -1,6 +1,6 @@
 # Inventory Reservation Contract v1
 
-**Part of:** XCOP-COMMERCE-CONTRACT-v1 · **Status:** ENGINEERING READY
+**Part of:** XCOP-COMMERCE-CONTRACT-v1 · **Status:** FROZEN
 
 Closes P0-15.1. `inventory.quantity_reserved` is today a column **nothing
 writes**. This contract makes it authoritative.
@@ -119,11 +119,11 @@ Reservations are time-bounded: `expires_at = now() + ttl`.
 - A scheduled sweeper releases expired reservations. It must be **idempotent**
   (`WHERE status='active' AND expires_at < now()`), safe to run concurrently,
   and safe to re-run after a crash mid-batch.
-- Releasing a reservation on a `payment_pending` order also drives the order to
-  `cancelled` (T4) — stock and order state never diverge.
+- Releasing a reservation on an unconfirmed order also drives
+  `commercial → cancelled` (C2) and `fulfillment → unfulfilled` (F2) — stock and order state never diverge.
 - **Race:** a payment authorized *after* expiry must not silently succeed. The
   webhook handler re-checks reservation validity; if released and stock is no
-  longer available, it raises `attention_required(inventory_shortfall)` and
+  longer available, it raises `exception(inventory_shortfall)` and
   initiates refund. Money is never kept for stock that cannot ship.
 
 ---
@@ -133,7 +133,7 @@ Reservations are time-bounded: `expires_at = now() + ttl`.
 | Failure | Detection | Recovery | Invariant preserved |
 | --- | --- | --- | --- |
 | Reserve succeeded, order write failed | Orphan reservation, no order | TTL sweeper releases | availability restored |
-| Payment captured, commit failed | `payment_status='captured'` + reservation `active` | `attention_required(inventory_commit_failed)`; retry commit (idempotent) | no double-deduct |
+| Payment captured, commit failed | `payment_status='captured'` + reservation `active` | `exception(inventory_commit_failed)`; retry commit (idempotent) | no double-deduct |
 | Duplicate webhook | Processor event id already stored | No-op, return 200 | no double commit |
 | Sweeper dies mid-batch | Reservations still `active`, expired | Next run completes | idempotent |
 | Manual stock correction during active reservations | Constraint would be violated | Adjustment refused if it would push `on_hand < reserved`; staff must release first | no oversell |

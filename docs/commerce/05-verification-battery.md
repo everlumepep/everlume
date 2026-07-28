@@ -1,6 +1,6 @@
 # Commerce Verification Battery v1
 
-**Part of:** XCOP-COMMERCE-CONTRACT-v1 · **Status:** ENGINEERING READY
+**Part of:** XCOP-COMMERCE-CONTRACT-v1 · **Status:** FROZEN
 
 Per the War Room finding, the battery is a **Foundation deliverable and a
 design-review mechanism** — written *before* implementation, not after. It
@@ -60,7 +60,7 @@ cart and leaks nothing · B6 cart referencing a deleted product fails cleanly
 | C3 | **concurrent last-unit → exactly one winner**, one clean `unavailable` |
 | C4 | multi-line all-or-nothing: one short line reserves nothing |
 | C5 | re-reserve same (order, sku) is idempotent — no double count |
-| C6 | TTL expiry releases and drives `payment_pending → cancelled` |
+| C6 | TTL expiry releases and drives `commercial → cancelled` (C2) |
 | C7 | commit leaves `available` **unchanged**, `on_hand` reduced |
 | C8 | release restores availability exactly |
 | C9 | stock adjustment below active reservations is refused |
@@ -68,35 +68,57 @@ cart and leaks nothing · B6 cart referencing a deleted product fails cleanly
 | C11 | late authorization after expiry → refund, **never oversell** |
 | C12 | `available` never negative under concurrent load |
 
-## D · State machine (P0-15.2)
+## D · Machine-local legality (P0-15.2)
 
 | # | Assertion |
 | --- | --- |
-| D1 | **exhaustive illegal-transition matrix** — every (from,to) pair not in Contract 01 §3 is refused |
-| D2 | **`pending → fulfilled` impossible** by any actor |
-| D3 | `pending → confirmed` impossible (skips payment) |
-| D4 | `confirmed → fulfilled` impossible (skips pick/pack) |
-| D5 | customer cannot cause T3 |
-| D6 | staff cannot refund; Manager+ can |
-| D7 | staff cannot cancel a paid order; Manager+ can |
-| D8 | `attention_required` demands typed reason; untyped refused |
-| D9 | `attention_required` round-trips to `previous_status` |
-| D10 | `cancelled` is terminal — every outbound transition refused |
-| D11 | I1 holds: tampering `total_cents` after auth blocks confirmation |
-| D12 | illegal `(order_status, payment_status)` combination refused |
+| D1 | **exhaustive illegal-transition matrix per machine** — every (machine, from, to) not in Contract 01 §3 is refused |
+| D2 | fulfillment `unfulfilled → fulfilled` impossible by any actor *(the merged model's `pending → fulfilled`)* |
+| D3 | commercial `pending → closed` impossible |
+| D4 | fulfillment `reserved → ready` impossible (skips picking) |
+| D5 | **customer cannot cause any payment transition**; neither can staff (P2/P3/P6/P7 System-only) |
+| D6 | staff cannot request a refund; Manager+ can |
+| D7 | staff cannot cancel a confirmed order; Manager+ can |
+| D8 | `closed` and `cancelled` are terminal — every outbound transition refused |
+| D9 | I1 holds: tampering `total_cents` after authorization blocks confirmation |
+| D10 | partial-shipment sequence `ready → partially_fulfilled → …→ fulfilled` is legal and reaches `fulfilled` exactly once |
+| D11 | direct `UPDATE orders SET …_status` bypassing the guard is refused (I3) |
+
+## D′ · Cross-machine invariants (D-1 ruling)
+
+**Independence must not mean every combination is legal.** Each invariant is
+tested to fail closed.
+
+| # | Assertion |
+| --- | --- |
+| X1 | fulfillment cannot pass `reserved` while `commercial ≠ confirmed` |
+| X2 | `commercial = confirmed` refused unless payment satisfies the **configured capture strategy** — tested under both `immediate` and `authorize_then_capture` |
+| X3 | **goods cannot ship against uncaptured funds** — `partially_fulfilled`/`fulfilled` refused unless `payment = captured`, in *both* strategies |
+| X4 | `payment = failed` (or `expired`) cannot drive fulfillment into `processing`; an in-flight order is forced back and a blocking exception raised |
+| X5 | inventory commit does **not** occur on fulfillment change alone — requires `commercial=confirmed` **and** `payment=captured` |
+| X6 | `commercial = cancelled` forces `fulfillment = cancelled`, releases all reservations, and refuses illegal payment pairings |
+| X7 | `closed` refused unless `fulfilled` **and** payment settled |
+| X8 | a **blocking** open exception freezes all three machines; resolving it unfreezes |
+| X9 | `payment = disputed` raises a blocking exception and halts advancement |
+| X10 | **full state-triple product** (4 × 9 × 7) — every combination is either reachable by a legal path or refused; none is silently representable |
+
+Groups A–H plus D′ constitute the exit criterion.
 
 ## E · Payment (against `FakeAdapter`)
 
 E1 unsigned webhook rejected, **no state change** · E2 tampered payload
 rejected · E3 replayed webhook is a no-op, one timeline entry · E4 out-of-order
 (`captured` before `authorized`) converges correctly · E5 amount mismatch →
-`attention_required(payment_amount_mismatch)`, never confirms · E6 currency
+`exception(payment_amount_mismatch)`, never confirms · E6 currency
 mismatch → attention · E7 **retried capture with same idempotency key charges
 once** · E8 concurrent duplicate captures → one capture · E9 refund posts a
 compensating entry, mutates nothing · E10 partial refund keeps
 `refunded_cents ≤ amount_cents` · E11 customer cannot read another's payments ·
 E12 customer cannot INSERT/UPDATE `payments` · E13 `fake` adapter **cannot** be
-selected under production config · E14 dispute event raises attention
+selected under production config · E14 dispute event raises a blocking
+exception · E15 **both capture strategies exercised end-to-end**; a strategy
+unsupported by the adapter **fails closed at boot** · E16 in-flight orders
+complete under the strategy they started with after a config change
 
 ## F · Rewards
 
