@@ -84,21 +84,27 @@ yet shipped. `confirmed` therefore requires `payment_status IN
 
 Every pair not listed is **ILLEGAL** and must be refused.
 
-| # | From → To | Trigger | Authorized actor | Guard invariant | Failure path |
-| --- | --- | --- | --- | --- | --- |
-| T1 | `pending` → `payment_pending` | Customer starts checkout | **System** (edge fn, on customer request) | Active reservation exists; all lines purchasable (§G1); totals recomputed server-side | reservation unavailable → stay `pending`, typed error |
-| T2 | `pending` → `cancelled` | Customer cancels / cart TTL | Customer (own) or System | — | already terminal → no-op |
-| T3 | `payment_pending` → `confirmed` | **Verified** authorization/capture | **System only** | `payments` row verified; amount == `total_cents`; currency matches; reservation still active | amount mismatch → T6 |
-| T4 | `payment_pending` → `cancelled` | Session expired / customer abandoned | System | No successful auth exists | late auth arrives → T6 |
-| T5 | `payment_pending` → `attention_required` | Payment failed ambiguously | System | reason typed | — |
-| T6 | *any* → `attention_required` | Exception detected | System, Staff | `attention_reason` + `previous_status` set | — |
-| T7 | `confirmed` → `processing` | Staff begins picking | Staff | Reservation active | shortfall → T6 |
-| T8 | `processing` → `ready` | Picked and packed | Staff | All lines picked | partial → T6 |
-| T9 | `ready` → `fulfilled` | Dispatched | Staff | Shipment recorded; destination permitted (G7); **capture succeeded**; reservations committed | capture fails → T6 |
-| T10 | `confirmed`/`processing`/`ready` → `cancelled` | Cancellation after payment | **Manager+** | Refund initiated; reservations released | refund fails → T6 |
-| T11 | `attention_required` → `previous_status` | Exception resolved | Staff (Manager+ for money/compliance reasons) | Underlying condition cleared | — |
-| T12 | `attention_required` → `cancelled` | Unresolvable | **Manager+** | Refund/release as applicable | — |
-| T13 | `fulfilled` → `attention_required` | Refund request / dispute | System, Staff | — | — |
+| # | From → To | Trigger | Authorized actor | Guard invariant | Failure path | Events emitted (Contract 04) |
+| --- | --- | --- | --- | --- | --- | --- |
+| T1 | `pending` → `payment_pending` | Customer starts checkout | **System** (edge fn, on customer request) | Active reservation exists; all lines purchasable (§G1); totals recomputed server-side | reservation unavailable → stay `pending`, typed error | `inventory.reserved`, `payment.session_created` *(or `inventory.unavailable` on failure)* |
+| T2 | `pending` → `cancelled` | Customer cancels / cart TTL | Customer (own) or System | — | already terminal → no-op | `order.cancelled`, `inventory.released` |
+| T3 | `payment_pending` → `confirmed` | **Verified** authorization/capture | **System only** | `payments` row verified; amount == `total_cents`; currency matches; reservation still active | amount mismatch → T6 | `payment.authorized` *(or `.captured`)*, `order.confirmed` |
+| T4 | `payment_pending` → `cancelled` | Session expired / customer abandoned | System | No successful auth exists | late auth arrives → T6 | `payment.expired`, `order.cancelled`, `inventory.released` |
+| T5 | `payment_pending` → `attention_required` | Payment failed ambiguously | System | reason typed | — | `payment.failed`, `order.attention_raised` |
+| T6 | *any* → `attention_required` | Exception detected | System, Staff | `attention_reason` + `previous_status` set | — | `order.attention_raised` *(typed reason)* |
+| T7 | `confirmed` → `processing` | Staff begins picking | Staff | Reservation active | shortfall → T6 | `order.processing` |
+| T8 | `processing` → `ready` | Picked and packed | Staff | All lines picked | partial → T6 | `order.ready` |
+| T9 | `ready` → `fulfilled` | Dispatched | Staff | Shipment recorded; destination permitted (G7); **capture succeeded**; reservations committed | capture fails → T6 | `payment.captured`, `inventory.committed`, `order.fulfilled`, `rewards.earned` |
+| T10 | `confirmed`/`processing`/`ready` → `cancelled` | Cancellation after payment | **Manager+** | Refund initiated; reservations released | refund fails → T6 | `payment.refund_requested`, `payment.refunded`, `inventory.released`, `order.cancelled` |
+| T11 | `attention_required` → `previous_status` | Exception resolved | Staff (Manager+ for money/compliance reasons) | Underlying condition cleared | — | `order.attention_resolved` |
+| T12 | `attention_required` → `cancelled` | Unresolvable | **Manager+** | Refund/release as applicable | — | `order.attention_resolved`, `order.cancelled` *(+ refund/release events as applicable)* |
+| T13 | `fulfilled` → `attention_required` | Refund request / dispute | System, Staff | — | — | `payment.refund_requested` *or* `payment.disputed`, `order.attention_raised` |
+
+Per invariant **I6**, each transition emits **exactly one** `order_events` row
+and **one** `audit_events` row; where a row above lists several events, they
+correspond to distinct sub-operations (reservation, payment, rewards) each
+carrying its own dedupe key. The battery asserts the count, so a transition
+that emits two order events — or none — fails.
 
 **Explicitly impossible, tested exhaustively:** `pending → confirmed` (skips
 payment), `pending → processing`, **`pending → fulfilled`**, `confirmed →
