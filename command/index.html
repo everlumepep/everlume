@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <title>XENTH — EVERLUME COMMAND</title>
+  <link rel="icon" type="image/svg+xml" href="../assets/everlume-mark-v3.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="../premium-theme.css">
+  <link rel="stylesheet" href="../portal.css">
+</head>
+<body class="command">
+  <header class="command-topbar">
+    <b>XENTH</b><span>EVERLUME COMMAND</span>
+    <span class="who" id="whoami"></span>
+  </header>
+
+  <div class="command-locked" id="commandLocked">
+    <p class="eyebrow">Restricted</p>
+    <h2 id="lockedTitle">Checking authorization…</h2>
+    <p id="lockedLead"></p>
+    <p class="portal-switch"><a href="../account/signin.html" style="color:#c9a66e">Sign in</a> · <a href="../index.html" style="color:#c9a66e">Everlume storefront</a></p>
+  </div>
+
+  <div class="command-layout" id="commandApp" hidden>
+    <nav class="command-nav" aria-label="Command modules">
+      <button data-module="dashboard" class="active">Dashboard</button>
+      <button data-module="orders">Orders</button>
+      <button data-module="inventory">Inventory</button>
+      <button data-module="customers">Customers</button>
+      <button data-module="rewards">Rewards</button>
+      <button data-module="products">Products</button>
+      <button data-module="compliance">Compliance</button>
+      <button data-module="analytics">Analytics</button>
+      <button data-module="activity">Activity</button>
+      <button data-module="settings">Settings</button>
+    </nav>
+    <main class="command-main" id="commandMain" aria-live="polite"></main>
+  </div>
+
+  <script src="../vendor/supabase.js"></script>
+  <script src="../js/config.js"></script>
+  <script src="../js/supabase-client.js"></script>
+  <script src="../js/command.js"></script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+/* Everlume entry compliance gate */
+html.gate-open { overflow: hidden; }
+
+#el-gate { position: fixed; inset: 0; z-index: 2000; display: grid; place-items: center; padding: 22px; }
+#el-gate .gate-scrim { position: absolute; inset: 0; background: rgba(43, 33, 24, 0.62); backdrop-filter: blur(9px); }
+
+#el-gate .gate-panel {
+  position: relative;
+  width: min(560px, 100%);
+  max-height: calc(100vh - 44px);
+  overflow-y: auto;
+  background: linear-gradient(165deg, #fffdf9, #f8f0e4);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  padding: 44px 46px;
+  box-shadow: var(--shadow);
+}
+
+#el-gate .gate-brand { margin: 0 0 6px; font: 500 15px 'Cormorant Garamond', serif; letter-spacing: 0.42em; color: var(--gold); }
+#el-gate h2 { margin: 0 0 12px; font: 500 clamp(30px, 4.5vw, 40px)/1.05 'Cormorant Garamond', serif; color: var(--ink); }
+#el-gate .gate-lead { margin: 0 0 26px; color: var(--muted); font-size: 14px; line-height: 1.7; }
+
+#el-gate .gate-dob { border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px 20px; margin: 0 0 22px; display: flex; gap: 12px; }
+#el-gate .gate-dob legend { padding: 0 8px; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); font-weight: 500; }
+#el-gate .gate-dob label { flex: 1; font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+#el-gate .gate-dob input { width: 100%; margin-top: 7px; border: 1px solid var(--line); background: #fff; border-radius: 8px; padding: 12px; font: 400 16px Jost, sans-serif; color: var(--ink); }
+
+#el-gate .gate-check { display: flex; gap: 11px; align-items: flex-start; margin: 0 0 13px; font-size: 13px; line-height: 1.55; color: var(--ink); }
+#el-gate .gate-check input { margin-top: 3px; accent-color: var(--gold); width: 15px; height: 15px; flex: none; }
+#el-gate .gate-check a { color: var(--gold); }
+
+#el-gate .gate-error { min-height: 18px; margin: 6px 0 10px; font-size: 12px; color: #9c4a2f; }
+#el-gate .gate-enter { width: 100%; }
+#el-gate .gate-note { margin: 16px 0 0; font-size: 11px; color: var(--muted); text-align: center; }
+
+#el-gate .gate-refusal h3 { font: 600 28px 'Cormorant Garamond', serif; margin: 10px 0; }
+#el-gate .gate-refusal p { color: var(--muted); line-height: 1.7; }
+
+@media (max-width: 620px) {
+  #el-gate .gate-panel { padding: 32px 24px; }
+  #el-gate .gate-dob { flex-direction: row; }
+}
