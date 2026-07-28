@@ -39,6 +39,16 @@ test('rewards ledger is append-only and balance is trigger-maintained', () => {
     'rewards_accounts must not be client-writable');
 });
 
+test('account deletion cannot be blocked by the append-only ledger', () => {
+  // Regression guard for the defect fixed in migration 0007: a cascade delete
+  // into an unconditionally-raising trigger made account closure impossible.
+  assert.match(sql, /on delete set null[\s\S]*rewards_transactions|rewards_transactions[\s\S]*on delete set null/,
+    'rewards_transactions must not cascade-delete into the immutability trigger');
+  assert.match(sql, /delete refused/, 'deletes must still be refused explicitly');
+  assert.match(sql, /\(to_jsonb\(new\) - 'user_id'\) = \(to_jsonb\(old\) - 'user_id'\)/,
+    'the anonymization carve-out must compare full rows so it cannot be abused');
+});
+
 test('audit events cannot be written by clients', () => {
   assert.ok(!/create policy "[^"]*" on public\.audit_events\s+for (all|insert|update|delete)/.test(sql),
     'audit_events must have no client write policy');

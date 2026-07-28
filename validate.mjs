@@ -36,7 +36,9 @@ const required = [
   'supabase/migrations/20260728000003_commerce.sql',
   'supabase/migrations/20260728000004_rewards.sql',
   'supabase/migrations/20260728000005_audit.sql',
-  'supabase/migrations/20260728000006_seed_products.sql'
+  'supabase/migrations/20260728000006_seed_products.sql',
+  'supabase/migrations/20260728000007_ledger_account_deletion.sql',
+  'scripts/live-verify.mjs'
 ];
 
 const errors = [];

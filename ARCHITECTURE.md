@@ -93,6 +93,26 @@ client UI.
    email confirmation ON.
 5. Promote the first admin: `update profiles set role = 'admin' where email = '<founder email>';`
 
+## Live verification battery (XCOP-001.14)
+
+Once the backend is connected, run the full security battery against the real
+project. It exercises every control through the same path a browser takes
+(anon key + real signed-in sessions); the service-role key is used only to
+create and destroy throwaway test accounts and is never used to make an
+assertion pass.
+
+```bash
+SUPABASE_URL=... SUPABASE_ANON_KEY=... SUPABASE_SERVICE_ROLE_KEY=... node scripts/live-verify.mjs
+```
+
+Set those in the shell for that run only — never in a file. The script exits
+2 if credentials are absent, 1 on any failed control, 0 on a clean battery,
+and prints a JSON receipt suitable for evidence capture. It covers schema
+reachability, auth, customer isolation, order ownership, privilege-escalation
+refusal, ledger immutability and balance reconciliation, staff authorization,
+audit generation and forgery refusal, account deletion, gate data
+minimization, and draft-product exposure.
+
 ## Testing
 
 `npm test` runs:
