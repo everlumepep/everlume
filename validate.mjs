@@ -103,23 +103,29 @@ for (const file of tracked) {
 
 // Structural exposure: non-site files that ship because publish = "."
 const SITE = /^(index|404|privacy|terms|research-use|forms 2)\.html$|^account\/|^command\/|^assets\/|^js\/|^vendor\/|^(styles|logo|premium-theme|gate|portal)\.css$|^(app|boot|policy)\.js$|^favicon\.svg$|^robots\.txt$|^netlify\.toml$/;
-const exposed = tracked.filter(f => !SITE.test(f));
-if (exposed.length) {
-  console.warn(
-    `\n⚠  ${exposed.length} non-site file(s) would be published at the client domain ` +
-    `because netlify.toml sets publish = "." :`
-  );
-  const byTop = {};
-  for (const f of exposed) {
-    const top = f.includes('/') ? f.split('/')[0] + '/' : f;
-    byTop[top] = (byTop[top] || 0) + 1;
-  }
-  for (const [top, n] of Object.entries(byTop).sort((a, b) => b[1] - a[1])) {
-    console.warn(`   ${String(n).padStart(4)}  ${top}`);
-  }
-  console.warn(
-    `   Fix is a publish-directory restructure (move the site into its own\n` +
-    `   folder and set publish to it) — a deployment change, pending decision.\n`
+// Every non-site file must be refused by a forced 404 redirect. Without
+// force = true Netlify serves the static file and the rule never fires, so the
+// flag is checked explicitly rather than assumed from the rule's presence.
+const blocked = [...netlify.matchAll(/\[\[redirects\]\]([\s\S]*?)(?=\[\[|$)/g)]
+  .map(match => match[1])
+  .filter(block => /status\s*=\s*404/.test(block) && /force\s*=\s*true/.test(block))
+  .map(block => block.match(/from\s*=\s*"([^"]+)"/)?.[1])
+  .filter(Boolean);
+
+const isBlocked = file => blocked.some(pattern => {
+  const rule = pattern.replace(/^\//, '');
+  if (rule.endsWith('/*')) return file.startsWith(rule.slice(0, -1));
+  if (rule.startsWith('*.')) return file.endsWith(rule.slice(1)) && !file.includes('/');
+  return file === rule;
+});
+
+// Netlify does not serve dotfiles; verified against the live host (.gitignore → 404).
+const exposed = tracked.filter(f => !SITE.test(f) && !isBlocked(f) && !f.startsWith('.'));
+for (const file of exposed) {
+  errors.push(
+    `Non-site file would be published: ${file} — publish = "." serves every tracked ` +
+    `file; add a [[redirects]] rule with status = 404 and force = true, or move the ` +
+    `site into its own publish directory`
   );
 }
 
