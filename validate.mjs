@@ -112,10 +112,12 @@ const blocked = [...netlify.matchAll(/\[\[redirects\]\]([\s\S]*?)(?=\[\[|$)/g)]
   .map(block => block.match(/from\s*=\s*"([^"]+)"/)?.[1])
   .filter(Boolean);
 
+// Netlify splats match whole path segments only: "/dir/*" works, "/*.md" does not.
+// Extension globs are deliberately unsupported here — treating them as matches once
+// produced a false pass while three markdown files stayed reachable in production.
 const isBlocked = file => blocked.some(pattern => {
   const rule = pattern.replace(/^\//, '');
   if (rule.endsWith('/*')) return file.startsWith(rule.slice(0, -1));
-  if (rule.startsWith('*.')) return file.endsWith(rule.slice(1)) && !file.includes('/');
   return file === rule;
 });
 
