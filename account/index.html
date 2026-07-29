@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <title>My Everlume</title>
+  <link rel="icon" type="image/svg+xml" href="../assets/everlume-mark-v3.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="../premium-theme.css">
+  <link rel="stylesheet" href="../portal.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="../index.html" aria-label="Everlume home">
+      <img class="brand-monogram" src="../assets/everlume-mark-v3.svg" alt="" width="54" height="54">
+      <span class="brand-copy"><strong>EVERLUME</strong><small>PEPTIDES</small></span>
+    </a>
+    <nav class="nav portal-nav" aria-label="Account navigation">
+      <a href="../index.html">Catalog</a>
+      <a class="nav-cta" href="#" id="signOutBtn">Sign out</a>
+    </nav>
+  </header>
+
+  <main class="account-layout" id="accountApp" hidden>
+    <nav class="account-nav" aria-label="Account sections">
+      <button data-section="overview" class="active">Overview</button>
+      <button data-section="orders">Orders</button>
+      <button data-section="rewards">Rewards</button>
+      <button data-section="profile">Profile</button>
+      <button data-section="addresses">Addresses</button>
+      <button data-section="settings">Settings</button>
+    </nav>
+    <section class="account-panel" id="accountPanel" aria-live="polite"></section>
+  </main>
+
+  <main class="portal-shell" id="accountFallback">
+    <div class="portal-card">
+      <p class="eyebrow">My Everlume</p>
+      <h1 id="fallbackTitle">Loading…</h1>
+      <p class="lead" id="fallbackLead"></p>
+      <p class="portal-switch"><a href="signin.html">Go to sign in</a> · <a href="../index.html">Back to Everlume</a></p>
+    </div>
+  </main>
+
+  <script src="../vendor/supabase.js"></script>
+  <script src="../js/config.js"></script>
+  <script src="../js/supabase-client.js"></script>
+  <script src="../js/account.js"></script>
+</body>
+</html>

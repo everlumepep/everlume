@@ -1,0 +1,79 @@
+/* Shared styling for My Everlume (customer portal) and auth pages, plus the
+   XENTH / EVERLUME COMMAND admin shell. Consumer surfaces keep the Everlume
+   premium language; COMMAND uses a darker operational variant of it. */
+
+/* display rules below would otherwise defeat the hidden attribute */
+[hidden] { display: none !important; }
+
+/* Simple always-visible header nav (no hamburger) for portal pages. */
+.nav.portal-nav { display: flex !important; position: static; flex-direction: row; padding: 0; background: transparent; border: 0; }
+
+@media (max-width: 620px) {
+  .nav.portal-nav { gap: 14px; }
+  .nav.portal-nav .nav-cta { padding: 9px 13px; white-space: nowrap; }
+  .site-header:has(.portal-nav) .brand-copy small { display: none; }
+  .site-header:has(.portal-nav) .brand strong { letter-spacing: 0.18em; font-size: 16px; }
+}
+
+.portal-shell { min-height: 100vh; display: grid; place-items: start center; padding: 70px 22px; }
+.portal-card { width: min(480px, 100%); background: var(--paper); border: 1px solid var(--line); border-radius: 22px; padding: 44px 46px; box-shadow: var(--shadow); }
+.portal-card h1 { margin: 6px 0 8px; font: 500 clamp(34px, 5vw, 44px)/1 'Cormorant Garamond', serif; }
+.portal-card .lead { margin: 0 0 26px; color: var(--muted); font-size: 14px; line-height: 1.7; }
+.portal-card form { display: grid; gap: 14px; }
+.portal-card label { font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+.portal-card input { width: 100%; margin-top: 7px; border: 1px solid var(--line); background: #fff; border-radius: 8px; padding: 13px; font: 400 15px Jost, sans-serif; color: var(--ink); box-sizing: border-box; }
+.portal-card .form-status { min-height: 18px; font-size: 12px; color: #7a6543; }
+.portal-card .form-status.error { color: #9c4a2f; }
+.portal-switch { margin-top: 20px; font-size: 12px; color: var(--muted); text-align: center; }
+.portal-switch a, .portal-switch button { color: var(--gold); background: none; border: 0; cursor: pointer; font: inherit; text-decoration: underline; padding: 0; }
+.portal-notice { margin-top: 18px; padding: 16px; border-left: 3px solid var(--gold); background: #f5ecdf; font-size: 12px; line-height: 1.6; color: var(--muted); }
+
+/* My Everlume layout */
+.account-layout { display: grid; grid-template-columns: 230px 1fr; gap: 34px; width: min(1180px, 100%); margin: 0 auto; padding: 50px 22px 90px; }
+.account-nav { display: flex; flex-direction: column; gap: 4px; position: sticky; top: 110px; align-self: start; }
+.account-nav button { text-align: left; background: none; border: 0; border-left: 2px solid transparent; padding: 11px 16px; font: 500 11px Jost, sans-serif; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); cursor: pointer; }
+.account-nav button.active { color: var(--ink); border-left-color: var(--gold); background: rgba(169, 121, 63, 0.07); }
+.account-panel { background: var(--paper); border: 1px solid var(--line); border-radius: 20px; padding: 38px 42px; min-height: 420px; }
+.account-panel h2 { margin: 0 0 6px; font: 500 34px 'Cormorant Garamond', serif; }
+.account-panel .panel-sub { margin: 0 0 26px; color: var(--muted); font-size: 13px; }
+.stat-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; margin-bottom: 26px; }
+.stat-tile { border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; }
+.stat-tile b { display: block; font: 600 30px 'Cormorant Garamond', serif; }
+.stat-tile span { font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold); }
+.data-list { border-top: 1px solid var(--line); }
+.data-list .row { display: flex; justify-content: space-between; gap: 16px; padding: 15px 4px; border-bottom: 1px solid var(--line); font-size: 13px; }
+.data-list .row small { color: var(--muted); display: block; margin-top: 3px; }
+.pill { font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; padding: 5px 10px; border-radius: 999px; background: #efe4d2; color: #7a6543; align-self: center; white-space: nowrap; }
+.empty-note { padding: 28px 0; color: var(--muted); font-size: 13px; line-height: 1.7; }
+
+/* XENTH / EVERLUME COMMAND */
+body.command { background: #211b15; color: #ece3d3; }
+.command-topbar { display: flex; align-items: baseline; gap: 14px; padding: 26px 5vw; border-bottom: 1px solid #3a3128; }
+.command-topbar b { font: 500 18px Jost, sans-serif; letter-spacing: 0.4em; }
+.command-topbar span { font: 500 11px 'Cormorant Garamond', serif; letter-spacing: 0.34em; color: #c9a66e; }
+.command-topbar .who { margin-left: auto; font-size: 11px; color: #a3937d; letter-spacing: 0.1em; }
+.command-layout { display: grid; grid-template-columns: 210px 1fr; gap: 0; min-height: calc(100vh - 90px); }
+.command-nav { border-right: 1px solid #3a3128; padding: 26px 0; display: flex; flex-direction: column; }
+.command-nav button { text-align: left; background: none; border: 0; border-left: 2px solid transparent; padding: 12px 26px; font: 500 10px Jost, sans-serif; letter-spacing: 0.18em; text-transform: uppercase; color: #a3937d; cursor: pointer; }
+.command-nav button.active { color: #f2e8d5; border-left-color: #c9a66e; background: rgba(201, 166, 110, 0.06); }
+.command-main { padding: 40px 5vw; }
+.command-main h2 { margin: 0 0 4px; font: 500 36px 'Cormorant Garamond', serif; color: #f2e8d5; }
+.command-main .panel-sub { color: #a3937d; font-size: 12px; margin: 0 0 30px; }
+.command-main .stat-tile { border-color: #3a3128; background: #262019; }
+.command-main .stat-tile span { color: #c9a66e; }
+.command-main .data-list, .command-main .data-list .row { border-color: #3a3128; }
+.command-main .pill { background: #33291d; color: #d6b57e; }
+.command-main .empty-note { color: #a3937d; }
+.command-locked { min-height: 60vh; display: grid; place-content: center; text-align: center; padding: 40px; }
+.command-locked h2 { font: 500 40px 'Cormorant Garamond', serif; margin: 12px 0; color: #f2e8d5; }
+.command-locked p { color: #a3937d; max-width: 460px; line-height: 1.8; }
+
+@media (max-width: 860px) {
+  .account-layout { grid-template-columns: 1fr; }
+  .account-nav { flex-direction: row; overflow-x: auto; position: static; }
+  .account-nav button { border-left: 0; border-bottom: 2px solid transparent; white-space: nowrap; }
+  .account-nav button.active { border-bottom-color: var(--gold); }
+  .command-layout { grid-template-columns: 1fr; }
+  .command-nav { flex-direction: row; overflow-x: auto; border-right: 0; border-bottom: 1px solid #3a3128; padding: 0; }
+  .account-panel { padding: 26px 20px; }
+}
