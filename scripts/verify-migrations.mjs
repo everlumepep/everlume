@@ -178,11 +178,16 @@ await check('0009 — SKUs follow the client convention and are unique', async (
   const bad = rows.filter(r => !/^EL-[A-Z0-9-]+$/.test(r.sku));
   assert(bad.length === 0, `non-conforming sku(s): ${bad.map(b => b.sku).join(', ')}`);
   assert(new Set(rows.map(r => r.sku)).size === rows.length, 'duplicate sku');
-  const tirz = await many(
-    `select i.sku from public.inventory i join public.products p on p.id = i.product_id
-      where p.name = 'Tirzepatide' order by i.sku`);
-  assert(tirz.length === 5, `expected 5 Tirzepatide formats, got ${tirz.length}`);
-  return `${rows.length} SKUs, Tirzepatide: ${tirz.map(t => t.sku).join(' ')}`;
+  for (const [name, prefix] of [['Tirzepatide', 'EL-TR'], ['Retatrutide', 'EL-RT']]) {
+    const f = await many(
+      `select i.sku from public.inventory i join public.products p on p.id = i.product_id
+        where p.name = $1 order by i.sku`, [name]);
+    assert(f.length === 5, `expected 5 ${name} formats, got ${f.length}`);
+    for (const mg of [10, 20, 30, 40, 50]) {
+      assert(f.some(x => x.sku === `${prefix}${mg}`), `missing ${prefix}${mg}`);
+    }
+  }
+  return `${rows.length} SKUs · Tirzepatide and Retatrutide both EL-TR/RT 10–50`;
 });
 
 await check('inventory status derives from quantity vs threshold', async () => {

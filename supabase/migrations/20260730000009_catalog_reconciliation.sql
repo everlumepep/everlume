@@ -56,11 +56,18 @@ update public.products set name = 'NAD+', slug = 'nad-plus-1000mg', updated_at =
 where slug = 'nad-plus-100mg';
 
 -- ── 3. Additional Tirzepatide and Retatrutide formats ──────────────────────
+-- Client confirmed 2026-07-30 that Retatrutide carries the same 10–50 range as
+-- Tirzepatide. This migration has never been applied to any database, so the
+-- range is completed here rather than as a second migration — the change is the
+-- same catalog reconciliation, not a later correction to applied history.
 insert into public.products (slug, name, dose_label, category, description, status)
 values
   ('tirzepatide-10mg', 'Tirzepatide', '10mg', 'metabolic', 'Material format for controlled metabolic-pathway research.', 'active'),
   ('tirzepatide-30mg', 'Tirzepatide', '30mg', 'metabolic', 'Alternate-quantity format for laboratory investigation.', 'active'),
-  ('tirzepatide-50mg', 'Tirzepatide', '50mg', 'metabolic', 'Alternate-quantity format for laboratory investigation.', 'active')
+  ('tirzepatide-50mg', 'Tirzepatide', '50mg', 'metabolic', 'Alternate-quantity format for laboratory investigation.', 'active'),
+  ('retatrutide-30mg', 'Retatrutide', '30mg', 'metabolic', 'Alternate-quantity format for laboratory investigation.', 'active'),
+  ('retatrutide-40mg', 'Retatrutide', '40mg', 'metabolic', 'Alternate-quantity format for laboratory investigation.', 'active'),
+  ('retatrutide-50mg', 'Retatrutide', '50mg', 'metabolic', 'Alternate-quantity format for laboratory investigation.', 'active')
 on conflict (slug) do nothing;
 
 -- ── 4. Materials not present in the 0006 seed ──────────────────────────────
@@ -81,6 +88,9 @@ from (values
   ('tirzepatide-10mg',  'EL-TR10'),
   ('tirzepatide-30mg',  'EL-TR30'),
   ('tirzepatide-50mg',  'EL-TR50'),
+  ('retatrutide-30mg',  'EL-RT30'),
+  ('retatrutide-40mg',  'EL-RT40'),
+  ('retatrutide-50mg',  'EL-RT50'),
   ('selank-10mg',       'EL-SEL10'),
   ('kisspeptin-5mg',    'EL-KISS5'),
   ('ss31-10mg',         'EL-SS31-10'),
