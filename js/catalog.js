@@ -9,26 +9,34 @@
 (function () {
   const SUPPORT_EMAIL = 'hello@myeverlume.com';
 
-  // Mirror of migration 0006. Kept deliberately identical to the seed so the
-  // pre-backend storefront cannot present a product the database would refuse.
+  // Mirror of migrations 0006 + 0009 (client-supplied SKU convention and dose
+  // range, 2026-07-30). Kept deliberately identical to the seed — including its
+  // authorization state — so the pre-backend storefront cannot present a
+  // product the database would refuse.
   const SEED = [
-    ['tirzepatide-20mg', 'Tirzepatide', '20mg', 'metabolic', 'Material format for controlled metabolic-pathway research.'],
-    ['tirzepatide-40mg', 'Tirzepatide', '40mg', 'metabolic', 'Alternate-quantity format for laboratory investigation.'],
-    ['retatrutide-10mg', 'Retatrutide', '10mg', 'metabolic', 'Material format for metabolic-pathway research.'],
-    ['retatrutide-20mg', 'Retatrutide', '20mg', 'metabolic', 'Alternate-quantity format for laboratory investigation.'],
-    ['klow-blend', 'Klow Blend', 'Blend', 'peptide', 'Multi-component peptide research format.'],
-    ['ghk-cu', 'GHK-Cu', '50mg / 100mg', 'peptide', 'Copper-peptide research formats.'],
-    ['nad-plus-100mg', 'NAD+', '100mg', 'peptide', 'Material format for cellular-pathway investigation.'],
-    ['glutathione-1200mg', 'Glutathione', '1200mg', 'peptide', 'Material format for biochemical research.'],
-    ['kpv', 'KPV', '', 'tissue', 'Material format for laboratory tissue-pathway research.'],
-    ['bpc-157', 'BPC-157', '', 'tissue', 'Material format for laboratory tissue-pathway research.'],
-    ['tb-500', 'TB-500', '', 'tissue', 'Material format for laboratory tissue-pathway research.'],
-    ['semax', 'Semax', '', 'tissue', 'Material format for controlled peptide research.'],
-    ['nad-plus', 'NAD+', '', 'cellular', 'Material format for cellular-pathway investigation.'],
-    ['5-am', '5-AM', '', 'cellular', 'Material format for metabolic-pathway investigation.'],
-    ['mots-c', 'MOTS-C', '', 'cellular', 'Material format for mitochondrial-pathway research.'],
-    ['tesamorelin', 'Tesamorelin', '', 'cellular', 'Material format for controlled peptide research.']
-  ].map(([slug, name, dose, category, description]) => ({
+    ['tirzepatide-10mg', 'Tirzepatide', '10mg', 'metabolic', 'EL-TR10', 'Material format for controlled metabolic-pathway research.'],
+    ['tirzepatide-20mg', 'Tirzepatide', '20mg', 'metabolic', 'EL-TR20', 'Alternate-quantity format for laboratory investigation.'],
+    ['tirzepatide-30mg', 'Tirzepatide', '30mg', 'metabolic', 'EL-TR30', 'Alternate-quantity format for laboratory investigation.'],
+    ['tirzepatide-40mg', 'Tirzepatide', '40mg', 'metabolic', 'EL-TR40', 'Alternate-quantity format for laboratory investigation.'],
+    ['tirzepatide-50mg', 'Tirzepatide', '50mg', 'metabolic', 'EL-TR50', 'Alternate-quantity format for laboratory investigation.'],
+    ['retatrutide-10mg', 'Retatrutide', '10mg', 'metabolic', 'EL-RT10', 'Material format for metabolic-pathway research.'],
+    ['retatrutide-20mg', 'Retatrutide', '20mg', 'metabolic', 'EL-RT20', 'Alternate-quantity format for laboratory investigation.'],
+    ['tesamorelin', 'Tesamorelin', '10mg', 'metabolic', 'EL-TSM10', 'Material format for controlled peptide research.'],
+    ['selank-10mg', 'Selank', '10mg', 'peptide', 'EL-SEL10', 'Material format for controlled peptide research.'],
+    ['kisspeptin-5mg', 'Kisspeptin', '5mg', 'peptide', 'EL-KISS5', 'Material format for controlled peptide research.'],
+    ['semax', 'Semax', '', 'peptide', 'EL-SEMAX', 'Material format for controlled peptide research.'],
+    ['ghk-cu', 'GHK-Cu', '50mg / 100mg', 'peptide', 'EL-GHKCU', 'Copper-peptide research formats.'],
+    ['glutathione-1200mg', 'Glutathione', '1200mg', 'peptide', 'EL-GLUT1200', 'Material format for biochemical research.'],
+    ['klow-blend', 'Klow Blend', 'Blend', 'peptide', 'EL-KLOW', 'Multi-component peptide research format.'],
+    ['kpv', 'KPV', '10mg', 'tissue', 'EL-KPV10', 'Material format for laboratory tissue-pathway research.'],
+    ['bpc-157', 'BPC-157', '10mg', 'tissue', 'EL-BPC10', 'Material format for laboratory tissue-pathway research.'],
+    ['tb-500', 'TB-500', '', 'tissue', 'EL-TB500', 'Material format for laboratory tissue-pathway research.'],
+    ['nad-plus-1000mg', 'NAD+', '1000mg', 'cellular', 'EL-NAD1000', 'Material format for cellular-pathway investigation.'],
+    ['mots-c', 'MOTS-C', '10mg', 'cellular', 'EL-MOTSC10', 'Material format for mitochondrial-pathway research.'],
+    ['ss31-10mg', 'SS-31', '10mg', 'cellular', 'EL-SS31-10', 'Material format for mitochondrial-pathway research.'],
+    ['5-am', '5-AM', '5mg', 'cellular', 'EL-5AM5', 'Material format for metabolic-pathway investigation.'],
+    ['l-carnitine-600mg', 'L-Carnitine', '600mg/10ml', 'cellular', 'EL-LCAR600', 'Solution format for cellular-pathway investigation.']
+  ].map(([slug, name, dose, category, sku, description]) => ({
     slug,
     name,
     dose_label: dose,
@@ -37,7 +45,7 @@
     price_cents: null,
     status: 'active',
     compliance_status: 'pending_review',
-    sku: 'EL-' + slug.replace(/-/g, '').toUpperCase(),
+    sku,
     quantity_on_hand: 0,
     quantity_reserved: 0,
     inventory_status: 'out'

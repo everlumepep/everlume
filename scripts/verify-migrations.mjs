@@ -161,12 +161,28 @@ await check('deleted account leaves an anonymized ledger, not a hole', async () 
 });
 
 console.log('\nCommerce triggers & constraints');
-await check('seeded catalog is 16 products, all pending_review', async () => {
+// The count is incidental and moves whenever the client revises the catalog.
+// The invariant that must never move: nothing arrives purchasable.
+await check('every catalogued product is pending_review and unpriced', async () => {
   const r = await one(`select count(*)::int total,
-    count(*) filter (where compliance_status <> 'pending_review')::int bad from public.products`);
-  assert(r.total === 16, `expected 16 products, got ${r.total}`);
-  assert(r.bad === 0, `${r.bad} product(s) not pending_review`);
-  return '16 products, 0 approved';
+    count(*) filter (where compliance_status <> 'pending_review')::int bad_status,
+    count(*) filter (where price_cents is not null)::int bad_price from public.products`);
+  assert(r.total > 0, 'catalog is empty — the seed did not apply');
+  assert(r.bad_status === 0, `${r.bad_status} product(s) not pending_review`);
+  assert(r.bad_price === 0, `${r.bad_price} product(s) carry a price`);
+  return `${r.total} products, 0 approved, 0 priced`;
+});
+
+await check('0009 — SKUs follow the client convention and are unique', async () => {
+  const rows = await many(`select sku from public.inventory order by sku`);
+  const bad = rows.filter(r => !/^EL-[A-Z0-9-]+$/.test(r.sku));
+  assert(bad.length === 0, `non-conforming sku(s): ${bad.map(b => b.sku).join(', ')}`);
+  assert(new Set(rows.map(r => r.sku)).size === rows.length, 'duplicate sku');
+  const tirz = await many(
+    `select i.sku from public.inventory i join public.products p on p.id = i.product_id
+      where p.name = 'Tirzepatide' order by i.sku`);
+  assert(tirz.length === 5, `expected 5 Tirzepatide formats, got ${tirz.length}`);
+  return `${rows.length} SKUs, Tirzepatide: ${tirz.map(t => t.sku).join(' ')}`;
 });
 
 await check('inventory status derives from quantity vs threshold', async () => {
