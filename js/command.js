@@ -31,53 +31,147 @@
     return error ? '—' : (n ?? 0);
   }
 
+  const money = cents => '$' + (Number(cents || 0) / 100).toLocaleString(undefined, {
+    minimumFractionDigits: 2, maximumFractionDigits: 2
+  });
+
+  // Pill tone per machine, so an operator reads state at a glance rather than
+  // parsing three similar-looking words.
+  const TONE = {
+    // payment
+    none: 'neutral', pending: 'warn', authorized: 'warn', captured: 'good',
+    partially_refunded: 'warn', refunded: 'neutral', failed: 'bad',
+    expired: 'bad', disputed: 'bad',
+    // fulfillment
+    unfulfilled: 'neutral', reserved: 'warn', processing: 'warn',
+    ready: 'warn', partially_fulfilled: 'warn', fulfilled: 'good',
+    // commercial
+    confirmed: 'good', closed: 'neutral', cancelled: 'bad',
+    // inventory
+    ok: 'good', low: 'warn', out: 'bad',
+    // inquiries
+    new: 'warn', in_review: 'warn', answered: 'good'
+  };
+  const pill = value => `<span class="pill pill-${TONE[value] || 'neutral'}">${esc(String(value).replace(/_/g, ' '))}</span>`;
+
   const modules = {
     async dashboard() {
-      const [orders, customers, products, low] = await Promise.all([
-        count('orders'), count('profiles'), count('products'),
-        count('inventory', q => q.eq('status', 'low'))
+      // Revenue counts CAPTURED money only. Authorized-but-uncaptured is not
+      // revenue, and showing it as such would overstate the business.
+      const [orders, customers, low, newInquiries, captured, awaiting] = await Promise.all([
+        count('orders'),
+        count('profiles'),
+        count('inventory', q => q.in('status', ['low', 'out'])),
+        count('inquiries', q => q.eq('status', 'new')),
+        client.from('orders').select('total_cents').eq('payment_status', 'captured')
+          .then(({ data }) => (data || []).reduce((s, o) => s + Number(o.total_cents || 0), 0))
+          .catch(() => 0),
+        count('orders', q => q.eq('commercial_status', 'confirmed').in('fulfillment_status', ['unfulfilled', 'reserved', 'processing', 'ready']))
       ]);
-      return `<h2>Overview</h2><p class="panel-sub">Business snapshot — live from the shared data model.</p>
+      return `<h2>Overview</h2><p class="panel-sub">Business snapshot — live from the Everlume data model.</p>
         <div class="stat-row">
+          <div class="stat-tile"><b>${money(captured)}</b><span>Revenue (captured)</span></div>
           <div class="stat-tile"><b>${orders}</b><span>Orders</span></div>
+          <div class="stat-tile"><b>${awaiting}</b><span>Awaiting fulfillment</span></div>
           <div class="stat-tile"><b>${customers}</b><span>Customers</span></div>
-          <div class="stat-tile"><b>${products}</b><span>Products</span></div>
-          <div class="stat-tile"><b>${low}</b><span>Low stock</span></div>
+          <div class="stat-tile"><b>${newInquiries}</b><span>New inquiries</span></div>
+          <div class="stat-tile"><b>${low}</b><span>Low / out of stock</span></div>
         </div>
-        <p class="empty-note">Module depth arrives with the commerce build-out; this console already reads the same source of truth as the storefront.</p>`;
+        <p class="empty-note">Revenue reflects captured payments only — authorized-but-uncaptured amounts are not counted as revenue.</p>`;
     },
     async orders() {
+      // Three independent machines per contract 01 / ruling D-1. They are shown
+      // side by side because the combination is the operator's real signal:
+      // captured + unfulfilled means "ready to pick", not "in progress".
       const { data } = await client.from('orders')
-        .select('id, order_number, status, total_cents, created_at')
-        .order('created_at', { ascending: false }).limit(30);
+        .select('id, order_number, commercial_status, payment_status, fulfillment_status, total_cents, created_at, order_exceptions(reason, blocking, resolved_at)')
+        .order('created_at', { ascending: false }).limit(40);
       const rows = data || [];
-      return `<h2>Orders</h2><p class="panel-sub">Receive → process → fulfill → complete.</p>` +
-        (rows.length ? `<div class="data-list">${rows.map(o => `
-          <div class="row"><div>${esc(o.order_number || o.id.slice(0, 8))}<small>${esc(new Date(o.created_at).toLocaleString())} · $${(o.total_cents / 100).toFixed(2)}</small></div>
-          <span class="pill">${esc(o.status)}</span></div>`).join('')}</div>`
-        : '<p class="empty-note">No orders in the system yet.</p>');
+      if (!rows.length) return `<h2>Orders</h2><p class="panel-sub">Commercial · payment · fulfillment, tracked independently.</p><p class="empty-note">No orders in the system yet.</p>`;
+      return `<h2>Orders</h2><p class="panel-sub">Commercial · payment · fulfillment, tracked independently.</p>
+        <div class="data-list">${rows.map(o => {
+          const open = (o.order_exceptions || []).filter(x => !x.resolved_at);
+          const blocking = open.filter(x => x.blocking);
+          return `<div class="row row-order">
+            <div><strong>${esc(o.order_number || o.id.slice(0, 8))}</strong>
+              <small>${esc(new Date(o.created_at).toLocaleString())} · ${money(o.total_cents)}</small>
+              ${blocking.length ? `<small class="row-flag">⚠ ${blocking.length} blocking exception: ${esc(blocking.map(x => x.reason.replace(/_/g, ' ')).join(', '))}</small>` : ''}
+            </div>
+            <div class="pill-stack">
+              <span class="pill-label">commercial</span>${pill(o.commercial_status)}
+              <span class="pill-label">payment</span>${pill(o.payment_status)}
+              <span class="pill-label">fulfillment</span>${pill(o.fulfillment_status)}
+            </div>
+          </div>`;
+        }).join('')}</div>`;
+    },
+
+    async inquiries() {
+      const { data } = await client.from('inquiries')
+        .select('id, name, organization, email, product, message, status, created_at')
+        .order('created_at', { ascending: false }).limit(40);
+      const rows = data || [];
+      return `<h2>Inquiries</h2><p class="panel-sub">Research and availability requests from the storefront.</p>` +
+        (rows.length ? `<div class="data-list">${rows.map(q => `
+          <div class="row"><div><strong>${esc(q.name || q.email)}</strong>
+            <small>${esc(q.organization)} · ${esc(q.email)} · ${esc(new Date(q.created_at).toLocaleDateString())}</small>
+            ${q.product ? `<small>Interested in: ${esc(q.product)}</small>` : ''}
+            ${q.message ? `<small class="row-quote">${esc(q.message.slice(0, 160))}${q.message.length > 160 ? '…' : ''}</small>` : ''}
+          </div>${pill(q.status)}</div>`).join('')}</div>`
+          : '<p class="empty-note">No inquiries recorded yet. Storefront submissions land here once the inquiry form writes to the database.</p>');
     },
     async inventory() {
       const { data } = await client.from('inventory')
-        .select('sku, quantity_on_hand, quantity_reserved, reorder_threshold, status, products(name)')
+        .select('sku, quantity_on_hand, quantity_reserved, reorder_threshold, status, products(name, dose_label)')
         .order('sku');
       const rows = data || [];
-      return `<h2>Inventory</h2><p class="panel-sub">Stock levels and reorder thresholds.</p>` +
-        (rows.length ? `<div class="data-list">${rows.map(i => `
-          <div class="row"><div>${esc(i.products?.name || i.sku)}<small>${esc(i.sku)} · on hand ${i.quantity_on_hand} · reserved ${i.quantity_reserved} · reorder at ${i.reorder_threshold}</small></div>
-          <span class="pill">${esc(i.status)}</span></div>`).join('')}</div>`
-        : '<p class="empty-note">No inventory records yet.</p>');
+      if (!rows.length) return `<h2>Inventory</h2><p class="panel-sub">Stock levels and reorder thresholds.</p><p class="empty-note">No inventory records yet.</p>`;
+      const flagged = rows.filter(i => i.status !== 'ok').length;
+      return `<h2>Inventory</h2>
+        <p class="panel-sub">Stock, reorder thresholds, and audited manual adjustment.</p>
+        ${flagged ? `<p class="ops-alert">${flagged} SKU${flagged > 1 ? 's are' : ' is'} at or below the reorder threshold.</p>` : ''}
+        <div class="data-list">${rows.map(i => {
+          const available = i.quantity_on_hand - i.quantity_reserved;
+          return `<div class="row row-inv">
+            <div><strong>${esc(i.products?.name || i.sku)} ${esc(i.products?.dose_label || '')}</strong>
+              <small>${esc(i.sku)} · on hand ${i.quantity_on_hand} · reserved ${i.quantity_reserved} · <b>available ${available}</b> · reorder at ${i.reorder_threshold}</small>
+            </div>
+            <div class="inv-actions">
+              ${pill(i.status)}
+              <button class="adjust-btn" data-sku="${esc(i.sku)}" type="button">Adjust</button>
+            </div>
+          </div>`;
+        }).join('')}</div>
+        <div class="adjust-panel" id="adjustPanel" hidden>
+          <h3>Adjust stock — <span id="adjustSku"></span></h3>
+          <p class="panel-sub">Manager or admin only. Every adjustment writes an audit record in the same transaction, so an adjustment that cannot be recorded does not happen.</p>
+          <label>Change (+ / −)<input type="number" id="adjustDelta" step="1" placeholder="e.g. 12 or -3"></label>
+          <label>Reason (required)<input type="text" id="adjustReason" placeholder="e.g. cycle count correction, receipt of PO 1042"></label>
+          <div class="adjust-actions">
+            <button class="btn btn-dark" id="adjustSubmit" type="button">Apply adjustment</button>
+            <button class="request-btn" id="adjustCancel" type="button">Cancel</button>
+          </div>
+          <p class="pd-status" id="adjustStatus" role="status" aria-live="polite"></p>
+        </div>`;
     },
     async customers() {
       const { data } = await client.from('profiles')
-        .select('id, first_name, last_name, email, role, created_at')
+        .select('id, first_name, last_name, email, role, created_at, orders(total_cents, payment_status), rewards_accounts(balance)')
         .order('created_at', { ascending: false }).limit(30);
       const rows = data || [];
-      return `<h2>Customers</h2><p class="panel-sub">Accounts on the platform.</p>` +
-        (rows.length ? `<div class="data-list">${rows.map(p => `
-          <div class="row"><div>${esc([p.first_name, p.last_name].filter(Boolean).join(' ') || p.email)}<small>${esc(p.email)} · joined ${esc(new Date(p.created_at).toLocaleDateString())}</small></div>
-          <span class="pill">${esc(p.role)}</span></div>`).join('')}</div>`
-        : '<p class="empty-note">No customer accounts yet.</p>');
+      if (!rows.length) return `<h2>Customers</h2><p class="panel-sub">Accounts, order history, and rewards.</p><p class="empty-note">No customer accounts yet.</p>`;
+      return `<h2>Customers</h2><p class="panel-sub">Accounts, order history, and rewards.</p>
+        <div class="data-list">${rows.map(p => {
+          const orders = p.orders || [];
+          const spent = orders.filter(o => o.payment_status === 'captured')
+            .reduce((s, o) => s + Number(o.total_cents || 0), 0);
+          const rewards = Array.isArray(p.rewards_accounts) ? p.rewards_accounts[0] : p.rewards_accounts;
+          return `<div class="row">
+            <div><strong>${esc([p.first_name, p.last_name].filter(Boolean).join(' ') || p.email)}</strong>
+              <small>${esc(p.email)} · joined ${esc(new Date(p.created_at).toLocaleDateString())}</small>
+              <small>${orders.length} order${orders.length === 1 ? '' : 's'} · ${money(spent)} captured · ${Number(rewards?.balance || 0).toLocaleString()} points</small>
+            </div>${pill(p.role)}</div>`;
+        }).join('')}</div>`;
     },
     async rewards() {
       const [accounts, outstanding] = await Promise.all([
@@ -134,10 +228,56 @@
     }
   };
 
+  // Inventory adjustment goes through the adjust_inventory() function, never a
+  // direct UPDATE: the function enforces the manager check, requires a reason,
+  // refuses to drive stock negative, and writes the audit row transactionally.
+  // The UI cannot weaken any of that — a hidden control is not a permission.
+  function wireInventoryAdjust() {
+    const panel = document.getElementById('adjustPanel');
+    if (!panel) return;
+    const skuLabel = document.getElementById('adjustSku');
+    const delta = document.getElementById('adjustDelta');
+    const reason = document.getElementById('adjustReason');
+    const status = document.getElementById('adjustStatus');
+    let activeSku = null;
+
+    main.querySelectorAll('.adjust-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        activeSku = btn.dataset.sku;
+        skuLabel.textContent = activeSku;
+        delta.value = '';
+        reason.value = '';
+        status.textContent = '';
+        panel.hidden = false;
+        panel.scrollIntoView({ block: 'nearest' });
+        delta.focus();
+      });
+    });
+
+    document.getElementById('adjustCancel').addEventListener('click', () => { panel.hidden = true; });
+
+    document.getElementById('adjustSubmit').addEventListener('click', async () => {
+      const d = parseInt(delta.value, 10);
+      if (!Number.isFinite(d) || d === 0) { status.textContent = 'Enter a non-zero whole number.'; return; }
+      if (!reason.value.trim()) { status.textContent = 'A reason is required.'; return; }
+      status.textContent = 'Applying…';
+      const { data, error } = await client.rpc('adjust_inventory', {
+        p_sku: activeSku, p_delta: d, p_reason: reason.value.trim()
+      });
+      if (error) { status.textContent = error.message || 'Adjustment refused.'; return; }
+      status.textContent = `Adjusted ${activeSku} to ${data?.quantity_on_hand ?? '—'} on hand. Audit record written.`;
+      setTimeout(() => render('inventory'), 900);
+    });
+  }
+
   async function render(name) {
     main.innerHTML = '<p class="empty-note">Loading…</p>';
-    try { main.innerHTML = await modules[name](); }
-    catch { main.innerHTML = '<p class="empty-note">Could not load this module.</p>'; }
+    try {
+      main.innerHTML = await modules[name]();
+      if (name === 'inventory') wireInventoryAdjust();
+    } catch {
+      main.innerHTML = '<p class="empty-note">Could not load this module.</p>';
+    }
   }
 
   document.querySelectorAll('.command-nav button').forEach(btn =>
