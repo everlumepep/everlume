@@ -29,17 +29,18 @@
       ? `<button class="add-btn" data-slug="${escapeHtml(product.slug)}">Add to bag</button>`
       : `<button class="request-btn" data-product="${name} ${dose}">Inquire</button>`;
 
-    return `<article class="product-card reveal visible">
+    return `<article class="product-card reveal visible" data-category="${escapeHtml(product.category)}">
       <a class="product-visual" href="${href}" aria-label="${name} ${dose} details">
         <div class="mini-vial"><span>EL</span><b>${name.toUpperCase()}</b><small>${dose}</small></div>
       </a>
       <div class="product-copy">
+        <p class="product-cat">${escapeHtml(product.category)} research</p>
         <div class="dose">${dose}</div>
         <h3><a href="${href}">${name}</a></h3>
         <p>${escapeHtml(product.description)}</p>
         <p class="product-meta"><span class="sku">${escapeHtml(product.sku)}</span><span class="avail avail-${label.state}">${escapeHtml(label.text)}</span></p>
         <div class="product-bottom">
-          <span class="quote-label">${price ? escapeHtml(price) : 'Documentation available'}</span>
+          <span class="${price ? 'product-price' : 'quote-label'}">${price ? escapeHtml(price) : 'Documentation available'}</span>
           ${action}
         </div>
       </div>

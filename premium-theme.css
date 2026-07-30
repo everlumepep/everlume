@@ -354,13 +354,15 @@ footer {
    a product is only offered for purchase when status, compliance state, price,
    and stock all agree. Everything else reads as documentation/inquiry. */
 
+/* Stacked rather than justified: at a 4-up card width the SKU and the
+   availability pill do not fit on one line, and space-between + wrap left the
+   pill stranded against the opposite edge. */
 .product-meta {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin: 10px 0 14px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 7px;
+  margin: 12px 0 4px;
   min-height: auto;
 }
 
@@ -538,3 +540,74 @@ footer {
   .pd-layout, .checkout-layout { grid-template-columns: 1fr; }
   .checkout-summary { position: static; }
 }
+
+/* ── Product card polish ───────────────────────────────────────────────────
+   Cards are equal-height regardless of copy length, so a row never looks
+   ragged, and the action rail always sits on the baseline. Category accent
+   is drawn from the same palette as the collection cards. */
+
+.product-card {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.product-card .product-copy {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.product-card .product-copy > p:not(.product-meta) {
+  flex: 1;
+}
+
+.product-visual {
+  position: relative;
+  border-bottom: 1px solid var(--line);
+}
+
+.product-visual::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(164, 125, 71, 0.28), transparent);
+}
+
+.product-card:hover .mini-vial {
+  transform: translateY(-4px);
+}
+.mini-vial { transition: transform 220ms ease; }
+
+/* Category accent bar — a quiet wayfinding cue, not decoration for its own sake */
+.product-card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  z-index: 1;
+  background: var(--accent, transparent);
+}
+.product-card[data-category="metabolic"] { --accent: #7f866f; }
+.product-card[data-category="peptide"]   { --accent: #a47d47; }
+.product-card[data-category="tissue"]    { --accent: #71838d; }
+.product-card[data-category="cellular"]  { --accent: #b7895f; }
+
+.product-cat {
+  font-size: 8px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.product-copy h3 { margin: 2px 0 8px; line-height: 1.05; }
+
+.product-bottom {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+  gap: 12px;
+}
+
+.product-price { font: 600 24px "Cormorant Garamond", serif; }
