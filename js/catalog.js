@@ -1,0 +1,155 @@
+// Everlume catalog. Loaded after js/supabase-client.js.
+// Exposes window.everlumeCatalog — the single source of truth for what the
+// storefront may display and what a customer may actually buy.
+//
+// Reads from Supabase when configured, otherwise falls back to a local mirror
+// of supabase/migrations/0006 so the storefront renders before the backend
+// exists. The fallback mirrors the seed exactly, INCLUDING its authorization
+// state: every product is pending_review with no price.
+(function () {
+  const SUPPORT_EMAIL = 'hello@myeverlume.com';
+
+  // Mirror of migration 0006. Kept deliberately identical to the seed so the
+  // pre-backend storefront cannot present a product the database would refuse.
+  const SEED = [
+    ['tirzepatide-20mg', 'Tirzepatide', '20mg', 'metabolic', 'Material format for controlled metabolic-pathway research.'],
+    ['tirzepatide-40mg', 'Tirzepatide', '40mg', 'metabolic', 'Alternate-quantity format for laboratory investigation.'],
+    ['retatrutide-10mg', 'Retatrutide', '10mg', 'metabolic', 'Material format for metabolic-pathway research.'],
+    ['retatrutide-20mg', 'Retatrutide', '20mg', 'metabolic', 'Alternate-quantity format for laboratory investigation.'],
+    ['klow-blend', 'Klow Blend', 'Blend', 'peptide', 'Multi-component peptide research format.'],
+    ['ghk-cu', 'GHK-Cu', '50mg / 100mg', 'peptide', 'Copper-peptide research formats.'],
+    ['nad-plus-100mg', 'NAD+', '100mg', 'peptide', 'Material format for cellular-pathway investigation.'],
+    ['glutathione-1200mg', 'Glutathione', '1200mg', 'peptide', 'Material format for biochemical research.'],
+    ['kpv', 'KPV', '', 'tissue', 'Material format for laboratory tissue-pathway research.'],
+    ['bpc-157', 'BPC-157', '', 'tissue', 'Material format for laboratory tissue-pathway research.'],
+    ['tb-500', 'TB-500', '', 'tissue', 'Material format for laboratory tissue-pathway research.'],
+    ['semax', 'Semax', '', 'tissue', 'Material format for controlled peptide research.'],
+    ['nad-plus', 'NAD+', '', 'cellular', 'Material format for cellular-pathway investigation.'],
+    ['5-am', '5-AM', '', 'cellular', 'Material format for metabolic-pathway investigation.'],
+    ['mots-c', 'MOTS-C', '', 'cellular', 'Material format for mitochondrial-pathway research.'],
+    ['tesamorelin', 'Tesamorelin', '', 'cellular', 'Material format for controlled peptide research.']
+  ].map(([slug, name, dose, category, description]) => ({
+    slug,
+    name,
+    dose_label: dose,
+    category,
+    description,
+    price_cents: null,
+    status: 'active',
+    compliance_status: 'pending_review',
+    sku: 'EL-' + slug.replace(/-/g, '').toUpperCase(),
+    quantity_on_hand: 0,
+    quantity_reserved: 0,
+    inventory_status: 'out'
+  }));
+
+  const CATEGORIES = [
+    { key: 'all', label: 'All' },
+    { key: 'metabolic', label: 'Metabolic' },
+    { key: 'peptide', label: 'Peptide' },
+    { key: 'tissue', label: 'Tissue' },
+    { key: 'cellular', label: 'Cellular' }
+  ];
+
+  // ── Authorization ────────────────────────────────────────────────────────
+  // D-III: a product's commerce path is determined by the AGREEMENT of its
+  // axes, not by any single flag. If they disagree, the product fails closed.
+  //
+  // G1 is absolute here: pending_review is NOT purchasable, and there is no
+  // bypass — no query string, no config toggle, no "test mode". A build that
+  // needs a purchasable fixture must approve and price it like production.
+  function availability(product) {
+    const reasons = [];
+    if (product.status !== 'active') reasons.push('not_active');
+    if (product.compliance_status !== 'approved') reasons.push('compliance_review_pending');
+    if (product.price_cents === null || product.price_cents === undefined) reasons.push('no_price');
+    else if (!(product.price_cents > 0)) reasons.push('invalid_price');
+    if (available(product) <= 0) reasons.push('out_of_stock');
+    return { purchasable: reasons.length === 0, reasons };
+  }
+
+  function available(product) {
+    return Math.max(0, (product.quantity_on_hand || 0) - (product.quantity_reserved || 0));
+  }
+
+  // Customer-facing explanation. Deliberately does not imply a future date or
+  // a regulatory outcome — the review is internal and its result is not known.
+  function availabilityLabel(product) {
+    const { purchasable, reasons } = availability(product);
+    if (purchasable) return { state: 'available', text: 'In stock' };
+    if (reasons.includes('compliance_review_pending')) {
+      return { state: 'review', text: 'Documentation available — inquiries only' };
+    }
+    if (reasons.includes('no_price') || reasons.includes('invalid_price')) {
+      return { state: 'review', text: 'Documentation available — inquiries only' };
+    }
+    if (reasons.includes('out_of_stock')) return { state: 'out', text: 'Out of stock' };
+    return { state: 'unavailable', text: 'Unavailable' };
+  }
+
+  function formatPrice(cents) {
+    if (cents === null || cents === undefined) return null;
+    return '$' + (cents / 100).toFixed(2);
+  }
+
+  // ── Loading ──────────────────────────────────────────────────────────────
+  let cache = null;
+
+  async function load() {
+    if (cache) return cache;
+    const client = window.everlumeSupabase;
+    if (!client) {
+      cache = { products: SEED.slice(), source: 'fallback' };
+      return cache;
+    }
+    try {
+      const { data, error } = await client
+        .from('products')
+        .select('slug,name,dose_label,category,description,price_cents,status,compliance_status,inventory(sku,quantity_on_hand,quantity_reserved,status)')
+        .eq('status', 'active')
+        .order('category', { ascending: true });
+      if (error) throw error;
+      const products = (data || []).map(row => {
+        const inv = Array.isArray(row.inventory) ? row.inventory[0] : row.inventory;
+        return {
+          slug: row.slug,
+          name: row.name,
+          dose_label: row.dose_label || '',
+          category: row.category,
+          description: row.description || '',
+          price_cents: row.price_cents,
+          status: row.status,
+          compliance_status: row.compliance_status,
+          sku: (inv && inv.sku) || '',
+          quantity_on_hand: (inv && inv.quantity_on_hand) || 0,
+          quantity_reserved: (inv && inv.quantity_reserved) || 0,
+          inventory_status: (inv && inv.status) || 'out'
+        };
+      });
+      cache = { products, source: 'supabase' };
+      return cache;
+    } catch (error) {
+      // Never fail the storefront open. A backend error must not turn into a
+      // catalog with unknown authorization state, so fall back to the seed —
+      // which is pending_review, i.e. not purchasable.
+      cache = { products: SEED.slice(), source: 'fallback-after-error' };
+      return cache;
+    }
+  }
+
+  async function find(slug) {
+    const { products } = await load();
+    return products.find(p => p.slug === slug) || null;
+  }
+
+  window.everlumeCatalog = {
+    load,
+    find,
+    availability,
+    availabilityLabel,
+    available,
+    formatPrice,
+    categories: CATEGORIES,
+    supportEmail: SUPPORT_EMAIL
+  };
+})();

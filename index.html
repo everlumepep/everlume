@@ -37,6 +37,7 @@
       <a href="#standards">Standards</a>
       <a href="#faq">FAQ</a>
       <a href="account/">My Everlume</a>
+      <a class="nav-bag" href="cart.html">Bag<span class="cart-count" id="cartCount" hidden></span></a>
       <a class="nav-cta" href="#contact">Request availability</a>
     </nav>
   </header>
@@ -98,10 +99,10 @@
         <div><p class="eyebrow">Introductory pricing</p><h2>Research collection</h2></div>
         <div class="filters" role="group" aria-label="Filter products">
           <button class="filter active" data-filter="all">All</button>
-          <button class="filter" data-filter="weight">Metabolic</button>
-          <button class="filter" data-filter="beauty">Peptide</button>
-          <button class="filter" data-filter="recovery">Tissue</button>
-          <button class="filter" data-filter="energy">Cellular</button>
+          <button class="filter" data-filter="metabolic">Metabolic</button>
+          <button class="filter" data-filter="peptide">Peptide</button>
+          <button class="filter" data-filter="tissue">Tissue</button>
+          <button class="filter" data-filter="cellular">Cellular</button>
         </div>
       </div>
       <div class="product-grid" id="productGrid"></div>
@@ -163,8 +164,12 @@
     <div class="footer-links"><a href="#collection">Collection</a><a href="#catalog">Documentation</a><a href="#faq">FAQ</a><a href="research-use.html">Research-use policy</a><a href="privacy.html">Privacy</a><a href="#contact">Contact</a></div>
     <p>© <span id="year"></span> Everlume. Laboratory research use only. Not for human or veterinary use. No medical claims are made.</p>
   </footer>
-  <script src="app.js"></script>
   <script src="js/config.js"></script>
+  <script src="vendor/supabase.js"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/catalog.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="app.js"></script>
   <script type="module" src="js/gate.js"></script>
 </body>
 </html>
