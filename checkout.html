@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f8f2e8">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <meta name="description" content="Everlume checkout.">
+  <title>Checkout — Everlume</title>
+  <link rel="icon" type="image/svg+xml" href="assets/everlume-mark-v3.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500&family=Jost:wght@300;400;500;600&family=Pinyon+Script&display=swap" rel="stylesheet">
+  <script src="boot.js"></script>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="logo.css">
+  <link rel="stylesheet" href="premium-theme.css">
+  <link rel="stylesheet" href="portal.css">
+  <link rel="stylesheet" href="gate.css">
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <div class="announcement">Research products only · Not for human consumption</div>
+  <header class="site-header">
+    <a class="brand" href="index.html" aria-label="Everlume home">
+      <img class="brand-monogram" src="assets/everlume-mark-v3.svg" alt="" width="54" height="54">
+      <span class="brand-copy"><strong>EVERLUME</strong><small>PEPTIDES</small></span>
+    </a>
+    <nav class="nav portal-nav" aria-label="Primary navigation">
+      <a href="index.html">Catalog</a>
+      <a href="cart.html">Bag</a>
+    </nav>
+  </header>
+
+  <main id="main-content" tabindex="-1" class="section">
+    <p class="eyebrow">Secure checkout</p>
+    <h1 class="page-title">Checkout</h1>
+
+    <div id="checkoutBlocked" hidden>
+      <div class="cart-empty">
+        <h3>Nothing is ready to check out.</h3>
+        <p>Your bag has no items available for purchase. Materials under documentation review can be requested through the inquiry form.</p>
+        <a class="btn btn-dark" href="index.html">Browse catalog</a>
+      </div>
+    </div>
+
+    <form id="checkoutForm" class="checkout-layout" hidden novalidate>
+      <div class="checkout-main">
+        <fieldset>
+          <legend>Customer information</legend>
+          <label>Full name<input name="name" required autocomplete="name"></label>
+          <label>Organization<input name="organization" required autocomplete="organization"></label>
+          <label>Email<input type="email" name="email" required autocomplete="email"></label>
+          <label>Phone<input type="tel" name="phone" autocomplete="tel"></label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Shipping information</legend>
+          <label>Address line 1<input name="address1" required autocomplete="address-line1"></label>
+          <label>Address line 2<input name="address2" autocomplete="address-line2"></label>
+          <label>City<input name="city" required autocomplete="address-level2"></label>
+          <label>State / Region<input name="region" required autocomplete="address-level1"></label>
+          <label>Postal code<input name="postal" required autocomplete="postal-code"></label>
+          <label>Country<input name="country" required autocomplete="country-name" value="United States"></label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Acknowledgements</legend>
+          <label class="consent"><input type="checkbox" name="ack_research" required> These materials are for laboratory research and educational use only, and not for human or veterinary use.</label>
+          <label class="consent"><input type="checkbox" name="ack_capacity" required> I am ordering on behalf of a research entity and am authorized to do so.</label>
+          <label class="consent"><input type="checkbox" name="ack_terms" required> I agree to the <a href="terms.html">Terms</a>, <a href="privacy.html">Privacy Policy</a>, <a href="refund.html">Return Policy</a>, and <a href="research-use.html">Research-Use Notice</a>.</label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Payment</legend>
+          <div id="paymentPane"></div>
+        </fieldset>
+      </div>
+
+      <aside class="cart-summary checkout-summary">
+        <h3>Order summary</h3>
+        <div id="summaryLines"></div>
+        <dl>
+          <div><dt>Subtotal</dt><dd id="ckSubtotal">—</dd></div>
+          <div><dt>Shipping</dt><dd id="ckShipping">Quoted after review</dd></div>
+          <div><dt>Tax</dt><dd id="ckTax">Quoted after review</dd></div>
+        </dl>
+        <p class="summary-note">Final totals, shipping, and tax are confirmed by Everlume before any payment is taken. The amounts shown here are derived from the catalog and are not a charge.</p>
+        <button class="btn btn-dark" id="submitOrder" type="submit">Place order</button>
+        <p class="pd-status" id="checkoutStatus" role="status" aria-live="polite"></p>
+      </aside>
+    </form>
+  </main>
+
+  <footer>
+    <div class="footer-brand"><img class="footer-monogram" src="assets/everlume-mark-v3.svg" alt="" width="64" height="64"><div><strong>EVERLUME</strong><span>PEPTIDES</span><small>Elevate · Renew · Glow</small></div></div>
+    <div class="footer-links"><a href="index.html">Catalog</a><a href="research-use.html">Research-use policy</a><a href="shipping.html">Shipping</a><a href="refund.html">Returns</a><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="contact.html">Contact</a></div>
+    <p>© <span id="year"></span> Everlume. Laboratory research use only. Not for human or veterinary use. No medical claims are made.</p>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="vendor/supabase.js"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/catalog.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/checkout.js"></script>
+  <script type="module" src="js/gate.js"></script>
+</body>
+</html>

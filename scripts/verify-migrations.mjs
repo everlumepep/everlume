@@ -161,12 +161,33 @@ await check('deleted account leaves an anonymized ledger, not a hole', async () 
 });
 
 console.log('\nCommerce triggers & constraints');
-await check('seeded catalog is 16 products, all pending_review', async () => {
+// The count is incidental and moves whenever the client revises the catalog.
+// The invariant that must never move: nothing arrives purchasable.
+await check('every catalogued product is pending_review and unpriced', async () => {
   const r = await one(`select count(*)::int total,
-    count(*) filter (where compliance_status <> 'pending_review')::int bad from public.products`);
-  assert(r.total === 16, `expected 16 products, got ${r.total}`);
-  assert(r.bad === 0, `${r.bad} product(s) not pending_review`);
-  return '16 products, 0 approved';
+    count(*) filter (where compliance_status <> 'pending_review')::int bad_status,
+    count(*) filter (where price_cents is not null)::int bad_price from public.products`);
+  assert(r.total > 0, 'catalog is empty — the seed did not apply');
+  assert(r.bad_status === 0, `${r.bad_status} product(s) not pending_review`);
+  assert(r.bad_price === 0, `${r.bad_price} product(s) carry a price`);
+  return `${r.total} products, 0 approved, 0 priced`;
+});
+
+await check('0009 — SKUs follow the client convention and are unique', async () => {
+  const rows = await many(`select sku from public.inventory order by sku`);
+  const bad = rows.filter(r => !/^EL-[A-Z0-9-]+$/.test(r.sku));
+  assert(bad.length === 0, `non-conforming sku(s): ${bad.map(b => b.sku).join(', ')}`);
+  assert(new Set(rows.map(r => r.sku)).size === rows.length, 'duplicate sku');
+  for (const [name, prefix] of [['Tirzepatide', 'EL-TR'], ['Retatrutide', 'EL-RT']]) {
+    const f = await many(
+      `select i.sku from public.inventory i join public.products p on p.id = i.product_id
+        where p.name = $1 order by i.sku`, [name]);
+    assert(f.length === 5, `expected 5 ${name} formats, got ${f.length}`);
+    for (const mg of [10, 20, 30, 40, 50]) {
+      assert(f.some(x => x.sku === `${prefix}${mg}`), `missing ${prefix}${mg}`);
+    }
+  }
+  return `${rows.length} SKUs · Tirzepatide and Retatrutide both EL-TR/RT 10–50`;
 });
 
 await check('inventory status derives from quantity vs threshold', async () => {
@@ -281,6 +302,100 @@ await check('anonymous gate acceptance is insertable and carries no DOB', async 
   for (const banned of ['dob', 'birth']) assert(!blob.includes(banned), `receipt leaks ${banned}`);
   assert(row.user_id === null, 'anonymous acceptance carried a user id');
   return 'version-only receipt, no identity';
+});
+
+
+// ── 0008: three-machine state, invariants, inquiries, audited adjustment ────
+await check('0008 — order carries three independent state machines', async () => {
+  const cols = await many(`select column_name from information_schema.columns
+    where table_name='orders' and column_name in
+      ('commercial_status','payment_status','fulfillment_status')`);
+  assert(cols.length === 3, `expected 3 state columns, got ${cols.length}`);
+  return 'commercial · payment · fulfillment';
+});
+
+await check('0008 — INVARIANT: cannot ship without captured payment', async () => {
+  const o = await one(`insert into public.orders (commercial_status, payment_status, fulfillment_status)
+                       values ('confirmed','authorized','ready') returning id`);
+  await expectFailure(db,
+    `update public.orders set fulfillment_status='fulfilled' where id='${o.id}'`,
+    'shipped while payment was merely authorized');
+  return 'refused: fulfilled requires payment_status = captured';
+});
+
+await check('0008 — INVARIANT: no physical work on an unconfirmed order', async () => {
+  await expectFailure(db,
+    `insert into public.orders (commercial_status, payment_status, fulfillment_status)
+     values ('pending','none','processing')`,
+    'processing accepted on a pending order');
+  return 'refused: processing requires commercial_status = confirmed';
+});
+
+await check('0008 — INVARIANT: failed payment cannot coexist with work in flight', async () => {
+  await expectFailure(db,
+    `insert into public.orders (commercial_status, payment_status, fulfillment_status)
+     values ('confirmed','failed','ready')`,
+    'failed payment accepted alongside ready fulfillment');
+  return 'refused: failed/expired payment blocks in-flight fulfillment';
+});
+
+await check('0008 — adjust_inventory refuses without a reason', async () => {
+  const inv = await one(`select sku from public.inventory limit 1`);
+  await expectFailure(db,
+    `select public.adjust_inventory('${inv.sku}', 5, '   ')`,
+    'adjustment accepted with a blank reason');
+  return 'refused: reason is mandatory';
+});
+
+await check('0008 — adjust_inventory refuses to drive stock negative', async () => {
+  const inv = await one(`select sku from public.inventory limit 1`);
+  await expectFailure(db,
+    `select public.adjust_inventory('${inv.sku}', -9999, 'harness underflow probe')`,
+    'adjustment drove stock below zero');
+  return 'refused: would go below zero';
+});
+
+await check('0008 — adjust_inventory requires manager (refused as a customer)', async () => {
+  const inv = await one(`select sku from public.inventory limit 1`);
+  await db.query(`select set_config('test.uid', $1, false)`, [userB]);
+  const m = await expectFailure(db,
+    `select public.adjust_inventory('${inv.sku}', 5, 'customer attempt')`,
+    'a customer adjusted stock');
+  await db.query(`select set_config('test.uid', '', false)`);
+  assert(/manager or admin/.test(m), `unexpected refusal: ${m}`);
+  return 'refused: manager or admin required';
+});
+
+await check('0008 — adjust_inventory writes an audit row in the same transaction', async () => {
+  // Promote with NO JWT context present: the role-protection trigger refuses
+  // role changes whenever auth.uid() is set, even for the superuser.
+  await db.query(`select set_config('test.uid', '', false)`);
+  await db.query(`update public.profiles set role='manager' where id=$1`, [staff]);
+  await db.query(`select set_config('test.uid', $1, false)`, [staff]);
+  const inv = await one(`select sku, quantity_on_hand from public.inventory limit 1`);
+  const before = await one(`select count(*)::int n from public.audit_events where action='inventory.adjusted'`);
+  await db.query(`select public.adjust_inventory('${inv.sku}', 7, 'harness receipt')`);
+  const after = await one(`select count(*)::int n from public.audit_events where action='inventory.adjusted'`);
+  const row = await one(`select quantity_on_hand from public.inventory where sku='${inv.sku}'`);
+  assert(after.n === before.n + 1, 'no audit row written');
+  assert(row.quantity_on_hand === inv.quantity_on_hand + 7, 'stock not adjusted');
+  const ev = await one(`select metadata from public.audit_events
+                        where action='inventory.adjusted' order by created_at desc limit 1`);
+  assert(String(ev.metadata.reason) === 'harness receipt', 'reason not recorded in audit');
+  assert(ev.metadata.delta === 7, 'delta not recorded in audit');
+  await db.query(`select set_config('test.uid', '', false)`);
+  return `on hand ${inv.quantity_on_hand} → ${row.quantity_on_hand}, audit recorded with reason + delta`;
+});
+
+await check('0008 — anonymous can submit an inquiry but cannot read any back', async () => {
+  await db.exec(`set role anon;`);
+  await db.query(`select set_config('test.uid', '', false)`);
+  await db.query(`insert into public.inquiries (name, email, message)
+                  values ('Harness','h@example.test','probe')`);
+  const seen = await many(`select id from public.inquiries`);
+  await db.exec(`reset role;`);
+  assert(seen.length === 0, `anonymous read back ${seen.length} inquiry row(s)`);
+  return 'insert allowed, read refused';
 });
 
 console.log(`\n${'─'.repeat(60)}`);

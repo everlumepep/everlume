@@ -7,6 +7,19 @@ window.EVERLUME_CONFIG = {
   SUPABASE_URL: '',
   SUPABASE_ANON_KEY: '',
 
+  // Storefront commerce switch. FALSE keeps the site inquiry-only: the bag and
+  // checkout entry points are hidden and nothing can be added to a bag, even
+  // if a product were otherwise authorized.
+  //
+  // This is an ADDITIONAL gate, never a bypass. Commerce requires this flag
+  // AND per-product authorization (active + approved + priced + in stock).
+  // Turning it on does not make any product purchasable on its own — G1 stands.
+  COMMERCE_ENABLED: false,
+
+  // Payment provider state. PENDING_PROVIDER until a processor has actually
+  // approved Everlume's business — not when credentials merely exist.
+  PAYMENT_STATE: 'PENDING_PROVIDER',
+
   // Entry gate configuration. Bumping GATE_VERSION or any policy version
   // forces every visitor to re-complete the gate.
   MIN_AGE: 18,

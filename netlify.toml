@@ -79,3 +79,22 @@
   for = "/assets/*.svg"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
+
+# CSS and JS must revalidate on every request. Without this a browser serves a
+# cached stylesheet after a deploy and the site renders as a mix of old styles
+# and new markup — which is exactly how a shipped change looks broken to a
+# reviewer who is actually seeing yesterday's CSS.
+[[headers]]
+  for = "/*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/js/*"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"

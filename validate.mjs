@@ -19,6 +19,11 @@ const required = [
   'js/config.js',
   'js/gate-logic.mjs',
   'js/gate.js',
+  'js/catalog.js',
+  'js/cart.js',
+  'js/cart-page.js',
+  'js/product.js',
+  'js/checkout.js',
   'js/supabase-client.js',
   'js/auth.js',
   'js/reset.js',
@@ -29,6 +34,12 @@ const required = [
   'account/signin.html',
   'account/reset.html',
   'command/index.html',
+  'cart.html',
+  'product.html',
+  'checkout.html',
+  'shipping.html',
+  'refund.html',
+  'contact.html',
   'robots.txt',
   'netlify.toml',
   'assets/everlume-mark-v3.svg',
@@ -40,7 +51,8 @@ const required = [
   'supabase/migrations/20260728000006_seed_products.sql',
   'supabase/migrations/20260728000007_ledger_account_deletion.sql',
   'scripts/live-verify.mjs',
-  'scripts/verify-migrations.mjs'
+  'scripts/verify-migrations.mjs',
+  'scripts/certify.mjs'
 ];
 
 const errors = [];
@@ -50,6 +62,7 @@ for (const file of required) {
 
 const pages = [
   'index.html', 'research-use.html', 'privacy.html', 'terms.html', '404.html',
+  'cart.html', 'product.html', 'checkout.html', 'shipping.html', 'refund.html', 'contact.html',
   'account/index.html', 'account/signin.html', 'account/reset.html', 'command/index.html'
 ];
 for (const page of pages) {
@@ -102,7 +115,7 @@ for (const file of tracked) {
 }
 
 // Structural exposure: non-site files that ship because publish = "."
-const SITE = /^(index|404|privacy|terms|research-use|forms 2)\.html$|^account\/|^command\/|^assets\/|^js\/|^vendor\/|^(styles|logo|premium-theme|gate|portal)\.css$|^(app|boot|policy)\.js$|^favicon\.svg$|^robots\.txt$|^netlify\.toml$/;
+const SITE = /^(index|404|privacy|terms|research-use|forms 2|cart|product|checkout|shipping|refund|contact)\.html$|^account\/|^command\/|^assets\/|^js\/|^vendor\/|^(styles|logo|premium-theme|gate|portal)\.css$|^(app|boot|policy)\.js$|^favicon\.svg$|^robots\.txt$|^netlify\.toml$/;
 // Every non-site file must be refused by a forced 404 redirect. Without
 // force = true Netlify serves the static file and the rule never fires, so the
 // flag is checked explicitly rather than assumed from the rule's presence.

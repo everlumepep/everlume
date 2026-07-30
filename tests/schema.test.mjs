@@ -80,3 +80,74 @@ test('seeded products all start in pending_review (no implied approval)', () => 
   const seed = readFileSync(join(dir, files.find(f => f.includes('seed_products'))), 'utf8');
   assert.ok(!seed.includes("'approved'"), 'seed must not pre-approve compliance status');
 });
+
+// The storefront renders from a fallback catalog in js/catalog.js until the
+// Supabase project exists. If that fallback drifts from the migrations, the
+// pre-backend site shows a catalog the database would not agree with — a
+// silent divergence with no runtime symptom. This test pins them together.
+test('fallback catalog matches the migrated catalog', () => {
+  const catalogJs = readFileSync(new URL('../js/catalog.js', import.meta.url), 'utf8');
+  const migrations = ['20260728000006_seed_products.sql', '20260730000009_catalog_reconciliation.sql']
+    .map(f => readFileSync(new URL(`../supabase/migrations/${f}`, import.meta.url), 'utf8'))
+    .join('\n');
+
+  const fallbackSkus = [...catalogJs.matchAll(/'(EL-[A-Z0-9-]+)'/g)].map(m => m[1]).sort();
+  const migrationSkus = [...new Set([...migrations.matchAll(/'(EL-[A-Z0-9-]+)'/g)].map(m => m[1]))].sort();
+
+  assert.ok(fallbackSkus.length > 0, 'fallback catalog has no SKUs');
+  assert.equal(new Set(fallbackSkus).size, fallbackSkus.length, 'duplicate SKU in fallback catalog');
+
+  // Every SKU the storefront can show must exist in the migrations. The reverse
+  // is not required: archived products keep an inventory row but are correctly
+  // absent from the customer-facing fallback.
+  const orphans = fallbackSkus.filter(s => !migrationSkus.includes(s));
+  assert.deepEqual(orphans, [], `fallback SKUs not present in any migration: ${orphans.join(', ')}`);
+
+  for (const prefix of ['EL-TR', 'EL-RT']) {
+    const found = fallbackSkus.filter(s => s.startsWith(prefix));
+    assert.equal(found.length, 5, `${prefix} should have 5 formats, got ${found.length}`);
+  }
+});
+
+test('fallback catalog ships nothing purchasable', () => {
+  const catalogJs = readFileSync(new URL('../js/catalog.js', import.meta.url), 'utf8');
+  assert.match(catalogJs, /compliance_status:\s*'pending_review'/,
+    'fallback catalog must seed pending_review');
+  assert.match(catalogJs, /price_cents:\s*null/,
+    'fallback catalog must seed a null price');
+  assert.ok(!/compliance_status:\s*'approved'/.test(catalogJs),
+    'fallback catalog must not hard-code an approved product');
+});
+
+// The commerce switch must only ever CLOSE the purchase path. If it could open
+// one, it would become the G1 bypass that G1 explicitly forbids.
+test('commerce flag is an additional gate, never a bypass', () => {
+  const catalogJs = readFileSync(new URL('../js/catalog.js', import.meta.url), 'utf8');
+  const config = readFileSync(new URL('../js/config.js', import.meta.url), 'utf8');
+
+  assert.match(config, /COMMERCE_ENABLED:\s*false/,
+    'COMMERCE_ENABLED must ship false — commerce opens by deliberate deploy, not by default');
+
+  // The flag must ADD a refusal reason, not short-circuit the other checks.
+  assert.match(catalogJs, /if \(!commerceEnabled\(\)\) reasons\.push\('commerce_closed'\)/,
+    'flag must push a refusal reason');
+  assert.ok(!/if \(commerceEnabled\(\)\)\s*return\s*\{\s*purchasable:\s*true/.test(catalogJs),
+    'flag must never return purchasable directly');
+
+  // Every original axis must still be evaluated after the flag check.
+  for (const axis of [
+    /product\.status !== 'active'/,
+    /product\.compliance_status !== 'approved'/,
+    /product\.price_cents === null/,
+    /available\(product\) <= 0/
+  ]) {
+    assert.match(catalogJs, axis, 'an authorization axis was removed');
+  }
+});
+
+test('cart and checkout refuse direct URL access when commerce is closed', () => {
+  const cartPage = readFileSync(new URL('../js/cart-page.js', import.meta.url), 'utf8');
+  const checkout = readFileSync(new URL('../js/checkout.js', import.meta.url), 'utf8');
+  assert.match(cartPage, /commerceEnabled\(\)/, 'bag page does not check the commerce flag');
+  assert.match(checkout, /commerceEnabled\(\)/, 'checkout does not check the commerce flag');
+});
