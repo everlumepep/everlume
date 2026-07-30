@@ -51,7 +51,24 @@
     </article>`;
   }
 
+  function closedMarkup() {
+    return `<div class="cart-empty">
+      <h3>Ordering is not open yet.</h3>
+      <p>Everlume is currently an inquiry-only research catalog. Request availability
+         and documentation for any material and Everlume will follow up directly.</p>
+      <a class="btn btn-dark" href="index.html#contact">Request availability</a>
+    </div>`;
+  }
+
   async function render() {
+    // Direct URL access must land on the same closed state as the hidden entry
+    // point — a hidden link is not a control.
+    if (!catalog.commerceEnabled()) {
+      linesEl.innerHTML = closedMarkup();
+      summaryEl.hidden = true;
+      stateEl.textContent = '';
+      return;
+    }
     const { items, rejected, subtotalCents } = await cart.resolve();
 
     if (!items.length && !rejected.length) {

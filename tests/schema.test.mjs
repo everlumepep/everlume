@@ -118,3 +118,36 @@ test('fallback catalog ships nothing purchasable', () => {
   assert.ok(!/compliance_status:\s*'approved'/.test(catalogJs),
     'fallback catalog must not hard-code an approved product');
 });
+
+// The commerce switch must only ever CLOSE the purchase path. If it could open
+// one, it would become the G1 bypass that G1 explicitly forbids.
+test('commerce flag is an additional gate, never a bypass', () => {
+  const catalogJs = readFileSync(new URL('../js/catalog.js', import.meta.url), 'utf8');
+  const config = readFileSync(new URL('../js/config.js', import.meta.url), 'utf8');
+
+  assert.match(config, /COMMERCE_ENABLED:\s*false/,
+    'COMMERCE_ENABLED must ship false — commerce opens by deliberate deploy, not by default');
+
+  // The flag must ADD a refusal reason, not short-circuit the other checks.
+  assert.match(catalogJs, /if \(!commerceEnabled\(\)\) reasons\.push\('commerce_closed'\)/,
+    'flag must push a refusal reason');
+  assert.ok(!/if \(commerceEnabled\(\)\)\s*return\s*\{\s*purchasable:\s*true/.test(catalogJs),
+    'flag must never return purchasable directly');
+
+  // Every original axis must still be evaluated after the flag check.
+  for (const axis of [
+    /product\.status !== 'active'/,
+    /product\.compliance_status !== 'approved'/,
+    /product\.price_cents === null/,
+    /available\(product\) <= 0/
+  ]) {
+    assert.match(catalogJs, axis, 'an authorization axis was removed');
+  }
+});
+
+test('cart and checkout refuse direct URL access when commerce is closed', () => {
+  const cartPage = readFileSync(new URL('../js/cart-page.js', import.meta.url), 'utf8');
+  const checkout = readFileSync(new URL('../js/checkout.js', import.meta.url), 'utf8');
+  assert.match(cartPage, /commerceEnabled\(\)/, 'bag page does not check the commerce flag');
+  assert.match(checkout, /commerceEnabled\(\)/, 'checkout does not check the commerce flag');
+});

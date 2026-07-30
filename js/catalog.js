@@ -73,8 +73,16 @@
   // G1 is absolute here: pending_review is NOT purchasable, and there is no
   // bypass — no query string, no config toggle, no "test mode". A build that
   // needs a purchasable fixture must approve and price it like production.
+  function commerceEnabled() {
+    return (window.EVERLUME_CONFIG || {}).COMMERCE_ENABLED === true;
+  }
+
   function availability(product) {
     const reasons = [];
+    // The storefront switch is an ADDITIONAL axis, not an override. It can only
+    // ever close the purchase path — it cannot open one for a product whose
+    // own axes disagree.
+    if (!commerceEnabled()) reasons.push('commerce_closed');
     if (product.status !== 'active') reasons.push('not_active');
     if (product.compliance_status !== 'approved') reasons.push('compliance_review_pending');
     if (product.price_cents === null || product.price_cents === undefined) reasons.push('no_price');
@@ -92,6 +100,11 @@
   function availabilityLabel(product) {
     const { purchasable, reasons } = availability(product);
     if (purchasable) return { state: 'available', text: 'In stock' };
+    // When the storefront is inquiry-only, say so plainly rather than implying
+    // the material itself is the reason it cannot be bought.
+    if (reasons.includes('commerce_closed')) {
+      return { state: 'review', text: 'Documentation available — inquiries only' };
+    }
     if (reasons.includes('compliance_review_pending')) {
       return { state: 'review', text: 'Documentation available — inquiries only' };
     }
@@ -160,6 +173,7 @@
   window.everlumeCatalog = {
     load,
     find,
+    commerceEnabled,
     availability,
     availabilityLabel,
     available,

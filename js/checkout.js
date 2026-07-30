@@ -66,6 +66,18 @@
   }
 
   async function renderSummary() {
+    if (!catalog.commerceEnabled()) {
+      form.hidden = true;
+      blocked.hidden = false;
+      blocked.innerHTML = `<div class="cart-empty">
+        <h3>Checkout is not open yet.</h3>
+        <p>Everlume is currently an inquiry-only research catalog. No orders are
+           accepted through this site. Request availability and documentation and
+           Everlume will follow up directly.</p>
+        <a class="btn btn-dark" href="index.html#contact">Request availability</a>
+      </div>`;
+      return false;
+    }
     const { items, subtotalCents } = await cart.resolve();
     if (!items.length) {
       form.hidden = true;

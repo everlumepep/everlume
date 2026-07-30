@@ -81,6 +81,13 @@
     });
   }
 
+  function applyCommerceVisibility() {
+    if (catalog.commerceEnabled()) return;
+    // Inquiry-only: remove the bag entry points entirely rather than leaving a
+    // link to a page that can only say "no".
+    document.querySelectorAll('.nav-bag').forEach(el => el.remove());
+  }
+
   function updateCartBadge() {
     const badge = document.getElementById('cartCount');
     if (!badge) return;
@@ -104,6 +111,7 @@
       render();
     });
   }
+  applyCommerceVisibility();
   updateCartBadge();
   if (cart) cart.onChange(updateCartBadge);
 
