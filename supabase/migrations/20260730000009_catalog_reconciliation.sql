@@ -2,9 +2,11 @@
 --
 -- Client specified the SKU convention and the real dose range on 2026-07-30:
 --   Tirzepatide  → EL-TR{mg}   (10, 20, 30, 40, 50)
---   Retatrutide  → EL-RT{mg}
+--   Retatrutide  → EL-RT{mg}   (10, 20, 30, 40, 50 — confirmed same range)
 --   Tesamorelin  → EL-TSM10
--- The remaining SKUs follow the same derived pattern: EL-{ABBREV}{mg}.
+-- The remaining SKUs follow the same derived pattern, EL-{ABBREV}{mg}, and the
+-- client RATIFIED both the derived codes and the full product list on
+-- 2026-07-30. This catalog is settled; do not re-derive or re-propose it.
 --
 -- ADDITIVE. 0006 is left exactly as it was written — this migration reconciles
 -- forward rather than rewriting history to look tidy (same discipline as 0007).

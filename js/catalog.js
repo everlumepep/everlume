@@ -9,10 +9,14 @@
 (function () {
   const SUPPORT_EMAIL = 'hello@myeverlume.com';
 
-  // Mirror of migrations 0006 + 0009 (client-supplied SKU convention and dose
-  // range, 2026-07-30). Kept deliberately identical to the seed — including its
-  // authorization state — so the pre-backend storefront cannot present a
-  // product the database would refuse.
+  // Mirror of migrations 0006 + 0009. Catalog RATIFIED by the client
+  // 2026-07-30: SKU convention (EL-TR/RT/TSM explicit, remainder derived as
+  // EL-{ABBREV}{mg}), both dose ranges, and the full product list. Settled —
+  // changes come from the client, not from re-derivation.
+  //
+  // Kept deliberately identical to the seed — including its authorization
+  // state — so the pre-backend storefront cannot present a product the
+  // database would refuse. tests/schema.test.mjs pins the two together.
   const SEED = [
     ['tirzepatide-10mg', 'Tirzepatide', '10mg', 'metabolic', 'EL-TR10', 'Material format for controlled metabolic-pathway research.'],
     ['tirzepatide-20mg', 'Tirzepatide', '20mg', 'metabolic', 'EL-TR20', 'Alternate-quantity format for laboratory investigation.'],
