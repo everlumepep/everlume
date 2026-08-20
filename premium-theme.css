@@ -567,6 +567,22 @@ footer {
 .pd-signal-one { top: 15%; left: 9%; }
 .pd-signal-two { right: 10%; top: 31%; }
 .pd-signal-three { left: 12%; bottom: 12%; }
+.pd-hotspots .pd-signal{appearance:none;cursor:pointer;transition:background .2s ease,border-color .2s ease,transform .2s ease}
+.pd-hotspots .pd-signal:hover,.pd-hotspots .pd-signal:focus-visible,.pd-hotspots .pd-signal[aria-expanded="true"]{background:#3b2b22;color:#fff8ed;border-color:#b78b4d;transform:translateY(-2px);outline:none}
+.pd-hotspot-card{position:absolute;z-index:6;left:50%;bottom:5%;width:min(76%,440px);padding:1rem 1.15rem;border:1px solid rgba(164,125,71,.3);border-radius:16px;background:rgba(255,252,247,.96);box-shadow:0 18px 44px rgba(63,42,24,.14);opacity:0;transform:translate(-50%,10px);pointer-events:none;transition:opacity .22s ease,transform .22s ease}
+.pd-hotspot-card.is-visible{opacity:1;transform:translate(-50%,0)}
+.pd-hotspot-card strong{display:block;margin-bottom:.35rem;color:#8e6632;font:600 .65rem/1.2 Jost,sans-serif;letter-spacing:.16em;text-transform:uppercase}
+.pd-hotspot-card p{margin:0;color:#51443a;font-size:.77rem;line-height:1.55}
+.pd-material-profile{padding-top:clamp(72px,9vw,128px)}
+.pd-material-intro{display:grid;grid-template-columns:minmax(0,.75fr) minmax(0,1.25fr);gap:4vw;align-items:end;margin-bottom:2.5rem}
+.pd-material-intro h2{margin:.15em 0;font:500 clamp(3.5rem,6vw,6.8rem)/.86 "Cormorant Garamond",serif;letter-spacing:-.035em}
+.pd-material-intro>p:last-child{max-width:34rem;color:var(--muted);font-size:1rem;line-height:1.7}
+.pd-material-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border:1px solid var(--line);border-radius:28px;overflow:hidden;background:var(--paper)}
+.pd-material-grid article{min-height:260px;padding:clamp(1.8rem,3.5vw,3.5rem);border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+.pd-material-grid article:nth-child(2n){border-right:0}.pd-material-grid article:nth-last-child(-n+2){border-bottom:0}
+.pd-material-grid span{color:var(--gold);font:500 1rem "Cormorant Garamond",serif}
+.pd-material-grid h3{margin:1.6rem 0 .75rem;font:500 2rem/1 "Cormorant Garamond",serif}
+.pd-material-grid p{margin:0;color:var(--muted);font-size:.9rem;line-height:1.75}
 .pd-dose { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); margin: 0 0 18px; }
 .pd-specs { margin: 26px 0; border-top: 1px solid var(--line); }
 .pd-specs div { display: flex; justify-content: space-between; gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--line); }
@@ -1112,6 +1128,7 @@ html.js .lume-stage.reveal.visible{transform:translateY(var(--lume-shift,0px))}
 .pd-process-grid p{margin:0;color:#cbbbad;font-size:.86rem;line-height:1.7}
 @media(max-width:920px){.standards-story{grid-template-columns:1fr}.standards-story>img{min-height:500px}.bundle-grid,.pd-process-grid{grid-template-columns:1fr}.intro>p:last-child{margin-left:0}}
 @media(max-width:620px){.standards-story>img{min-height:390px}.standards-story-copy{padding:56px 24px}.standards-story-copy h2{font-size:3.6rem}.pd-process{padding:2rem 1.25rem;border-radius:22px}.trust-strip small{display:none}}
+@media(max-width:700px){.pd-hotspot-card{bottom:4%;width:88%}.pd-hotspot-card p{font-size:.72rem}.pd-material-intro{grid-template-columns:1fr}.pd-material-grid{grid-template-columns:1fr}.pd-material-grid article,.pd-material-grid article:nth-child(2n),.pd-material-grid article:nth-last-child(-n+2){min-height:0;border-right:0;border-bottom:1px solid var(--line)}.pd-material-grid article:last-child{border-bottom:0}}
 
 /* Pep Talk catalog guide and research list */
 .pd-save-wrap{margin-top:1rem;padding:1rem 1.1rem;border:1px solid rgba(176,128,61,.28);border-radius:18px;background:rgba(255,252,247,.72)}

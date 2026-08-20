@@ -28,7 +28,7 @@
     ['retatrutide-30mg', 'Retatrutide', '30mg', 'metabolic', 'EL-RT30', 'Alternate-quantity format for laboratory investigation.'],
     ['retatrutide-40mg', 'Retatrutide', '40mg', 'metabolic', 'EL-RT40', 'Alternate-quantity format for laboratory investigation.'],
     ['retatrutide-50mg', 'Retatrutide', '50mg', 'metabolic', 'EL-RT50', 'Alternate-quantity format for laboratory investigation.'],
-    ['tesamorelin', 'Tesamorelin', '10mg', 'metabolic', 'EL-TSM10', 'Material format for controlled peptide research.'],
+    ['tesamorelin', 'Tesamorelin', '10mg', 'metabolic', 'EL-TSM10', 'Synthetic GHRH analog for controlled laboratory investigation of receptor pharmacology, pituitary signaling, GH-axis biology, peptide stability, and analytical workflows.'],
     ['selank-10mg', 'Selank', '10mg', 'peptide', 'EL-SEL10', 'Material format for controlled peptide research.'],
     ['kisspeptin-5mg', 'Kisspeptin', '5mg', 'peptide', 'EL-KISS5', 'Material format for controlled peptide research.'],
     ['semax', 'Semax', '', 'peptide', 'EL-SEMAX', 'Material format for controlled peptide research.'],
