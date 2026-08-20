@@ -19,12 +19,12 @@
   // database would refuse. tests/schema.test.mjs pins the two together.
   const SEED = [
     ['tirzepatide-10mg', 'Tirzepatide', '10mg', 'metabolic', 'EL-TR10', 'Material format for controlled metabolic-pathway research.'],
-    ['tirzepatide-20mg', 'Tirzepatide', '20mg', 'metabolic', 'EL-TR20', 'Alternate-quantity format for laboratory investigation.'],
+    ['tirzepatide-20mg', 'Tirzepatide', '20mg', 'metabolic', 'EL-TR20', 'Alternate-quantity format for laboratory investigation.', 6500],
     ['tirzepatide-30mg', 'Tirzepatide', '30mg', 'metabolic', 'EL-TR30', 'Alternate-quantity format for laboratory investigation.'],
-    ['tirzepatide-40mg', 'Tirzepatide', '40mg', 'metabolic', 'EL-TR40', 'Alternate-quantity format for laboratory investigation.'],
+    ['tirzepatide-40mg', 'Tirzepatide', '40mg', 'metabolic', 'EL-TR40', 'Alternate-quantity format for laboratory investigation.', 9800],
     ['tirzepatide-50mg', 'Tirzepatide', '50mg', 'metabolic', 'EL-TR50', 'Alternate-quantity format for laboratory investigation.'],
-    ['retatrutide-10mg', 'Retatrutide', '10mg', 'metabolic', 'EL-RT10', 'Material format for metabolic-pathway research.'],
-    ['retatrutide-20mg', 'Retatrutide', '20mg', 'metabolic', 'EL-RT20', 'Alternate-quantity format for laboratory investigation.'],
+    ['retatrutide-10mg', 'Retatrutide', '10mg', 'metabolic', 'EL-RT10', 'Material format for metabolic-pathway research.', 6000],
+    ['retatrutide-20mg', 'Retatrutide', '20mg', 'metabolic', 'EL-RT20', 'Alternate-quantity format for laboratory investigation.', 9000],
     ['retatrutide-30mg', 'Retatrutide', '30mg', 'metabolic', 'EL-RT30', 'Alternate-quantity format for laboratory investigation.'],
     ['retatrutide-40mg', 'Retatrutide', '40mg', 'metabolic', 'EL-RT40', 'Alternate-quantity format for laboratory investigation.'],
     ['retatrutide-50mg', 'Retatrutide', '50mg', 'metabolic', 'EL-RT50', 'Alternate-quantity format for laboratory investigation.'],
@@ -33,8 +33,8 @@
     ['kisspeptin-5mg', 'Kisspeptin', '5mg', 'peptide', 'EL-KISS5', 'Material format for controlled peptide research.'],
     ['semax', 'Semax', '', 'peptide', 'EL-SEMAX', 'Material format for controlled peptide research.'],
     ['ghk-cu', 'GHK-Cu', '50mg / 100mg', 'peptide', 'EL-GHKCU', 'Copper-peptide research formats.'],
-    ['glutathione-1200mg', 'Glutathione', '1200mg', 'peptide', 'EL-GLUT1200', 'Material format for biochemical research.'],
-    ['klow-blend', 'Klow Blend', 'Blend', 'peptide', 'EL-KLOW', 'Multi-component peptide research format.'],
+    ['glutathione-1200mg', 'Glutathione', '1200mg', 'peptide', 'EL-GLUT1200', 'Material format for biochemical research.', 4500],
+    ['klow-blend', 'Klow Blend', 'Blend', 'peptide', 'EL-KLOW', 'Multi-component peptide research format.', 11500],
     ['kpv', 'KPV', '10mg', 'tissue', 'EL-KPV10', 'Material format for laboratory tissue-pathway research.'],
     ['bpc-157', 'BPC-157', '10mg', 'tissue', 'EL-BPC10', 'Material format for laboratory tissue-pathway research.'],
     ['tb-500', 'TB-500', '', 'tissue', 'EL-TB500', 'Material format for laboratory tissue-pathway research.'],
@@ -43,13 +43,13 @@
     ['ss31-10mg', 'SS-31', '10mg', 'cellular', 'EL-SS31-10', 'Material format for mitochondrial-pathway research.'],
     ['5-am', '5-AM', '5mg', 'cellular', 'EL-5AM5', 'Material format for metabolic-pathway investigation.'],
     ['l-carnitine-600mg', 'L-Carnitine', '600mg/10ml', 'cellular', 'EL-LCAR600', 'Solution format for cellular-pathway investigation.']
-  ].map(([slug, name, dose, category, sku, description]) => ({
+  ].map(([slug, name, dose, category, sku, description, priceCents = null]) => ({
     slug,
     name,
     dose_label: dose,
     category,
     description,
-    price_cents: null,
+    price_cents: priceCents,
     status: 'active',
     compliance_status: 'pending_review',
     sku,

@@ -87,7 +87,7 @@ test('seeded products all start in pending_review (no implied approval)', () => 
 // silent divergence with no runtime symptom. This test pins them together.
 test('fallback catalog matches the migrated catalog', () => {
   const catalogJs = readFileSync(new URL('../js/catalog.js', import.meta.url), 'utf8');
-  const migrations = ['20260728000006_seed_products.sql', '20260730000009_catalog_reconciliation.sql']
+  const migrations = ['20260728000006_seed_products.sql', '20260730000009_catalog_reconciliation.sql', '20260820000010_client_confirmed_prices.sql']
     .map(f => readFileSync(new URL(`../supabase/migrations/${f}`, import.meta.url), 'utf8'))
     .join('\n');
 
@@ -109,12 +109,12 @@ test('fallback catalog matches the migrated catalog', () => {
   }
 });
 
-test('fallback catalog ships nothing purchasable', () => {
+test('fallback catalog publishes only confirmed prices and ships nothing purchasable', () => {
   const catalogJs = readFileSync(new URL('../js/catalog.js', import.meta.url), 'utf8');
   assert.match(catalogJs, /compliance_status:\s*'pending_review'/,
     'fallback catalog must seed pending_review');
-  assert.match(catalogJs, /price_cents:\s*null/,
-    'fallback catalog must seed a null price');
+  const confirmedPrices = [...catalogJs.matchAll(/,\s*(6500|9800|6000|9000|11500|4500)\]/g)];
+  assert.equal(confirmedPrices.length, 6, 'fallback must contain exactly six confirmed prices');
   assert.ok(!/compliance_status:\s*'approved'/.test(catalogJs),
     'fallback catalog must not hard-code an approved product');
 });
