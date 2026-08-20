@@ -32,10 +32,10 @@
     <button class="menu-toggle" aria-label="Open menu" aria-expanded="false">☰</button>
     <nav class="nav" aria-label="Primary navigation">
       <a href="#collection">Collection</a>
-      <a href="#catalog">Catalog</a>
-      <a href="#bundles">Bundles</a>
+      <a href="catalog.html">Catalog</a>
+      <a href="#bundles">Research sets</a>
       <a href="#faq">FAQ</a>
-      <a href="account/">My Everlume</a>
+      <a href="account/">My Everlume <span class="nav-preview">Preview</span></a>
       <a class="nav-bag" href="cart.html">Bag<span class="cart-count" id="cartCount" hidden></span></a>
       <a class="nav-cta" href="#contact">Request availability</a>
     </nav>
@@ -45,11 +45,11 @@
     <section class="hero">
       <div class="hero-copy reveal">
         <p class="eyebrow">Independent research. Elevated standards.</p>
-        <h1>Research presented<br>with <em>clarity.</em></h1>
-        <p class="hero-text">A refined catalog of research materials organized for metabolic, peptide, tissue, and cellular investigation.</p>
+        <h1>Research materials,<br><em>clearly documented.</em></h1>
+        <p class="hero-text">Explore laboratory research materials by category, available quantity, and documentation status through a controlled inquiry experience.</p>
         <div class="hero-actions">
           <a class="btn btn-dark" href="#collection">Explore collection</a>
-          <a class="btn btn-light" href="#catalog">View research catalog</a>
+          <a class="btn btn-light" href="catalog.html">View full catalog</a>
         </div>
         <div class="micro-trust">
           <span>Research-grade presentation</span>
@@ -81,8 +81,8 @@
 
     <section class="section intro reveal">
       <p class="eyebrow">The Everlume standard</p>
-      <h2>Premium does not need to feel complicated.</h2>
-      <p>Every product is grouped by research objective, presented with clear material details, and supported by a clean inquiry experience. No confusing product maze. No clutter. Just a clear path to the information you need.</p>
+      <h2>Clear materials. Organized documentation. A direct inquiry process.</h2>
+      <p>Every material is grouped by research category, identified by format and reference code, and connected to a controlled request for current specifications and documentation.</p>
     </section>
 
     <section class="lume-moment" aria-labelledby="lumeTitle">
@@ -94,8 +94,8 @@
       <div class="lume-copy reveal">
         <p class="eyebrow">The Everlume experience</p>
         <h2 id="lumeTitle">Where precision<br>meets <em>light.</em></h2>
-        <p>Considered presentation, clear documentation, and an elevated path from discovery to inquiry.</p>
-        <a href="#catalog">Enter the collection <span aria-hidden="true">→</span></a>
+        <p>Material identity, available formats, documentation status, and inquiry requirements presented in one considered experience.</p>
+        <a href="catalog.html">Enter the catalog <span aria-hidden="true">→</span></a>
       </div>
       <div class="lume-stage reveal" aria-label="Everlume signature research vial">
         <div class="lume-aura" aria-hidden="true"></div>
@@ -123,21 +123,15 @@
         <img src="assets/editorial/everlume-molecular-light-v1.jpg" alt="Sculptural glass, pearl, and champagne-gold forms illuminated by warm natural light" width="1672" height="941" loading="lazy">
         <figcaption>
           <span>Illuminate what’s possible.</span>
-          <strong>Everlume brings clarity, confidence, and elevated standards to every discovery.</strong>
+          <strong>Clear categorization, documented specifications, and a considered inquiry experience.</strong>
         </figcaption>
       </figure>
     </section>
 
-    <section class="section products" id="products">
+    <section class="section products" id="products" aria-labelledby="featuredTitle">
       <div class="section-head reveal">
-        <div><p class="eyebrow">Research catalog</p><h2>Research collection</h2></div>
-        <div class="filters" role="group" aria-label="Filter products">
-          <button class="filter active" data-filter="all">All</button>
-          <button class="filter" data-filter="metabolic">Metabolic</button>
-          <button class="filter" data-filter="peptide">Peptide</button>
-          <button class="filter" data-filter="tissue">Tissue</button>
-          <button class="filter" data-filter="cellular">Cellular</button>
-        </div>
+        <div><p class="eyebrow">Selected from the catalog</p><h2 id="featuredTitle">Featured materials</h2></div>
+        <a href="catalog.html">View the full research catalog →</a>
       </div>
       <div class="product-grid" id="productGrid"></div>
     </section>
@@ -145,7 +139,7 @@
     <section class="section catalog" id="catalog">
       <div class="catalog-copy reveal">
         <p class="eyebrow">Controlled documentation</p>
-        <h2>Research information by request.</h2>
+        <h2>Request current specifications and documentation.</h2>
         <p>Request current availability, specifications, handling documentation, and applicable purchasing requirements directly from Everlume.</p>
         <a class="btn btn-dark" href="#contact">Request documentation</a>
       </div>
@@ -155,7 +149,7 @@
     </section>
 
     <section class="section bundles" id="bundles">
-      <div class="section-head centered reveal"><div><p class="eyebrow">Research groupings</p><h2>Material inquiry sets</h2></div></div>
+      <div class="section-head centered reveal"><div><p class="eyebrow">Research groupings</p><h2>Curated research sets</h2></div></div>
       <div class="bundle-grid">
         <article class="bundle-card featured reveal"><span class="badge">Research set</span><h3>Metabolic Pathway Set</h3><strong>Request quote</strong><p>A grouped inquiry for metabolic-pathway research materials and available documentation.</p><button class="request-btn" data-product="Metabolic Pathway Research Set">Request availability</button></article>
         <article class="bundle-card reveal"><h3>Peptide Characterization Set</h3><strong>Request quote</strong><p>A grouped inquiry for copper-peptide and related research materials.</p><button class="request-btn" data-product="Peptide Characterization Research Set">Request availability</button></article>

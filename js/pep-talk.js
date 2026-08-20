@@ -67,5 +67,12 @@
   panel.querySelector('.pep-form').addEventListener('submit', event => { event.preventDefault(); const question = input.value.trim(); if (!question) return; bubble(question, true); input.value = ''; setTimeout(() => bubble(answer(question)), 160); });
   panel.querySelectorAll('.pep-quick button').forEach(button => button.addEventListener('click', () => { bubble(button.textContent, true); setTimeout(() => bubble(answer(button.textContent)), 160); }));
   panel.querySelector('.pep-clear').addEventListener('click', () => window.everlumeResearchList?.clear());
+
+  const collisionZone = document.querySelector('.contact');
+  if (collisionZone && 'IntersectionObserver' in window) {
+    new IntersectionObserver(entries => {
+      launcher.classList.toggle('pep-away', entries.some(entry => entry.isIntersecting));
+    }, { threshold: .08 }).observe(collisionZone);
+  }
   window.everlumeResearchList?.subscribe(renderList); renderList();
 })();

@@ -78,7 +78,7 @@
       .slice(0, 3);
 
     const label = catalog.availabilityLabel(product);
-    const price = catalog.formatPrice(product.price_cents);
+    const price = catalog.commerceEnabled() ? catalog.formatPrice(product.price_cents) : null;
     const name = escapeHtml(product.name);
     const dose = escapeHtml(product.dose_label || '—');
 
@@ -122,7 +122,7 @@
       <div class="pd-copy">
         <p class="eyebrow">${escapeHtml(product.category)} research</p>
         <h1 class="page-title">${name}</h1>
-        ${variants.length > 1 ? `<label class="variant-picker pd-variant-picker"><span>Dosage</span><select id="pdVariant" aria-label="Select ${name} dosage">${variants.map(variant => `<option value="${escapeHtml(variant.slug)}"${variant.slug === product.slug ? ' selected' : ''}>${escapeHtml(variant.dose_label || '—')}</option>`).join('')}</select></label>` : `<p class="pd-dose">${dose}</p>`}
+        ${variants.length > 1 ? `<label class="variant-picker pd-variant-picker"><span>Available quantity</span><select id="pdVariant" aria-label="Select ${name} available quantity">${variants.map(variant => `<option value="${escapeHtml(variant.slug)}"${variant.slug === product.slug ? ' selected' : ''}>${escapeHtml(variant.dose_label || '—')}</option>`).join('')}</select></label>` : `<p class="pd-dose">Available quantity · ${dose}</p>`}
         <p class="policy-lead">${escapeHtml(product.description)}</p>
         <dl class="pd-specs">
           <div><dt>SKU</dt><dd>${escapeHtml(product.sku)}</dd></div>

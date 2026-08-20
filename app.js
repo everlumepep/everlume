@@ -36,12 +36,12 @@
   function cardMarkup(group) {
     const { product, variants, key } = group;
     const label = catalog.availabilityLabel(product);
-    const price = catalog.formatPrice(product.price_cents);
+    const price = catalog.commerceEnabled() ? catalog.formatPrice(product.price_cents) : null;
     const name = escapeHtml(product.name);
     const dose = escapeHtml(product.dose_label || '—');
     const href = 'product.html?slug=' + encodeURIComponent(product.slug);
     const doseControl = variants.length > 1
-      ? `<label class="variant-picker"><span>Dosage</span><select data-variant-group="${escapeHtml(key)}" aria-label="Select ${name} dosage">${variants.map(variant =>
+      ? `<label class="variant-picker"><span>Available quantity</span><select data-variant-group="${escapeHtml(key)}" aria-label="Select ${name} available quantity">${variants.map(variant =>
           `<option value="${escapeHtml(variant.slug)}"${variant.slug === product.slug ? ' selected' : ''}>${escapeHtml(variant.dose_label || '—')}</option>`
         ).join('')}</select></label>`
       : `<div class="dose">${dose}</div>`;
@@ -70,7 +70,8 @@
 
   function render() {
     if (!grid) return;
-    const shown = groupProducts(allProducts.filter(p => activeFilter === 'all' || p.category === activeFilter));
+    const groups = groupProducts(allProducts.filter(p => activeFilter === 'all' || p.category === activeFilter));
+    const shown = document.body.dataset.catalogView === 'full' ? groups : groups.slice(0, 6);
     grid.innerHTML = shown.length
       ? shown.map(cardMarkup).join('')
       : '<p class="empty-note">No materials in this category.</p>';
