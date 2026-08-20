@@ -125,9 +125,11 @@ html.js .reveal.visible {
 
 .arch {
   background:
-    radial-gradient(circle at 50% 18%, rgba(255, 255, 255, 0.9), transparent 35%),
-    linear-gradient(150deg, #f1e3d1, #fffaf3);
-  border-color: #ddc9aa;
+    radial-gradient(circle at 50% 62%, rgba(255,244,211,.98) 0 7%, rgba(213,165,91,.48) 22%, rgba(65,43,25,.52) 48%, transparent 67%),
+    radial-gradient(circle at 50% 20%, rgba(255,255,255,.18), transparent 31%),
+    linear-gradient(155deg, #17120f, #342419 62%, #0b0908);
+  border-color: rgba(204,160,91,.62);
+  box-shadow: 0 32px 80px rgba(38,24,13,.34), inset 0 0 80px rgba(0,0,0,.42), 0 0 52px rgba(196,147,75,.16);
 }
 
 .hero-note,

@@ -2,7 +2,42 @@
 html.gate-open { overflow: hidden; }
 
 #el-gate { position: fixed; inset: 0; z-index: 2000; display: grid; place-items: center; padding: 22px; }
-#el-gate .gate-scrim { position: absolute; inset: 0; background: rgba(43, 33, 24, 0.62); backdrop-filter: blur(9px); }
+#el-gate .gate-scrim {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 46%, rgba(77,52,23,.2), transparent 24%),
+    #030303;
+  backdrop-filter: blur(12px);
+}
+#el-gate .gate-scrim::before,
+#el-gate .gate-scrim::after {
+  content: "";
+  position: absolute;
+  inset: -20%;
+  background-repeat: repeat;
+  pointer-events: none;
+}
+#el-gate .gate-scrim::before {
+  opacity: .72;
+  background-image:
+    radial-gradient(circle, rgba(255,248,224,.95) 0 1px, transparent 1.7px),
+    radial-gradient(circle, rgba(197,152,83,.78) 0 1px, transparent 1.8px),
+    radial-gradient(circle, rgba(255,255,255,.52) 0 .7px, transparent 1.4px);
+  background-size: 143px 137px, 211px 197px, 91px 109px;
+  background-position: 9px 18px, 62px 31px, 25px 73px;
+  animation: gate-stars-drift 28s linear infinite;
+}
+#el-gate .gate-scrim::after {
+  opacity: .55;
+  background-image:
+    radial-gradient(circle, #fff4d4 0 1.5px, transparent 2.2px),
+    radial-gradient(circle, rgba(205,157,83,.9) 0 1px, transparent 2px);
+  background-size: 317px 289px, 257px 331px;
+  background-position: 41px 81px, 130px 12px;
+  animation: gate-stars-twinkle 5.5s ease-in-out infinite alternate;
+}
 
 #el-gate .gate-reveal {
   position: absolute;
@@ -53,14 +88,23 @@ html.gate-open { overflow: hidden; }
 
 #el-gate .gate-panel {
   position: relative;
-  width: min(560px, 100%);
+  width: min(510px, 100%);
   max-height: calc(100vh - 44px);
   overflow-y: auto;
   background: linear-gradient(165deg, #fffdf9, #f8f0e4);
   border: 1px solid var(--line);
   border-radius: 22px;
-  padding: 44px 46px;
-  box-shadow: var(--shadow);
+  padding: 32px 36px;
+  box-shadow: 0 30px 90px rgba(0,0,0,.62), 0 0 60px rgba(195,145,72,.1);
+}
+
+@keyframes gate-stars-drift {
+  from { transform: translate3d(0,0,0) rotate(0deg); }
+  to { transform: translate3d(4%,3%,0) rotate(.8deg); }
+}
+@keyframes gate-stars-twinkle {
+  0% { opacity: .25; filter: brightness(.75); transform: scale(1); }
+  100% { opacity: .78; filter: brightness(1.35); transform: scale(1.015); }
 }
 
 @keyframes gate-panel-recede {
@@ -101,12 +145,12 @@ html.gate-entering body > :not(#el-gate) { animation: gate-page-arrive 3500ms cu
 
 #el-gate .gate-brand { margin: 0 0 6px; font: 500 15px 'Cormorant Garamond', serif; letter-spacing: 0.42em; color: var(--gold); }
 #el-gate h2 { margin: 0 0 12px; font: 500 clamp(30px, 4.5vw, 40px)/1.05 'Cormorant Garamond', serif; color: var(--ink); }
-#el-gate .gate-lead { margin: 0 0 26px; color: var(--muted); font-size: 14px; line-height: 1.7; }
+#el-gate .gate-lead { margin: 0 0 20px; color: var(--muted); font-size: 13px; line-height: 1.6; }
 
-#el-gate .gate-dob { border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px 20px; margin: 0 0 22px; display: flex; gap: 12px; }
+#el-gate .gate-dob { border: 1px solid var(--line); border-radius: 14px; padding: 13px 15px 16px; margin: 0 0 17px; display: flex; gap: 10px; }
 #el-gate .gate-dob legend { padding: 0 8px; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); font-weight: 500; }
 #el-gate .gate-dob label { flex: 1; font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
-#el-gate .gate-dob input { width: 100%; margin-top: 7px; border: 1px solid var(--line); background: #fff; border-radius: 8px; padding: 12px; font: 400 16px Jost, sans-serif; color: var(--ink); }
+#el-gate .gate-dob input { width: 100%; margin-top: 6px; border: 1px solid var(--line); background: #fff; border-radius: 8px; padding: 10px; font: 400 15px Jost, sans-serif; color: var(--ink); }
 
 #el-gate .gate-check { display: flex; gap: 11px; align-items: flex-start; margin: 0 0 13px; font-size: 13px; line-height: 1.55; color: var(--ink); }
 #el-gate .gate-check input { margin-top: 3px; accent-color: var(--gold); width: 15px; height: 15px; flex: none; }
@@ -114,7 +158,7 @@ html.gate-entering body > :not(#el-gate) { animation: gate-page-arrive 3500ms cu
 
 #el-gate .gate-error { min-height: 18px; margin: 6px 0 10px; font-size: 12px; color: #9c4a2f; }
 #el-gate .gate-enter { width: 100%; }
-#el-gate .gate-note { margin: 16px 0 0; font-size: 11px; color: var(--muted); text-align: center; }
+#el-gate .gate-note { margin: 12px 0 0; font-size: 10px; color: var(--muted); text-align: center; }
 
 #el-gate .gate-refusal h3 { font: 600 28px 'Cormorant Garamond', serif; margin: 10px 0; }
 #el-gate .gate-refusal p { color: var(--muted); line-height: 1.7; }
