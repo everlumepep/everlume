@@ -611,9 +611,9 @@ footer {
   z-index: 1;
   text-shadow: 0 1px rgba(255,255,255,.7);
 }
-.hero-art .vial span { margin: 43px 0 13px; }
-.hero-art .vial b { max-width: 76%; font-size: 14px; line-height: 1.05; }
-.hero-art .vial small { max-width: 76%; font-size: 8px; }
+.hero-art .vial span { margin: 40px 0 12px; font:500 8px Jost,sans-serif; letter-spacing:.22em; color:#9c763e; }
+.hero-art .vial b { width:64%; max-width:64%; font-size:14px; line-height:1; letter-spacing:.02em; white-space:nowrap; overflow:hidden; text-overflow:clip; }
+.hero-art .vial small { width:62%; max-width:62%; margin-top:10px; font:500 5.5px Jost,sans-serif; letter-spacing:.1em; white-space:nowrap; }
 .hero-art .vial-a { left: 10%; }
 .hero-art .vial-b { left: 36%; bottom: 88px; }
 .hero-art .vial-c { right: 10%; }
@@ -633,9 +633,9 @@ footer {
   filter: drop-shadow(0 19px 15px rgba(70,48,26,.2));
 }
 .mini-vial::before { display: none; }
-.mini-vial span { margin: 23px 0 7px; }
-.mini-vial b { display:flex; align-items:center; justify-content:center; width:70%; min-height:24px; max-width:70%; font-size:10px; line-height:1.05; overflow-wrap:anywhere; }
-.mini-vial small { max-width: 70%; font-size:6.5px; }
+.mini-vial span { margin:23px 0 9px; font:500 6px Jost,sans-serif; letter-spacing:.2em; color:#9c763e; }
+.mini-vial b { display:flex; align-items:center; justify-content:center; width:62%; min-height:20px; max-width:62%; font-size:10px; line-height:1; letter-spacing:.01em; white-space:nowrap; overflow:hidden; text-overflow:clip; }
+.mini-vial small { width:60%; max-width:60%; margin-top:7px; font:500 4.5px Jost,sans-serif; letter-spacing:.08em; white-space:nowrap; }
 
 .variant-picker {
   display: grid;
@@ -770,9 +770,9 @@ footer {
 
 @media (max-width: 620px) {
   .hero-art .vial { width: 118px; height: 220px; bottom: 62px; }
-  .hero-art .vial span { margin: 33px 0 8px; font-size: 18px; }
-  .hero-art .vial b { font-size: 10px; }
-  .hero-art .vial small { font-size: 7px; }
+  .hero-art .vial span { margin: 29px 0 8px; font-size: 5.5px; }
+  .hero-art .vial b { font-size: 9px; }
+  .hero-art .vial small { margin-top:7px; font-size: 4px; }
   .hero-art .vial-a { left: 1%; }
   .hero-art .vial-b { left: 32%; bottom: 78px; }
   .hero-art .vial-c { right: 1%; }

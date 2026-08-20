@@ -52,7 +52,7 @@
 
     return `<article class="product-card reveal visible" data-category="${escapeHtml(product.category)}">
       <a class="product-visual" href="${href}" aria-label="${name} ${dose} details">
-        <div class="mini-vial"><img src="assets/products/everlume-vial-master-v1.png" alt="" width="1024" height="1365" loading="lazy"><span>EL</span><b>${name.toUpperCase()}</b><small>${dose}</small></div>
+        <div class="mini-vial"><img src="assets/products/everlume-vial-master-v1.png" alt="" width="1024" height="1365" loading="lazy"><span>EVERLUME</span><b>${escapeHtml(product.sku)}</b><small>RESEARCH ONLY</small></div>
       </a>
       <div class="product-copy">
         <p class="product-cat">${escapeHtml(product.category)} research</p>

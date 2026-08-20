@@ -60,7 +60,7 @@
 
     detail.innerHTML = `<div class="pd-layout">
       <div class="pd-visual">
-        <div class="mini-vial"><img src="assets/products/everlume-vial-master-v1.png" alt="" width="1024" height="1365"><span>EL</span><b>${name.toUpperCase()}</b><small>${dose}</small></div>
+        <div class="mini-vial"><img src="assets/products/everlume-vial-master-v1.png" alt="" width="1024" height="1365"><span>EVERLUME</span><b>${escapeHtml(product.sku)}</b><small>RESEARCH ONLY</small></div>
       </div>
       <div class="pd-copy">
         <p class="eyebrow">${escapeHtml(product.category)} research</p>
