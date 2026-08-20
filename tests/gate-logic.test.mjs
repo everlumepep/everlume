@@ -8,7 +8,7 @@ const config = {
   POLICY_VERSIONS: { terms: '1.0-draft', privacy: '1.0', research_use: '1.0' }
 };
 const NOW = new Date(Date.UTC(2026, 6, 28)); // 2026-07-28
-const allAcks = { age: true, terms: true, privacy: true, compliance: true };
+const allAcks = { terms: true, compliance: true };
 
 test('parseDob accepts a valid date and rejects impossible ones', () => {
   assert.ok(parseDob('4', '30', '1990'));
@@ -48,7 +48,7 @@ test('future and absurd dates are invalid, not underage', () => {
 });
 
 test('each missing acknowledgement blocks entry', () => {
-  for (const missing of ['age', 'terms', 'privacy', 'compliance']) {
+  for (const missing of ['terms', 'compliance']) {
     const acks = { ...allAcks, [missing]: false };
     const result = evaluateGate({ month: '1', day: '15', year: '1990', acks }, config, NOW);
     assert.equal(result.ok, false);

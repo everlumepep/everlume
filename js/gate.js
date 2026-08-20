@@ -38,11 +38,11 @@ function recordAcceptance(record) {
 function template() {
   return `
   <div class="gate-scrim"></div>
-  <div class="gate-reveal" aria-hidden="true"><span>EL</span><strong>EVERLUME</strong><small>ELEVATE · RENEW · GLOW</small></div>
+  <div class="gate-reveal" aria-hidden="true"><strong>EVERLUME</strong><small>ELEVATE · RENEW · GLOW</small></div>
   <div class="gate-panel" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
     <p class="gate-brand">EVERLUME</p>
-    <h2 id="gateTitle">Adult Access &amp; Product Acknowledgement</h2>
-    <p class="gate-lead">This site presents laboratory research materials. Please confirm your date of birth and review the acknowledgements below to continue.</p>
+    <h2 id="gateTitle">Welcome to Everlume</h2>
+    <p class="gate-lead">Confirm your date of birth and acknowledge the research-use terms to enter.</p>
     <form id="gateForm" novalidate>
       <fieldset class="gate-dob">
         <legend>Date of birth</legend>
@@ -50,13 +50,11 @@ function template() {
         <label>Day<input name="day" inputmode="numeric" autocomplete="bday-day" maxlength="2" placeholder="DD" required></label>
         <label>Year<input name="year" inputmode="numeric" autocomplete="bday-year" maxlength="4" placeholder="YYYY" required></label>
       </fieldset>
-      <label class="gate-check"><input type="checkbox" name="age"> <span>I confirm I am ${config.MIN_AGE} years of age or older.</span></label>
-      <label class="gate-check"><input type="checkbox" name="terms"> <span>I have read and agree to the <a href="terms.html">Terms &amp; Conditions</a>.</span></label>
-      <label class="gate-check"><input type="checkbox" name="privacy"> <span>I acknowledge the <a href="privacy.html">Privacy Policy</a>.</span></label>
-      <label class="gate-check"><input type="checkbox" name="compliance"> <span>I acknowledge the <a href="research-use.html">Research-Use &amp; Compliance Notice</a>: products are for laboratory research only and are not for human or veterinary use.</span></label>
+      <label class="gate-check"><input type="checkbox" name="terms"> <span>I agree to the <a href="terms.html">Terms</a> and acknowledge the <a href="research-use.html">Research-Use Notice</a>.</span></label>
+      <input type="hidden" name="compliance" value="on">
       <p class="gate-error" id="gateError" role="alert" aria-live="assertive"></p>
       <button class="btn btn-dark gate-enter" type="submit">Enter Everlume</button>
-      <p class="gate-note">Your date of birth is checked in your browser and is not stored or transmitted.</p>
+      <p class="gate-note">Your birth date is checked locally and is never stored or transmitted. <a href="privacy.html">Privacy</a></p>
     </form>
     <div class="gate-refusal" id="gateRefusal" hidden>
       <h3>We're unable to provide access.</h3>
@@ -100,9 +98,7 @@ function openGate() {
     const result = evaluateGate({
       month: data.get('month'), day: data.get('day'), year: data.get('year'),
       acks: {
-        age: data.get('age') === 'on',
         terms: data.get('terms') === 'on',
-        privacy: data.get('privacy') === 'on',
         compliance: data.get('compliance') === 'on'
       }
     }, config);
@@ -131,7 +127,7 @@ function openGate() {
     overlay.classList.add('is-entering');
     document.documentElement.classList.add('gate-entering');
     overlay.setAttribute('aria-hidden', 'true');
-    window.setTimeout(finishEntry, 1550);
+    window.setTimeout(finishEntry, 3600);
   });
 }
 

@@ -37,7 +37,7 @@ export function evaluateGate(input, config, now = new Date()) {
     else if (age < config.MIN_AGE) { underage = true; reasons.push('underage'); }
   }
 
-  for (const ack of ['age', 'terms', 'privacy', 'compliance']) {
+  for (const ack of ['terms', 'compliance']) {
     if (!input.acks || !input.acks[ack]) reasons.push('missing_ack_' + ack);
   }
 

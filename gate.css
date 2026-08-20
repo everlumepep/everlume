@@ -39,12 +39,17 @@ html.gate-open { overflow: hidden; }
   box-shadow: 0 0 65px 25px rgba(255,241,202,.72);
   transform: rotate(21deg) scaleY(.18);
 }
-#el-gate .gate-reveal span,
 #el-gate .gate-reveal strong,
 #el-gate .gate-reveal small { position: relative; z-index: 1; }
-#el-gate .gate-reveal span { font: 500 74px/1 'Cormorant Garamond', serif; letter-spacing: -.09em; }
-#el-gate .gate-reveal strong { margin-top: 10px; font: 500 19px 'Cormorant Garamond', serif; letter-spacing: .48em; }
-#el-gate .gate-reveal small { margin-top: 10px; font: 500 8px Jost, sans-serif; letter-spacing: .32em; }
+#el-gate .gate-reveal strong {
+  font: 500 clamp(58px, 11vw, 168px)/.85 'Cormorant Garamond', serif;
+  letter-spacing: .18em;
+  text-indent: .18em;
+  color: #f8e9c8;
+  text-shadow: 0 0 12px rgba(255,235,190,.2), 0 0 58px rgba(219,165,81,.14);
+  white-space: nowrap;
+}
+#el-gate .gate-reveal small { margin-top: 28px; font: 500 10px Jost, sans-serif; letter-spacing: .5em; color:#fff4dc; }
 
 #el-gate .gate-panel {
   position: relative;
@@ -60,39 +65,39 @@ html.gate-open { overflow: hidden; }
 
 @keyframes gate-panel-recede {
   0% { opacity: 1; transform: scale(1); filter: blur(0); }
-  42% { opacity: .18; transform: scale(.94); filter: blur(5px); }
+  32% { opacity: .12; transform: scale(.94); filter: blur(6px); }
   100% { opacity: 0; transform: scale(.8); filter: blur(18px); }
 }
 @keyframes gate-light-open {
-  0% { opacity: 0; transform: scale(.08); }
-  22% { opacity: 1; }
-  72% { opacity: 1; transform: scale(6.8); }
-  100% { opacity: 0; transform: scale(11); }
+  0%, 34% { opacity: 0; transform: scale(.04); }
+  52% { opacity: .72; }
+  82% { opacity: 1; transform: scale(7.5); }
+  100% { opacity: 0; transform: scale(13); }
 }
 @keyframes gate-reveal-mark {
-  0%, 22% { opacity: 0; transform: translateY(18px) scale(.9); filter: blur(7px); }
-  45%, 72% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
-  100% { opacity: 0; transform: translateY(-8px) scale(1.06); filter: blur(3px); }
+  0%, 18% { opacity: 0; transform: scale(.68); filter: blur(14px); letter-spacing:.32em; }
+  43%, 72% { opacity: 1; transform: scale(1); filter: blur(0); }
+  100% { opacity: 0; transform: scale(1.14); filter: blur(5px); }
 }
 @keyframes gate-scrim-to-light {
-  0% { background: rgba(43,33,24,.62); backdrop-filter: blur(9px); }
-  55% { background: rgba(250,231,190,.7); backdrop-filter: blur(4px); }
+  0%, 30% { background: #090705; backdrop-filter: blur(12px); }
+  68% { background: #171006; backdrop-filter: blur(7px); }
+  90% { background: rgba(255,239,201,.92); backdrop-filter: blur(3px); }
   100% { background: rgba(255,253,247,0); backdrop-filter: blur(0); }
 }
 @keyframes gate-page-arrive {
-  0% { transform: scale(1.035); filter: brightness(1.38) blur(3px); }
+  0%, 68% { transform: scale(1.055); filter: brightness(1.65) blur(7px); opacity:.18; }
   100% { transform: scale(1); filter: none; }
 }
 
-#el-gate.is-entering .gate-panel { animation: gate-panel-recede 780ms cubic-bezier(.5,0,.2,1) forwards; }
-#el-gate.is-entering .gate-scrim { animation: gate-scrim-to-light 1500ms cubic-bezier(.2,.7,.2,1) forwards; }
+#el-gate.is-entering .gate-panel { animation: gate-panel-recede 900ms cubic-bezier(.5,0,.2,1) forwards; }
+#el-gate.is-entering .gate-scrim { animation: gate-scrim-to-light 3500ms cubic-bezier(.2,.7,.2,1) forwards; }
 #el-gate.is-entering .gate-reveal { opacity: 1; }
-#el-gate.is-entering .gate-reveal::before { animation: gate-light-open 1500ms cubic-bezier(.18,.74,.2,1) forwards; }
-#el-gate.is-entering .gate-reveal::after { animation: gate-light-open 1500ms cubic-bezier(.18,.74,.2,1) 80ms forwards; }
-#el-gate.is-entering .gate-reveal span,
+#el-gate.is-entering .gate-reveal::before { animation: gate-light-open 3500ms cubic-bezier(.18,.74,.2,1) forwards; }
+#el-gate.is-entering .gate-reveal::after { animation: gate-light-open 3500ms cubic-bezier(.18,.74,.2,1) 120ms forwards; }
 #el-gate.is-entering .gate-reveal strong,
-#el-gate.is-entering .gate-reveal small { animation: gate-reveal-mark 1500ms cubic-bezier(.2,.7,.2,1) forwards; }
-html.gate-entering body > :not(#el-gate) { animation: gate-page-arrive 1500ms cubic-bezier(.2,.8,.2,1) forwards; transform-origin: center; }
+#el-gate.is-entering .gate-reveal small { animation: gate-reveal-mark 3500ms cubic-bezier(.2,.7,.2,1) forwards; }
+html.gate-entering body > :not(#el-gate) { animation: gate-page-arrive 3500ms cubic-bezier(.2,.8,.2,1) forwards; transform-origin: center; }
 
 #el-gate .gate-brand { margin: 0 0 6px; font: 500 15px 'Cormorant Garamond', serif; letter-spacing: 0.42em; color: var(--gold); }
 #el-gate h2 { margin: 0 0 12px; font: 500 clamp(30px, 4.5vw, 40px)/1.05 'Cormorant Garamond', serif; color: var(--ink); }
