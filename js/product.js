@@ -21,7 +21,7 @@
       intro: 'A clear starting point for laboratory teams examining peptide identity, interaction models, and analytical characterization.',
       points: [
         ['Material identity', 'Centers the research record on a clearly identified peptide material and selected format.'],
-        ['Interaction models', 'Provides context for controlled in-vitro interaction and comparative assay design.'],
+        ['Interaction models', 'Provides context for controlled in vitro interaction and comparative assay design.'],
         ['Documented handling', 'Encourages handling and storage aligned with the records supplied for the specific material.']
       ]
     },
@@ -75,7 +75,7 @@
   function notFound() {
     detail.innerHTML = `<h1 class="page-title">Material not found</h1>
       <p class="policy-lead">This material is not in the current catalog. It may have been renamed or withdrawn.</p>
-      <a class="btn btn-dark" href="index.html">Back to catalog</a>`;
+      <a class="btn btn-dark" href="catalog.html">Back to catalog</a>`;
   }
 
   async function render() {
@@ -119,7 +119,7 @@
     const relatedBlock = related.length ? `<section class="pd-related" aria-labelledby="pdRelatedTitle">
       <div class="pd-section-head pd-section-head-inline">
         <div><p class="eyebrow">Continue exploring</p><h2 id="pdRelatedTitle">Related research materials.</h2></div>
-        <a href="index.html#catalog">View full catalog</a>
+        <a href="catalog.html">View full catalog</a>
       </div>
       <div class="pd-related-grid">${related.map(item => `<a class="pd-related-card" href="product.html?slug=${encodeURIComponent(item.slug)}">
         <span>${escapeHtml(item.category)} research</span><h3>${escapeHtml(item.name)}</h3>
