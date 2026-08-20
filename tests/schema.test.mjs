@@ -39,6 +39,15 @@ test('rewards ledger is append-only and balance is trigger-maintained', () => {
     'rewards_accounts must not be client-writable');
 });
 
+test('published rewards and subscriptions are modeled without client-side financial writes', () => {
+  assert.match(sql, /create table if not exists public\.subscriptions/);
+  assert.match(sql, /create table if not exists public\.store_credit_transactions/);
+  assert.match(sql, /'referral_credit'[\s\S]*"credit_cents":1000[\s\S]*true/);
+  assert.match(sql, /'seventh_purchase_reward'[\s\S]*"qualifying_purchases":6[\s\S]*true/);
+  assert.ok(!/create policy "[^"]*" on public\.store_credit_transactions\s+for insert\s+to authenticated/.test(sql));
+  assert.ok(!/create policy "[^"]*" on public\.subscriptions\s+for insert\s+to authenticated/.test(sql));
+});
+
 test('account deletion cannot be blocked by the append-only ledger', () => {
   // Regression guard for the defect fixed in migration 0007: a cascade delete
   // into an unconditionally-raising trigger made account closure impossible.
@@ -87,7 +96,7 @@ test('seeded products all start in pending_review (no implied approval)', () => 
 // silent divergence with no runtime symptom. This test pins them together.
 test('fallback catalog matches the migrated catalog', () => {
   const catalogJs = readFileSync(new URL('../js/catalog.js', import.meta.url), 'utf8');
-  const migrations = ['20260728000006_seed_products.sql', '20260730000009_catalog_reconciliation.sql']
+  const migrations = ['20260728000006_seed_products.sql', '20260730000009_catalog_reconciliation.sql', '20260820000010_client_confirmed_prices.sql']
     .map(f => readFileSync(new URL(`../supabase/migrations/${f}`, import.meta.url), 'utf8'))
     .join('\n');
 
@@ -109,12 +118,12 @@ test('fallback catalog matches the migrated catalog', () => {
   }
 });
 
-test('fallback catalog ships nothing purchasable', () => {
+test('fallback catalog publishes only confirmed prices and ships nothing purchasable', () => {
   const catalogJs = readFileSync(new URL('../js/catalog.js', import.meta.url), 'utf8');
   assert.match(catalogJs, /compliance_status:\s*'pending_review'/,
     'fallback catalog must seed pending_review');
-  assert.match(catalogJs, /price_cents:\s*null/,
-    'fallback catalog must seed a null price');
+  const confirmedPrices = [...catalogJs.matchAll(/,\s*(6500|9800|6000|9000|11500|4500)\]/g)];
+  assert.equal(confirmedPrices.length, 6, 'fallback must contain exactly six confirmed prices');
   assert.ok(!/compliance_status:\s*'approved'/.test(catalogJs),
     'fallback catalog must not hard-code an approved product');
 });
@@ -150,4 +159,21 @@ test('cart and checkout refuse direct URL access when commerce is closed', () =>
   const checkout = readFileSync(new URL('../js/checkout.js', import.meta.url), 'utf8');
   assert.match(cartPage, /commerceEnabled\(\)/, 'bag page does not check the commerce flag');
   assert.match(checkout, /commerceEnabled\(\)/, 'checkout does not check the commerce flag');
+});
+
+test('subscription creation is gated server-side and Pep Talk describes preview capabilities honestly', () => {
+  const billing = readFileSync(new URL('../netlify/functions/create-subscription.mjs', import.meta.url), 'utf8');
+  const helper = readFileSync(new URL('../netlify/functions/_billing.mjs', import.meta.url), 'utf8');
+  const pepTalk = readFileSync(new URL('../js/pep-talk.js', import.meta.url), 'utf8');
+
+  assert.match(helper, /process\.env\.BILLING_ENABLED === 'true'/,
+    'billing authorization must be derived from a server environment variable');
+  assert.match(billing, /if \(!billingEnabled\(\)\) return json\(503/,
+    'the subscription endpoint must fail closed before authentication or Stripe calls');
+  assert.match(pepTalk, /deterministic catalog guidance/i,
+    'Pep Talk must identify its actual non-AI behavior');
+  assert.match(pepTalk, /Subscriptions are not active on this preview/,
+    'Pep Talk must not claim unavailable subscription functionality');
+  assert.match(pepTalk, /Ordering is not active on this preview/,
+    'Pep Talk must not claim unavailable order functionality');
 });

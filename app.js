@@ -11,6 +11,7 @@
   const cart = window.everlumeCart;
   let allProducts = [];
   let activeFilter = 'all';
+  const selectedVariants = new Map();
 
   function escapeHtml(value) {
     return String(value).replace(/[&<>"']/g, ch => ({
@@ -18,12 +19,32 @@
     }[ch]));
   }
 
-  function cardMarkup(product) {
+  function groupProducts(products) {
+    const groups = new Map();
+    products.forEach(product => {
+      const key = `${product.category}:${product.name}`;
+      if (!groups.has(key)) groups.set(key, []);
+      groups.get(key).push(product);
+    });
+    return Array.from(groups.entries()).map(([key, variants]) => ({
+      key,
+      variants,
+      product: variants.find(item => item.slug === selectedVariants.get(key)) || variants[0]
+    }));
+  }
+
+  function cardMarkup(group) {
+    const { product, variants, key } = group;
     const label = catalog.availabilityLabel(product);
-    const price = catalog.formatPrice(product.price_cents);
+    const price = catalog.commerceEnabled() ? catalog.formatPrice(product.price_cents) : null;
     const name = escapeHtml(product.name);
     const dose = escapeHtml(product.dose_label || '—');
     const href = 'product.html?slug=' + encodeURIComponent(product.slug);
+    const doseControl = variants.length > 1
+      ? `<label class="variant-picker"><span>Available quantity</span><select data-variant-group="${escapeHtml(key)}" aria-label="Select ${name} available quantity">${variants.map(variant =>
+          `<option value="${escapeHtml(variant.slug)}"${variant.slug === product.slug ? ' selected' : ''}>${escapeHtml(variant.dose_label || '—')}</option>`
+        ).join('')}</select></label>`
+      : `<div class="dose">${dose}</div>`;
 
     const action = label.state === 'available'
       ? `<button class="add-btn" data-slug="${escapeHtml(product.slug)}">Add to bag</button>`
@@ -31,11 +52,11 @@
 
     return `<article class="product-card reveal visible" data-category="${escapeHtml(product.category)}">
       <a class="product-visual" href="${href}" aria-label="${name} ${dose} details">
-        <div class="mini-vial"><span>EL</span><b>${name.toUpperCase()}</b><small>${dose}</small></div>
+        <div class="mini-vial"><img src="assets/products/everlume-vial-master-v1.png" alt="" width="1024" height="1365" loading="lazy"><span>EVERLUME</span><b>${escapeHtml(product.sku)}</b><small>RESEARCH ONLY</small></div>
       </a>
       <div class="product-copy">
         <p class="product-cat">${escapeHtml(product.category)} research</p>
-        <div class="dose">${dose}</div>
+        ${doseControl}
         <h3><a href="${href}">${name}</a></h3>
         <p>${escapeHtml(product.description)}</p>
         <p class="product-meta"><span class="sku">${escapeHtml(product.sku)}</span><span class="avail avail-${label.state}">${escapeHtml(label.text)}</span></p>
@@ -49,12 +70,23 @@
 
   function render() {
     if (!grid) return;
-    const shown = allProducts.filter(p => activeFilter === 'all' || p.category === activeFilter);
+    const groups = groupProducts(allProducts.filter(p => activeFilter === 'all' || p.category === activeFilter));
+    const shown = document.body.dataset.catalogView === 'full' ? groups : groups.slice(0, 6);
     grid.innerHTML = shown.length
       ? shown.map(cardMarkup).join('')
       : '<p class="empty-note">No materials in this category.</p>';
     bindRequestButtons();
     bindAddButtons();
+    bindVariantPickers();
+  }
+
+  function bindVariantPickers() {
+    document.querySelectorAll('[data-variant-group]').forEach(select => {
+      select.addEventListener('change', () => {
+        selectedVariants.set(select.dataset.variantGroup, select.value);
+        render();
+      });
+    });
   }
 
   function bindRequestButtons() {
@@ -140,6 +172,31 @@
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
   } else {
     document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
+  }
+
+  // Signature light moment. Pointer position only controls a decorative glow;
+  // scroll depth is intentionally shallow and disabled for reduced motion.
+  const lumeMoment = document.querySelector('.lume-moment');
+  if (lumeMoment && !reducedMotion) {
+    if (window.matchMedia('(pointer:fine)').matches) {
+      lumeMoment.addEventListener('pointermove', event => {
+        const bounds = lumeMoment.getBoundingClientRect();
+        lumeMoment.style.setProperty('--mx', `${((event.clientX - bounds.left) / bounds.width) * 100}%`);
+        lumeMoment.style.setProperty('--my', `${((event.clientY - bounds.top) / bounds.height) * 100}%`);
+      });
+    }
+    let lumeFrame = 0;
+    const updateLumeDepth = () => {
+      lumeFrame = 0;
+      const bounds = lumeMoment.getBoundingClientRect();
+      if (bounds.bottom < 0 || bounds.top > innerHeight) return;
+      const progress = (innerHeight - bounds.top) / (innerHeight + bounds.height);
+      lumeMoment.style.setProperty('--lume-shift', `${(progress - .5) * 28}px`);
+    };
+    addEventListener('scroll', () => {
+      if (!lumeFrame) lumeFrame = requestAnimationFrame(updateLumeDepth);
+    }, { passive: true });
+    updateLumeDepth();
   }
 
   // ── Inquiry form ─────────────────────────────────────────────────────────

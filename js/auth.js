@@ -7,6 +7,7 @@
   const lead = document.getElementById('authLead');
   const submit = document.getElementById('authSubmit');
   const nameField = document.getElementById('nameField');
+  const referralField = document.getElementById('referralField');
   const passwordField = document.getElementById('passwordField');
   let mode = 'signin';
 
@@ -28,6 +29,7 @@
     lead.textContent = copy[mode].lead;
     submit.textContent = copy[mode].submit;
     nameField.hidden = mode !== 'signup';
+    referralField.hidden = mode !== 'signup';
     passwordField.hidden = mode === 'reset';
     passwordField.querySelector('input').autocomplete = mode === 'signup' ? 'new-password' : 'current-password';
     document.getElementById('switchToSignup').hidden = mode !== 'signin';
@@ -60,7 +62,7 @@
           email, password,
           options: {
             emailRedirectTo: new URL('./', location.href).href,
-            data: { first_name: data.get('first_name') || '' }
+            data: { first_name: data.get('first_name') || '', referral_code: String(data.get('referral_code') || '').trim().toUpperCase() }
           }
         });
         if (error) return fail('We could not create the account. ' + (error.message || ''));

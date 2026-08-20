@@ -21,6 +21,7 @@
       <p class="lead" id="authLead">Access your orders, rewards, and account details.</p>
       <form id="authForm">
         <label id="nameField" hidden>First name<input name="first_name" autocomplete="given-name"></label>
+        <label id="referralField" hidden>Referral code <span>(optional)</span><input name="referral_code" autocomplete="off" maxlength="12"></label>
         <label>Email<input type="email" name="email" required autocomplete="email"></label>
         <label id="passwordField">Password<input type="password" name="password" autocomplete="current-password" minlength="8"></label>
         <p class="form-status" id="authStatus" role="status" aria-live="polite"></p>
@@ -35,6 +36,7 @@
       <p class="portal-switch"><a href="../index.html">← Back to Everlume</a></p>
     </div>
   </main>
+  <script src="../js/runtime-config.js"></script>
   <script src="../vendor/supabase.js"></script>
   <script src="../js/config.js"></script>
   <script src="../js/supabase-client.js"></script>

@@ -1,7 +1,7 @@
 {
   "name": "everlume",
   "private": true,
-  "description": "Everlume \u2014 premium research catalog and customer platform (static Netlify site + Supabase backend).",
+  "description": "Everlume — premium research catalog and customer platform (static Netlify site + Supabase backend).",
   "type": "module",
   "scripts": {
     "test": "node --test tests/*.test.mjs && node validate.mjs",
@@ -11,5 +11,8 @@
   },
   "devDependencies": {
     "@electric-sql/pglite": "^0.3.11"
+  },
+  "dependencies": {
+    "stripe": "^20.0.0"
   }
 }

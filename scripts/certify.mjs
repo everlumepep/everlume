@@ -129,8 +129,9 @@ console.log('\nG. Commerce authorization (G1 / D-III)');
   record('G', 'catalog ships nothing approved',
     !/compliance_status:\s*'approved'/.test(cat.body),
     "no hard-coded 'approved' product");
-  record('G', 'catalog ships no price',
-    !/price_cents:\s*\d/.test(cat.body), 'price_cents null throughout');
+  const publishedPrices = [...cat.body.matchAll(/,\s*(6500|9800|6000|9000|11500|4500)\]/g)];
+  record('G', 'catalog ships only client-confirmed prices',
+    publishedPrices.length === 6, 'six exact product/format prices');
   record('G', 'authorization requires all axes to agree',
     /compliance_status !== 'approved'/.test(cat.body) && /price_cents === null/.test(cat.body),
     'status · compliance · price · stock');

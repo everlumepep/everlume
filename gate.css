@@ -2,28 +2,155 @@
 html.gate-open { overflow: hidden; }
 
 #el-gate { position: fixed; inset: 0; z-index: 2000; display: grid; place-items: center; padding: 22px; }
-#el-gate .gate-scrim { position: absolute; inset: 0; background: rgba(43, 33, 24, 0.62); backdrop-filter: blur(9px); }
+#el-gate .gate-scrim {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 46%, rgba(77,52,23,.2), transparent 24%),
+    #030303;
+  backdrop-filter: blur(12px);
+}
+#el-gate .gate-scrim::before,
+#el-gate .gate-scrim::after {
+  content: "";
+  position: absolute;
+  inset: -20%;
+  background-repeat: repeat;
+  pointer-events: none;
+}
+#el-gate .gate-scrim::before {
+  opacity: .72;
+  background-image:
+    radial-gradient(circle, rgba(255,248,224,.95) 0 1px, transparent 1.7px),
+    radial-gradient(circle, rgba(197,152,83,.78) 0 1px, transparent 1.8px),
+    radial-gradient(circle, rgba(255,255,255,.52) 0 .7px, transparent 1.4px);
+  background-size: 143px 137px, 211px 197px, 91px 109px;
+  background-position: 9px 18px, 62px 31px, 25px 73px;
+  animation: gate-stars-drift 28s linear infinite;
+}
+#el-gate .gate-scrim::after {
+  opacity: .55;
+  background-image:
+    radial-gradient(circle, #fff4d4 0 1.5px, transparent 2.2px),
+    radial-gradient(circle, rgba(205,157,83,.9) 0 1px, transparent 2px);
+  background-size: 317px 289px, 257px 331px;
+  background-position: 41px 81px, 130px 12px;
+  animation: gate-stars-twinkle 5.5s ease-in-out infinite alternate;
+}
+
+#el-gate .gate-reveal {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  color: #76542c;
+  opacity: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+#el-gate .gate-reveal::before,
+#el-gate .gate-reveal::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  border-radius: 50%;
+  translate: -50% -50%;
+}
+#el-gate .gate-reveal::before {
+  width: 14vmax;
+  height: 14vmax;
+  background: #fffdf6;
+  box-shadow: 0 0 90px 42px rgba(255,242,201,.95), 0 0 220px 110px rgba(226,181,105,.55);
+  transform: scale(.08);
+}
+#el-gate .gate-reveal::after {
+  width: 1px;
+  height: 160vh;
+  background: linear-gradient(transparent, rgba(255,255,255,.9) 38%, #fff 50%, rgba(255,255,255,.9) 62%, transparent);
+  box-shadow: 0 0 65px 25px rgba(255,241,202,.72);
+  transform: rotate(21deg) scaleY(.18);
+}
+#el-gate .gate-reveal strong,
+#el-gate .gate-reveal small { position: relative; z-index: 1; }
+#el-gate .gate-reveal strong {
+  font: 500 clamp(58px, 11vw, 168px)/.85 'Cormorant Garamond', serif;
+  letter-spacing: .18em;
+  text-indent: .18em;
+  color: #f8e9c8;
+  text-shadow: 0 0 12px rgba(255,235,190,.2), 0 0 58px rgba(219,165,81,.14);
+  white-space: nowrap;
+}
+#el-gate .gate-reveal small { margin-top: 28px; font: 500 10px Jost, sans-serif; letter-spacing: .5em; color:#fff4dc; }
 
 #el-gate .gate-panel {
   position: relative;
-  width: min(560px, 100%);
+  width: min(510px, 100%);
   max-height: calc(100vh - 44px);
   overflow-y: auto;
   background: linear-gradient(165deg, #fffdf9, #f8f0e4);
   border: 1px solid var(--line);
   border-radius: 22px;
-  padding: 44px 46px;
-  box-shadow: var(--shadow);
+  padding: 32px 36px;
+  box-shadow: 0 30px 90px rgba(0,0,0,.62), 0 0 60px rgba(195,145,72,.1);
 }
+
+@keyframes gate-stars-drift {
+  from { transform: translate3d(0,0,0) rotate(0deg); }
+  to { transform: translate3d(4%,3%,0) rotate(.8deg); }
+}
+@keyframes gate-stars-twinkle {
+  0% { opacity: .25; filter: brightness(.75); transform: scale(1); }
+  100% { opacity: .78; filter: brightness(1.35); transform: scale(1.015); }
+}
+
+@keyframes gate-panel-recede {
+  0% { opacity: 1; transform: scale(1); filter: blur(0); }
+  32% { opacity: .12; transform: scale(.94); filter: blur(6px); }
+  100% { opacity: 0; transform: scale(.8); filter: blur(18px); }
+}
+@keyframes gate-light-open {
+  0%, 34% { opacity: 0; transform: scale(.04); }
+  52% { opacity: .72; }
+  82% { opacity: 1; transform: scale(7.5); }
+  100% { opacity: 0; transform: scale(13); }
+}
+@keyframes gate-reveal-mark {
+  0%, 18% { opacity: 0; transform: scale(.68); filter: blur(14px); letter-spacing:.32em; }
+  43%, 72% { opacity: 1; transform: scale(1); filter: blur(0); }
+  100% { opacity: 0; transform: scale(1.14); filter: blur(5px); }
+}
+@keyframes gate-scrim-to-light {
+  0%, 30% { background: #090705; backdrop-filter: blur(12px); }
+  68% { background: #171006; backdrop-filter: blur(7px); }
+  90% { background: rgba(255,239,201,.92); backdrop-filter: blur(3px); }
+  100% { background: rgba(255,253,247,0); backdrop-filter: blur(0); }
+}
+@keyframes gate-page-arrive {
+  0%, 68% { transform: scale(1.055); filter: brightness(1.65) blur(7px); opacity:.18; }
+  100% { transform: scale(1); filter: none; }
+}
+
+#el-gate.is-entering .gate-panel { animation: gate-panel-recede 900ms cubic-bezier(.5,0,.2,1) forwards; }
+#el-gate.is-entering .gate-scrim { animation: gate-scrim-to-light 3500ms cubic-bezier(.2,.7,.2,1) forwards; }
+#el-gate.is-entering .gate-reveal { opacity: 1; }
+#el-gate.is-entering .gate-reveal::before { animation: gate-light-open 3500ms cubic-bezier(.18,.74,.2,1) forwards; }
+#el-gate.is-entering .gate-reveal::after { animation: gate-light-open 3500ms cubic-bezier(.18,.74,.2,1) 120ms forwards; }
+#el-gate.is-entering .gate-reveal strong,
+#el-gate.is-entering .gate-reveal small { animation: gate-reveal-mark 3500ms cubic-bezier(.2,.7,.2,1) forwards; }
+html.gate-entering body > :not(#el-gate) { animation: gate-page-arrive 3500ms cubic-bezier(.2,.8,.2,1) forwards; transform-origin: center; }
 
 #el-gate .gate-brand { margin: 0 0 6px; font: 500 15px 'Cormorant Garamond', serif; letter-spacing: 0.42em; color: var(--gold); }
 #el-gate h2 { margin: 0 0 12px; font: 500 clamp(30px, 4.5vw, 40px)/1.05 'Cormorant Garamond', serif; color: var(--ink); }
-#el-gate .gate-lead { margin: 0 0 26px; color: var(--muted); font-size: 14px; line-height: 1.7; }
+#el-gate .gate-lead { margin: 0 0 20px; color: var(--muted); font-size: 13px; line-height: 1.6; }
 
-#el-gate .gate-dob { border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px 20px; margin: 0 0 22px; display: flex; gap: 12px; }
+#el-gate .gate-dob { border: 1px solid var(--line); border-radius: 14px; padding: 13px 15px 16px; margin: 0 0 17px; display: flex; gap: 10px; }
 #el-gate .gate-dob legend { padding: 0 8px; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); font-weight: 500; }
 #el-gate .gate-dob label { flex: 1; font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
-#el-gate .gate-dob input { width: 100%; margin-top: 7px; border: 1px solid var(--line); background: #fff; border-radius: 8px; padding: 12px; font: 400 16px Jost, sans-serif; color: var(--ink); }
+#el-gate .gate-dob input { width: 100%; margin-top: 6px; border: 1px solid var(--line); background: #fff; border-radius: 8px; padding: 10px; font: 400 15px Jost, sans-serif; color: var(--ink); }
 
 #el-gate .gate-check { display: flex; gap: 11px; align-items: flex-start; margin: 0 0 13px; font-size: 13px; line-height: 1.55; color: var(--ink); }
 #el-gate .gate-check input { margin-top: 3px; accent-color: var(--gold); width: 15px; height: 15px; flex: none; }
@@ -31,7 +158,7 @@ html.gate-open { overflow: hidden; }
 
 #el-gate .gate-error { min-height: 18px; margin: 6px 0 10px; font-size: 12px; color: #9c4a2f; }
 #el-gate .gate-enter { width: 100%; }
-#el-gate .gate-note { margin: 16px 0 0; font-size: 11px; color: var(--muted); text-align: center; }
+#el-gate .gate-note { margin: 12px 0 0; font-size: 10px; color: var(--muted); text-align: center; }
 
 #el-gate .gate-refusal h3 { font: 600 28px 'Cormorant Garamond', serif; margin: 10px 0; }
 #el-gate .gate-refusal p { color: var(--muted); line-height: 1.7; }
@@ -39,4 +166,9 @@ html.gate-open { overflow: hidden; }
 @media (max-width: 620px) {
   #el-gate .gate-panel { padding: 32px 24px; }
   #el-gate .gate-dob { flex-direction: row; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #el-gate *,
+  html.gate-entering body > :not(#el-gate) { animation: none !important; transition: none !important; }
 }

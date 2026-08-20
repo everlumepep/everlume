@@ -1,5 +1,7 @@
 [build]
   publish = "."
+  command = "node scripts/build-config.mjs"
+  functions = "netlify/functions"
 
 # Deployment boundary. publish = "." serves every tracked file, so engineering
 # artifacts must be refused explicitly. force = true is required: without it
@@ -24,6 +26,12 @@
 
 [[redirects]]
   from = "/tests/*"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/netlify/*"
   to = "/404.html"
   status = 404
   force = true

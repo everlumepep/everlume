@@ -163,14 +163,14 @@ await check('deleted account leaves an anonymized ledger, not a hole', async () 
 console.log('\nCommerce triggers & constraints');
 // The count is incidental and moves whenever the client revises the catalog.
 // The invariant that must never move: nothing arrives purchasable.
-await check('every catalogued product is pending_review and unpriced', async () => {
+await check('every catalogued product is pending_review; only six carry confirmed prices', async () => {
   const r = await one(`select count(*)::int total,
     count(*) filter (where compliance_status <> 'pending_review')::int bad_status,
-    count(*) filter (where price_cents is not null)::int bad_price from public.products`);
+    count(*) filter (where price_cents is not null)::int priced from public.products`);
   assert(r.total > 0, 'catalog is empty — the seed did not apply');
   assert(r.bad_status === 0, `${r.bad_status} product(s) not pending_review`);
-  assert(r.bad_price === 0, `${r.bad_price} product(s) carry a price`);
-  return `${r.total} products, 0 approved, 0 priced`;
+  assert(r.priced === 6, `expected 6 confirmed prices, found ${r.priced}`);
+  return `${r.total} products, 0 approved, 6 priced`;
 });
 
 await check('0009 — SKUs follow the client convention and are unique', async () => {

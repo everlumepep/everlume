@@ -2,30 +2,36 @@
 
 ## Current release posture
 
-The site is a controlled, no-index preview for a laboratory-research supplier. It does not include checkout, dosing or administration guidance, consumer benefit claims, or public pricing.
+The active product branch is a controlled, no-index preview for a laboratory-research supplier. It includes photographic catalog presentation, six client-confirmed public prices, format selection, a local saved-research list, deterministic Pep Talk catalog guidance, and implemented account/subscription/rewards/COMMAND surfaces. The latter surfaces remain explicitly unavailable until a dedicated Everlume Supabase backend is provisioned and verified. Commerce remains closed: no product is approved or stocked, the storefront commerce flag is false, and payment-processor approval is unverified.
+
+The authoritative current completion board is [`docs/RELEASE-CERTIFICATION.md`](docs/RELEASE-CERTIFICATION.md).
 
 ## Delivery certification — 2026-08-20
 
 - Canonical repository: `everlumepep/everlume`
-- Live controlled preview: `https://myeverlume.com`
-- Core tests and static validation: **20/20 passed**
-- Offline PostgreSQL migration and invariant battery: **39/39 passed**
-- Live public certification: **60/60 passed**
+- Certified PR preview: `https://deploy-preview-4--everlume1.netlify.app`
+- Current production (older `main` build): `https://myeverlume.com`
+- Scoped working-tree tests and static validation: **22/22 passed**, 50 files and 15 pages checked
+- Offline PostgreSQL migration and invariant battery: **41/41 passed**
+- PR preview public certification: **60/60 passed**
+- Production public certification: **59/60 failed** (source drift)
 - Public deployment boundary: internal source, migrations, tests, and handoff documents return **404**
 - Security posture: CSP, frame denial, MIME protection, referrer policy, permissions policy, noindex, and robots controls verified live
 
-The client delivery is **store complete / inquiry live**. Transactional commerce is not approved for launch. The remaining launch dependencies require external authority or credentials:
+The PR preview is **controlled-preview ready at the network boundary**, not production-ready. Production still deploys `main` at `65a2ac8` and fails the active-branch catalog check (59/60). Transactional commerce is not approved for launch. The remaining launch dependencies require external authority or credentials:
 
-1. provision and connect the Everlume Supabase project, then run `npm run verify:live`;
-2. obtain legal approval for the Terms & Conditions currently marked draft;
-3. obtain payment-processor approval and credentials before changing `PAYMENT_STATE` or enabling commerce;
-4. approve products, pricing, and inventory individually—never by bypassing the authorization gates.
+1. commit and preview-deploy the scoped P0/P1 fixes, then repeat certification;
+2. provision and connect a dedicated Everlume Supabase project, then run `npm run verify:live`;
+3. complete real-browser desktop, tablet, mobile, keyboard, console, and performance checks;
+4. obtain legal approval for the Terms & Conditions currently marked draft;
+5. obtain payment-processor approval and credentials before changing `PAYMENT_STATE` or enabling commerce;
+6. approve products, pricing, and inventory individually—never by bypassing the authorization gates.
 
 ## Netlify configuration
 
 - Repository: `everlumepep/everlume`
 - Production branch: `main`
-- Build command: none
+- Build command: `node scripts/build-config.mjs`
 - Publish directory: `.`
 - Form name: `research-inquiry`
 
