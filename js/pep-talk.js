@@ -10,16 +10,24 @@
     [/contact|help|person|support/i, 'For account, order, or documentation support, use the contact form and the Everlume team can follow up.']
   ];
   const root = document.createElement('div');
-  root.innerHTML = `<button class="pep-launcher" id="pepTalkLauncher" type="button" aria-haspopup="dialog" aria-controls="pepTalkPanel"><span aria-hidden="true">✦</span> Pep Talk</button>
+  root.innerHTML = `<button class="pep-launcher" id="pepTalkLauncher" type="button" aria-haspopup="dialog" aria-controls="pepTalkPanel">
+      <span class="pep-launcher-mark" aria-hidden="true">EL</span>
+      <span class="pep-launcher-copy"><small>Everlume concierge</small><strong>Pep Talk</strong></span>
+      <span class="pep-launcher-arrow" aria-hidden="true">↗</span>
+    </button>
     <div class="pep-backdrop" id="pepTalkBackdrop" hidden></div>
     <aside class="pep-panel" id="pepTalkPanel" role="dialog" aria-modal="true" aria-labelledby="pepTalkTitle" hidden>
-      <header><div><p class="eyebrow">Everlume catalog guide</p><h2 id="pepTalkTitle">Pep Talk</h2><p>Catalog help, not medical advice.</p></div><button class="pep-close" type="button" aria-label="Close Pep Talk">×</button></header>
+      <header class="pep-header">
+        <span class="pep-header-mark" aria-hidden="true">EL</span>
+        <div class="pep-heading"><p class="eyebrow">Private catalog concierge</p><h2 id="pepTalkTitle">Pep Talk</h2><p class="pep-status"><span class="pep-status-dot" aria-hidden="true"></span>Catalog guidance · Always discreet</p></div>
+        <button class="pep-close" type="button" aria-label="Close Pep Talk">×</button>
+      </header>
       <div class="pep-body">
-        <div class="pep-bubble pep-bot">Welcome. I can help you explore materials, formats, documentation, rewards, subscriptions, orders, and shipping.</div>
+        <div class="pep-intro"><span class="pep-intro-mark" aria-hidden="true">✦</span><div class="pep-bubble pep-bot">Illuminate what’s possible. I can guide you through materials, formats, documentation, rewards, subscriptions, orders, and shipping.</div></div>
         <div class="pep-quick" aria-label="Quick questions"><button>Explore the catalog</button><button>Compare formats</button><button>Rewards & referrals</button><button>Documentation</button><button>Orders & shipping</button></div>
         <section class="pep-list"><div class="pep-list-head"><h3>My Research List</h3><button type="button" class="pep-clear">Clear</button></div><p>Save material identities and formats for later review.</p><div class="pep-list-items"></div></section>
       </div>
-      <form class="pep-form"><label class="sr-only" for="pepInput">Ask Pep Talk</label><input id="pepInput" maxlength="240" placeholder="Ask about the catalog…"><button type="submit">Send</button></form>
+      <form class="pep-form"><label class="sr-only" for="pepInput">Ask Pep Talk</label><input id="pepInput" maxlength="240" placeholder="Ask your Everlume concierge…"><button type="submit" aria-label="Send question"><span aria-hidden="true">↗</span></button></form>
     </aside>`;
   document.body.append(root);
   const launcher = document.getElementById('pepTalkLauncher');
