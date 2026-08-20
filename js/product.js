@@ -57,6 +57,8 @@
            <p class="summary-note">This material is presented for documentation and inquiry. It is not offered for purchase on this site.</p>
            <a class="btn btn-dark" href="index.html#contact">Request documentation</a>
          </div>`;
+    const subscribeBlock = label.state === 'available' && window.EVERLUME_CONFIG?.BILLING_ENABLED
+      ? `<div class="subscription-card"><p class="eyebrow">Everlume Reserve</p><h2>Subscribe &amp; save 10%</h2><p>Flexible replenishment. Skip, reschedule, or cancel through My Everlume.</p><label>Delivery cadence<select id="pdCadence"><option value="30">Every 30 days</option><option value="60">Every 60 days</option><option value="90">Every 90 days</option></select></label><button class="btn btn-dark" id="pdSubscribe" type="button">Subscribe &amp; save</button><p id="pdSubscribeStatus" role="status" aria-live="polite"></p></div>` : '';
 
     detail.innerHTML = `<div class="pd-layout">
       <div class="pd-visual">
@@ -75,6 +77,7 @@
           ${price ? `<div><dt>Price</dt><dd>${escapeHtml(price)}</dd></div>` : ''}
         </dl>
         ${buyBlock}
+        ${subscribeBlock}
         <p class="policy-note">For laboratory research and educational use only. Not for human or veterinary use. Everlume makes no medical, therapeutic, or efficacy claims. See the <a href="research-use.html">research-use policy</a>.</p>
       </div>
     </div>`;
@@ -99,6 +102,12 @@
         location.href = 'product.html?slug=' + encodeURIComponent(variantSelect.value);
       });
     }
+    document.getElementById('pdSubscribe')?.addEventListener('click', async event => {
+      const button=event.currentTarget,status=document.getElementById('pdSubscribeStatus'); button.disabled=true; status.textContent='Opening secure checkout…';
+      const {data:{session}}=await window.everlumeSupabase.auth.getSession();
+      if(!session){ location.href='account/signin.html'; return; }
+      try{const response=await fetch('/.netlify/functions/create-subscription',{method:'POST',headers:{'content-type':'application/json',authorization:`Bearer ${session.access_token}`},body:JSON.stringify({slug:product.slug,cadenceDays:Number(document.getElementById('pdCadence').value)})});const result=await response.json();if(!response.ok)throw new Error(result.error);location.href=result.url;}catch(error){status.textContent=error.message||'Subscription checkout is unavailable.';button.disabled=false;}
+    });
   }
 
   render();

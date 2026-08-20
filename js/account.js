@@ -35,23 +35,25 @@
   }
 
   async function loadRewards() {
-    const [{ data: account }, { data: txns }] = await Promise.all([
+    const [{ data: account }, { data: txns }, { data: credits }] = await Promise.all([
       client.from('rewards_accounts').select('*').maybeSingle(),
-      client.from('rewards_transactions').select('*').order('created_at', { ascending: false }).limit(50)
+      client.from('rewards_transactions').select('*').order('created_at', { ascending: false }).limit(50),
+      client.from('store_credit_transactions').select('*').order('created_at', { ascending: false }).limit(50)
     ]);
-    return { account, txns: txns || [] };
+    return { account, txns: txns || [], credits: credits || [] };
   }
 
   const sections = {
     async overview() {
       const [orders, rewards] = await Promise.all([loadOrders(), loadRewards()]);
-      const balance = rewards.account?.balance ?? 0;
+      const credit = rewards.account?.store_credit_cents ?? 0;
       return `
         <h2>Welcome${profile?.first_name ? ', ' + esc(profile.first_name) : ''}.</h2>
         <p class="panel-sub">Your Everlume account at a glance.</p>
         <div class="stat-row">
           <div class="stat-tile"><b>${orders.length}</b><span>Orders</span></div>
-          <div class="stat-tile"><b>${Number(balance).toLocaleString()}</b><span>Reward points</span></div>
+          <div class="stat-tile"><b>${money(credit)}</b><span>Store credit</span></div>
+          <div class="stat-tile"><b>${Number(rewards.account?.qualifying_purchases ?? 0)}/6</b><span>Reward progress</span></div>
           <div class="stat-tile"><b>${esc(when(user.created_at))}</b><span>Member since</span></div>
         </div>
         ${orders.length ? `<div class="data-list">${orders.slice(0, 5).map(o => `
@@ -69,14 +71,22 @@
         : '<p class="empty-note">No orders yet.</p>');
     },
     async rewards() {
-      const { account, txns } = await loadRewards();
+      const { account, txns, credits } = await loadRewards();
       return `<h2>Rewards</h2><p class="panel-sub">Points are recorded as a ledger — every earn and redemption is listed.</p>
-        <div class="stat-row"><div class="stat-tile"><b>${Number(account?.balance ?? 0).toLocaleString()}</b><span>Available points</span></div>
+        <div class="stat-row"><div class="stat-tile"><b>${money(account?.store_credit_cents ?? 0)}</b><span>Store credit</span></div>
+        <div class="stat-tile"><b>${Number(account?.qualifying_purchases ?? 0)}/6</b><span>Purchase progress</span></div>
+        <div class="stat-tile"><b>${Number(account?.complimentary_rewards ?? 0)}</b><span>Complimentary rewards</span></div>
         <div class="stat-tile"><b>${esc(account?.referral_code || '—')}</b><span>Referral code</span></div></div>` +
-        (txns.length ? `<div class="data-list">${txns.map(t => `
+        (credits.length || txns.length ? `<div class="data-list">${credits.map(t => `
+          <div class="row"><div>${esc(t.description || t.type)}<small>${esc(when(t.created_at))} · store credit</small></div>
+          <span class="pill">${t.amount_cents > 0 ? '+' : ''}${money(t.amount_cents)}</span></div>`).join('')}${txns.map(t => `
           <div class="row"><div>${esc(t.description || t.type)}<small>${esc(when(t.created_at))} · ${esc(t.type)}</small></div>
           <span class="pill">${t.points > 0 ? '+' : ''}${Number(t.points).toLocaleString()}</span></div>`).join('')}</div>`
-        : '<p class="empty-note">No rewards activity yet. The rewards program will activate once business rules are approved.</p>');
+        : '<p class="empty-note">Refer a friend for $10 credit after their first completed purchase. Six qualifying purchases unlock one complimentary eligible item.</p>');
+    },
+    async subscriptions() {
+      const {data}=await client.from('subscriptions').select('*,products(name,dose_label)').order('created_at',{ascending:false}); const rows=data||[];
+      return `<h2>Subscriptions</h2><p class="panel-sub">Manage Everlume Reserve deliveries and billing.</p>${rows.length?`<div class="data-list">${rows.map(s=>`<div class="row"><div>${esc(s.products?.name||'Everlume Reserve')}<small>${esc(s.products?.dose_label||'')} · every ${esc(s.cadence_days)} days · renews ${esc(when(s.current_period_end))}</small></div><span class="pill">${esc(s.status)}</span></div>`).join('')}</div><button class="btn btn-dark" id="billingPortalBtn" type="button">Manage billing &amp; subscription</button><p id="billingPortalStatus" role="status"></p>`:'<p class="empty-note">No active subscriptions yet.</p>'}`;
     },
     async profile() {
       return `<h2>Profile</h2><p class="panel-sub">Your account information.</p>
@@ -113,6 +123,7 @@
     try { panel.innerHTML = await sections[name](); }
     catch { panel.innerHTML = '<p class="empty-note">We could not load this section. Please refresh.</p>'; }
     if (name === 'profile') bindProfileForm();
+    document.getElementById('billingPortalBtn')?.addEventListener('click', async event=>{const button=event.currentTarget,status=document.getElementById('billingPortalStatus');button.disabled=true;status.textContent='Opening secure billing…';const {data:{session}}=await client.auth.getSession();try{const response=await fetch('/.netlify/functions/customer-portal',{method:'POST',headers:{authorization:`Bearer ${session.access_token}`}});const result=await response.json();if(!response.ok)throw new Error(result.error);location.href=result.url;}catch(error){status.textContent=error.message||'Billing portal unavailable.';button.disabled=false;}});
   }
 
   function bindProfileForm() {

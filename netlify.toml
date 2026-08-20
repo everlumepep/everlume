@@ -1,5 +1,7 @@
 [build]
   publish = "."
+  command = "node scripts/build-config.mjs"
+  functions = "netlify/functions"
 
 # Deployment boundary. publish = "." serves every tracked file, so engineering
 # artifacts must be refused explicitly. force = true is required: without it

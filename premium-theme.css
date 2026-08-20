@@ -809,3 +809,7 @@ footer {
 }
 
 .product-price { font: 600 24px "Cormorant Garamond", serif; }
+.subscription-card{margin-top:1.5rem;padding:1.5rem;border:1px solid rgba(177,132,63,.3);border-radius:20px;background:linear-gradient(135deg,rgba(255,255,255,.78),rgba(241,225,198,.42));box-shadow:0 18px 48px rgba(73,51,34,.09)}
+.subscription-card h2{margin:.2rem 0 .5rem;font-family:"Cormorant Garamond",serif;font-size:clamp(1.65rem,3vw,2.35rem)}
+.subscription-card label{display:grid;gap:.45rem;margin:1rem 0;font-size:.75rem;letter-spacing:.14em;text-transform:uppercase}
+.subscription-card select{width:100%;padding:.85rem 1rem;border:1px solid rgba(177,132,63,.35);border-radius:999px;background:#fffaf3;color:#49392d}

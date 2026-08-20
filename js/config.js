@@ -3,9 +3,11 @@
 // key is designed to be exposed; security is enforced by Postgres RLS).
 // Fill these in at deploy time once the Supabase project exists.
 // NEVER put a service_role key anywhere in this repository.
+const runtime = window.EVERLUME_RUNTIME_CONFIG || {};
 window.EVERLUME_CONFIG = {
-  SUPABASE_URL: '',
-  SUPABASE_ANON_KEY: '',
+  SUPABASE_URL: runtime.SUPABASE_URL || '',
+  SUPABASE_ANON_KEY: runtime.SUPABASE_ANON_KEY || '',
+  BILLING_ENABLED: runtime.BILLING_ENABLED === true,
 
   // Storefront commerce switch. FALSE keeps the site inquiry-only: the bag and
   // checkout entry points are hidden and nothing can be added to a bag, even

@@ -39,6 +39,15 @@ test('rewards ledger is append-only and balance is trigger-maintained', () => {
     'rewards_accounts must not be client-writable');
 });
 
+test('published rewards and subscriptions are modeled without client-side financial writes', () => {
+  assert.match(sql, /create table if not exists public\.subscriptions/);
+  assert.match(sql, /create table if not exists public\.store_credit_transactions/);
+  assert.match(sql, /'referral_credit'[\s\S]*"credit_cents":1000[\s\S]*true/);
+  assert.match(sql, /'seventh_purchase_reward'[\s\S]*"qualifying_purchases":6[\s\S]*true/);
+  assert.ok(!/create policy "[^"]*" on public\.store_credit_transactions\s+for insert\s+to authenticated/.test(sql));
+  assert.ok(!/create policy "[^"]*" on public\.subscriptions\s+for insert\s+to authenticated/.test(sql));
+});
+
 test('account deletion cannot be blocked by the append-only ledger', () => {
   // Regression guard for the defect fixed in migration 0007: a cascade delete
   // into an unconditionally-raising trigger made account closure impossible.
