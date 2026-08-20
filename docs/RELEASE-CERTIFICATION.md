@@ -1,7 +1,7 @@
 # Everlume — (X) MASTER Release Candidate
 
 **Audit date:** 2026-08-20  
-**Certified source:** `everlumepep/everlume` · `mderby5/everlume-photographic-vials` · `b8f2cdf`
+**Certified source:** `everlumepep/everlume` · `mderby5/everlume-photographic-vials` · `b5b9034`
 **Release recommendation:** **NO-GO.** The exact static candidate is preview-deployed and network-certified, but preview backend connection, live/browser certification, ownership, legal, monitoring, recovery, and Founder gates remain open. Production and commerce remain stopped.
 
 This is the authoritative completion board for Directive 03. `PASS` means evidence was collected. `BLOCKED` and `UNTESTED` never mean pass.
@@ -11,21 +11,48 @@ This is the authoritative completion board for Directive 03. `PASS` means eviden
 **Release status: STOPPED — PRODUCTION NO-GO.**
 
 - Source identity reverified: canonical folder, remote, branch, and baseline commit all match.
-- Scoped working tree reverified at pushed candidate `b8f2cdf`; the corrective database-security migration and this updated receipt are authorized for publication and remain separate from unrelated untracked files.
+- Scoped working tree reverified at pushed candidate `b5b9034`; unrelated untracked files remain excluded.
 - Source suite and static validation: **PASS — 22/22**, 50 required files and 15 pages.
 - Offline migrations and security invariants: **PASS — 42/42** across all 12 ordered migrations.
 - Dependency audit: **PASS — 0 known vulnerabilities**.
-- Exact PR #4 preview network battery: **PASS — 60/60** at commit `b8f2cdf`, Netlify deployment `6a86fc561acb1500085ca27e`.
+- Exact PR #4 preview network battery: **PASS — 60/60** at commit `b5b9034`, Netlify deployment `6a86ff875bcf430008283699`.
 - Dedicated backend: **PASS for existence/schema boundary** — Supabase `Everlume` (`zyerhqcqxcjdnfmdbutg`) is `ACTIVE_HEALTHY`, has 12 migrations, 18 public tables, and RLS enabled on every public table.
 - Security advisor: **7 WARN** — anonymous and authenticated execution exposure for `is_staff`, `is_manager`, and `is_admin`, plus authenticated execution for the intentionally role-checking/audited `adjust_inventory` RPC. No advisor warning is silently treated as a pass.
 - Performance advisor: **OPEN** — unindexed foreign keys, per-row Auth/RLS evaluation, and overlapping permissive policies remain optimization risks.
-- Corrective security migration: **APPLIED LIVE / AUTHORIZED FOR COMMIT AND PUSH**.
+- Corrective security migration: **APPLIED LIVE / COMMITTED AND PUSHED** at `b5b9034`.
 - Real-browser certification: **BLOCKED** after a repeated attempt because the administrator-enforced browser security policy could not be verified.
 - Preview/backend connection and live Auth/RLS battery: **BLOCKED** because Netlify ownership cannot be authenticated in the available browser or local CLI session.
 - Ownership, inquiry delivery, monitoring, backup/restore, legal, and Founder gates: **BLOCKED / unrecorded**.
 - Production and commerce: unchanged and inaccessible by policy; no production action was taken.
 
 The stop conditions in Directive 04 remain active after publication. Release work resumes only after restored browser access, authenticated Netlify ownership, preview-only backend/Auth configuration, live certification, and the required approvals.
+
+## Live security-warning disposition — 2026-08-20
+
+**Disposition: controlled-preview risk acceptance only; remediation required before production.**
+
+Identity helpers `is_admin()`, `is_manager()`, and `is_staff()`:
+
+- are `STABLE SECURITY DEFINER` functions with fixed `search_path=public`;
+- take no arguments, so callers cannot supply or probe another user ID;
+- derive identity only from `auth.uid()` and return one boolean;
+- delegate the profile lookup to `role_of(uid)`, whose EXECUTE privilege is limited to `service_role` and database ownership;
+- are referenced by 30 live RLS policies, so simply revoking EXECUTE would break authorization;
+- returned `false` for all three anonymous live RPC probes and for a synthetic ordinary authenticated session;
+- disclose no user identifier, role string, profile row, or privileged record in those probes.
+
+Required production remediation: move the helpers and `role_of` into a non-exposed private schema, update and re-certify all dependent RLS policies, then remove their public-schema RPC surface. Until that migration passes the live authorization battery, the six helper warnings remain accepted only for the non-production controlled preview.
+
+`adjust_inventory(text, integer, text)`:
+
+- anonymous RPC: **PASS — refused at the function privilege boundary**;
+- ordinary authenticated customer: **PASS — refused by manager/admin enforcement**;
+- manager path: **PASS — exactly one inventory change and one attributable audit event in the same transaction**;
+- blank reason: **PASS — refused**;
+- negative inventory: **PASS — refused**;
+- cleanup: **PASS — all probes rolled back; zero synthetic users, zero probe audit rows, and unchanged inventory remained**.
+
+The authenticated `adjust_inventory` warning is formally accepted for controlled preview because direct invocation is the intended COMMAND RPC and its body independently enforces role, reason, non-zero delta, non-negative inventory, row locking, attribution, and transactional audit. It remains subject to re-test after the preview is connected through a real Auth session.
 
 ## 1. Canonical source and production identity
 
@@ -34,15 +61,15 @@ The stop conditions in Directive 04 remain active after publication. Release wor
 | Local source | `/Users/xenth_admin/XENTH-LANES/everlume` | PASS |
 | GitHub | `https://github.com/everlumepep/everlume.git` | PASS |
 | Active branch | `mderby5/everlume-photographic-vials` | PASS |
-| Directive commit | hardened candidate `b8f2cdf` | PASS |
-| Branch comparison | active branch is 10 commits ahead of `main`, 0 behind | PASS |
+| Directive commit | hardened candidate `b5b9034` | PASS |
+| Branch comparison | active branch is 12 commits ahead of `main`, 0 behind | PASS |
 | Pull request | PR #4, draft, mergeable, clean; Netlify preview successful | PASS |
 | Netlify project | `everlume1`, account name `Everlume` | PASS |
 | Production source | `main` at `65a2ac8` | PASS |
-| Preview source | PR #4 at `b8f2cdf`; Netlify deploy `6a86fc561acb1500085ca27e` | PASS |
+| Preview source | PR #4 at `b5b9034`; Netlify deploy `6a86ff875bcf430008283699` | PASS |
 | Production domain | `myeverlume.com` | PASS |
 | DNS / registrar | Cloudflare; `nick.ns.cloudflare.com`, `uma.ns.cloudflare.com`; routes to Netlify | PASS |
-| Source-to-production agreement | production is 10 commits behind the release candidate | FAIL — P0 |
+| Source-to-production agreement | production is 12 commits behind the release candidate | FAIL — P0 |
 
 Authoritative chain today:
 
@@ -50,7 +77,7 @@ Authoritative chain today:
 
 Candidate chain:
 
-`GitHub PR #4 / branch@b8f2cdf → Netlify deploy-preview-4--everlume1.netlify.app → Supabase Everlume zyerhqcqxcjdnfmdbutg (not yet connected to preview)`
+`GitHub PR #4 / branch@b5b9034 → Netlify deploy-preview-4--everlume1.netlify.app → Supabase Everlume zyerhqcqxcjdnfmdbutg (not yet connected to preview)`
 
 ## 2. Current product definition
 
@@ -77,12 +104,12 @@ The strongest honest immediate release is **A. Controlled Preview**. It is a pre
 
 | Priority | Owner | Surface | Evidence | Acceptance criteria / verification | Status |
 | --- | --- | --- | --- | --- | --- |
-| P0 | XENTH release owner | production identity | production hash equals `main@65a2ac8`, preview equals `b8f2cdf` | production deploys the exact certified commit only after all approvals; rerun 60 checks | FAIL |
+| P0 | XENTH release owner | production identity | production hash equals `main@65a2ac8`, preview equals `b5b9034` | production deploys the exact certified commit only after all approvals; rerun 60 checks | FAIL |
 | P0 | XENTH / Supabase owner | accounts, saved data, COMMAND | dedicated `Everlume` project `zyerhqcqxcjdnfmdbutg` is ACTIVE_HEALTHY; 12 migrations applied; all public tables have RLS | connect preview/Auth configuration and pass live verification | IN PROGRESS |
 | P0 | Founder / legal | terms and public authority | Terms v1.0 is marked draft | written approval and final policy version | BLOCKED |
 | P0 | Founder / commercial owner | commerce | products pending review; inventory zero; processor approval and credentials unverified | every commercial gate in Directive 03 passes | BLOCKED / commerce closed |
-| P0 | Engineering | subscription authorization | endpoint previously lacked a server billing gate | `BILLING_ENABLED` must be exactly `true` before any auth, DB, or Stripe operation | PASS at `b8f2cdf` |
-| P1 | Engineering / content | Pep Talk | deterministic UI claimed unavailable account/order/subscription value | identify deterministic behavior, retain medical refusal, state preview limitations | PASS at `b8f2cdf` |
+| P0 | Engineering | subscription authorization | endpoint previously lacked a server billing gate | `BILLING_ENABLED` must be exactly `true` before any auth, DB, or Stripe operation | PASS at `b5b9034` |
+| P1 | Engineering / content | Pep Talk | deterministic UI claimed unavailable account/order/subscription value | identify deterministic behavior, retain medical refusal, state preview limitations | PASS at `b5b9034` |
 | P1 | Engineering | keyboard accessibility | dialog returned focus but did not contain focus | Tab and Shift+Tab remain within open dialog; Escape closes and restores focus | FIXED LOCALLY; browser check BLOCKED |
 | P1 | XENTH admin | Netlify ownership | public API exposes account name only; local CLI is not authenticated | confirm `admin@xenthgroup.com` has owner/admin access and document rollback | BLOCKED |
 | P1 | XENTH admin | Cloudflare ownership | DNS and registrar are Cloudflare; local CLI is not authenticated | confirm destination account and zone access without changing DNS | BLOCKED |
@@ -143,11 +170,11 @@ No analytics, monitoring, email-provider, or fixed production-origin variables a
 
 | Verification | Result |
 | --- | --- |
-| Source tests | PASS — 22/22 at `b8f2cdf`; 22/22 after local security migration |
+| Source tests | PASS — 22/22 at `b5b9034` |
 | Static validation | PASS — 50 files, 15 pages |
 | Offline migrations / invariants | PASS — 42/42 after function-boundary hardening |
 | Dependency audit | PASS — 0 known vulnerabilities |
-| Exact hardened PR preview public certification | PASS — 60/60 at `b8f2cdf`; deploy `6a86fc561acb1500085ca27e` |
+| Exact hardened PR preview public certification | PASS — 60/60 at `b5b9034`; deploy `6a86ff875bcf430008283699` |
 | Production public certification | FAIL — 59/60; stale catalog/pricing build |
 | Authentication / password recovery | BLOCKED — project exists but preview/Auth URLs/email are not configured and live flow is untested |
 | Customer isolation / privilege refusal | PASS offline; BLOCKED live |
@@ -176,7 +203,7 @@ No analytics, monitoring, email-provider, or fixed production-origin variables a
 - [x] Preview network certification passes
 - [x] Offline database invariants pass
 - [x] Dependency audit passes
-- [x] Local P0/P1 fixes committed and preview-deployed at `b8f2cdf`
+- [x] Local P0/P1 fixes committed and preview-deployed at `b5b9034`
 - [ ] Real-browser desktop/tablet/mobile/keyboard/console certification passes
 - [ ] Dedicated Everlume Supabase project exists and is migrated; preview connection, Auth configuration, and live battery remain
 - [ ] Inquiry delivery owner and receipt verified
