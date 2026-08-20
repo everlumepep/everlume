@@ -1082,6 +1082,37 @@ html.js .lume-stage.reveal.visible{transform:translateY(var(--lume-shift,0px))}
 @media(max-width:800px){.lume-moment{min-height:840px;grid-template-columns:1fr;padding:76px 24px 90px}.lume-copy{text-align:center;margin:auto}.lume-copy>p:not(.eyebrow){margin-inline:auto}.lume-stage{min-height:410px}.lume-orbit{right:50%;transform:translate(50%,-50%)}.orbit-two{right:50%;animation:none}.lume-caption{left:24px;right:24px}.lume-moment::after{left:50%;transform:translateX(-50%)}.editorial-panel{min-height:440px}.editorial-panel::after{background:linear-gradient(0deg,rgba(31,24,19,.68),rgba(31,24,19,.05) 70%)}.editorial-panel figcaption{width:calc(100% - 56px)} }
 @media(max-width:620px){section[id]{scroll-margin-top:88px}.collection{padding-top:68px}.category-card{min-height:220px}.editorial-panel{min-height:470px}.editorial-panel img{object-position:64% center}.editorial-panel figcaption strong{font-size:38px}}
 @media(prefers-reduced-motion:reduce){.lume-aura,.lume-vial,.orbit-two,.lume-particle{animation:none!important}.lume-stage{transform:none!important}}
+
+/* XENTH refinement: turn standards into proof, not decoration. */
+.trust-strip div{align-items:flex-start}
+.trust-strip span{display:grid;gap:.32rem}
+.trust-strip strong{color:#fff8ed;font-size:.72rem;font-weight:500;letter-spacing:.16em;text-transform:uppercase}
+.trust-strip small{max-width:18rem;color:#cdbfb1;font-size:.68rem;line-height:1.45;letter-spacing:.03em;text-transform:none}
+.intro{max-width:1120px;text-align:left}
+.intro h2{max-width:900px;font-size:clamp(3.2rem,6vw,6.8rem);line-height:.88;letter-spacing:-.035em}
+.intro>p:last-child{max-width:720px;margin-left:auto;font-size:clamp(1rem,1.35vw,1.28rem);line-height:1.75}
+.standards-story{position:relative;min-height:760px;margin:0;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(420px,.95fr);overflow:hidden;background:#e8dac7}
+.standards-story>img{width:100%;height:100%;min-height:760px;object-fit:cover;object-position:47% center}
+.standards-story-copy{display:flex;flex-direction:column;justify-content:center;padding:clamp(64px,7vw,120px);background:linear-gradient(135deg,#fffaf2,#f3e7d5)}
+.standards-story-copy h2{margin:.25em 0;font:500 clamp(3.8rem,6.8vw,7.3rem)/.82 "Cormorant Garamond",serif;letter-spacing:-.04em;color:#382b22}
+.standards-story-copy>p:not(.eyebrow){max-width:38rem;color:#746659;font-size:1.02rem;line-height:1.75}
+.standards-story-copy ol{list-style:none;margin:2.1rem 0 2.4rem;padding:0;border-top:1px solid rgba(164,125,71,.25)}
+.standards-story-copy li{display:grid;grid-template-columns:2.6rem 1fr;align-items:center;gap:1rem;padding:1rem 0;border-bottom:1px solid rgba(164,125,71,.25);color:#4a392d;font-size:.85rem;letter-spacing:.06em}
+.standards-story-copy li span{color:#a47d47;font:500 1rem "Cormorant Garamond",serif}
+.standards-story-copy .btn{align-self:flex-start}
+.bundle-grid{grid-template-columns:repeat(3,minmax(0,1fr));max-width:1320px;margin-inline:auto}
+.pd-process{margin-top:clamp(4rem,8vw,8rem);padding:clamp(3.5rem,6vw,6rem);border-radius:32px;background:linear-gradient(145deg,#201713,#49382d);color:#fff9ef;box-shadow:0 36px 90px rgba(45,30,20,.18)}
+.pd-process .pd-section-head{max-width:720px}
+.pd-process .pd-section-head h2{color:#fff9ef}
+.pd-process .pd-section-head>p:last-child{color:#cbbbad}
+.pd-process-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;margin-top:2.4rem;background:rgba(229,190,122,.22)}
+.pd-process-grid article{padding:2rem;background:#2d211b}
+.pd-process-grid span{color:#d6ae68;font:500 1rem "Cormorant Garamond",serif}
+.pd-process-grid h3{margin:.9rem 0 .55rem;color:#fff9ef;font:500 2rem/1 "Cormorant Garamond",serif}
+.pd-process-grid p{margin:0;color:#cbbbad;font-size:.86rem;line-height:1.7}
+@media(max-width:920px){.standards-story{grid-template-columns:1fr}.standards-story>img{min-height:500px}.bundle-grid,.pd-process-grid{grid-template-columns:1fr}.intro>p:last-child{margin-left:0}}
+@media(max-width:620px){.standards-story>img{min-height:390px}.standards-story-copy{padding:56px 24px}.standards-story-copy h2{font-size:3.6rem}.pd-process{padding:2rem 1.25rem;border-radius:22px}.trust-strip small{display:none}}
+
 /* Pep Talk catalog guide and research list */
 .pd-save-wrap{margin-top:1rem;padding:1rem 1.1rem;border:1px solid rgba(176,128,61,.28);border-radius:18px;background:rgba(255,252,247,.72)}
 .pd-save-wrap p{margin:.55rem 0 0;color:var(--muted,#786b60);font-size:.82rem;line-height:1.5}

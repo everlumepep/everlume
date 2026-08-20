@@ -142,12 +142,16 @@
       <div class="pd-focus-grid">${profile.points.map((point, index) => `<article class="pd-focus-card"><span>0${index + 1}</span><h3>${escapeHtml(point[0])}</h3><p>${escapeHtml(point[1])}</p></article>`).join('')}</div>
     </section>
     <section class="pd-editorial" aria-labelledby="pdEditorialTitle">
-      <div class="pd-editorial-media"><img src="assets/editorial/everlume-molecular-light-v1.jpg" alt="Abstract warm molecular forms illuminated by soft golden light" width="1600" height="1067"></div>
-      <div class="pd-editorial-copy"><p class="eyebrow">From identity to inquiry</p><h2 id="pdEditorialTitle">Research, presented with clarity.</h2>
-        <p>Everlume pairs a refined material presentation with the practical records researchers need to evaluate fit before inquiry.</p>
-        <ul><li>Material identity and selected format</li><li>Lot and source documentation</li><li>Handling aligned with supplied records</li></ul>
+      <div class="pd-editorial-media"><img src="assets/editorial/everlume-documentation-still-life-v1.jpg" alt="Research vial presented beside organized specification documents" width="1680" height="945"></div>
+      <div class="pd-editorial-copy"><p class="eyebrow">Before you inquire</p><h2 id="pdEditorialTitle">The material record, made visible.</h2>
+        <p>Use this page to identify the material and selected format. Everlume confirms the current supporting record set before any fulfillment discussion.</p>
+        <ul><li>Material name, reference code, and selected format</li><li>Available lot and source records</li><li>Storage and handling aligned with supplied documentation</li></ul>
         <a class="text-link" href="index.html#contact">Request material documentation <span aria-hidden="true">&rarr;</span></a>
       </div>
+    </section>
+    <section class="pd-process" aria-labelledby="pdProcessTitle">
+      <div class="pd-section-head"><p class="eyebrow">A controlled path</p><h2 id="pdProcessTitle">What happens next.</h2><p>No maze, no ambiguous checkout. Each request moves through three explicit steps.</p></div>
+      <div class="pd-process-grid"><article><span>01</span><h3>Identify</h3><p>Select the material and available format that belongs in your inquiry.</p></article><article><span>02</span><h3>Confirm</h3><p>Everlume confirms current availability, documentation, and applicable requirements.</p></article><article><span>03</span><h3>Proceed</h3><p>Eligible fulfillment details are communicated directly after review.</p></article></div>
     </section>
     ${relatedBlock}
     <aside class="pd-boundary"><p class="eyebrow">Research boundary</p><p>This page describes laboratory research context only. It does not provide dosing, administration, treatment, or human-use guidance.</p></aside>`;
