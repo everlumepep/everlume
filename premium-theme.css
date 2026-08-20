@@ -580,6 +580,97 @@ footer {
 }
 .mini-vial { transition: transform 220ms ease; }
 
+/* Photographic Everlume vial system. Product names remain live HTML so every
+   catalog label stays sharp, accessible, and consistent across all SKUs. */
+.hero-art .vial {
+  width: 172px;
+  height: 300px;
+  bottom: 62px;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  filter: drop-shadow(0 28px 24px rgba(70, 48, 26, 0.2));
+}
+.hero-art .vial::before { display: none; }
+.hero-art .vial img,
+.mini-vial img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.hero-art .vial span,
+.hero-art .vial b,
+.hero-art .vial small,
+.mini-vial span,
+.mini-vial b,
+.mini-vial small {
+  position: relative;
+  z-index: 1;
+  text-shadow: 0 1px rgba(255,255,255,.7);
+}
+.hero-art .vial span { margin: 43px 0 13px; }
+.hero-art .vial b { max-width: 76%; font-size: 14px; line-height: 1.05; }
+.hero-art .vial small { max-width: 76%; font-size: 8px; }
+.hero-art .vial-a { left: 10%; }
+.hero-art .vial-b { left: 36%; bottom: 88px; }
+.hero-art .vial-c { right: 10%; }
+
+.product-visual {
+  height: 260px;
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 72%, rgba(190,150,96,.2), transparent 34%), linear-gradient(155deg,#efe2d2,#faf5ec);
+}
+.mini-vial {
+  width: 146px;
+  height: 214px;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  filter: drop-shadow(0 19px 15px rgba(70,48,26,.2));
+}
+.mini-vial::before { display: none; }
+.mini-vial span { margin: 23px 0 7px; }
+.mini-vial b { display:flex; align-items:center; justify-content:center; width:70%; min-height:24px; max-width:70%; font-size:10px; line-height:1.05; overflow-wrap:anywhere; }
+.mini-vial small { max-width: 70%; font-size:6.5px; }
+
+.variant-picker {
+  display: grid;
+  gap: 6px;
+  margin: 0 0 10px;
+  color: var(--gold);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+.variant-picker select {
+  width: 100%;
+  min-height: 42px;
+  padding: 9px 34px 9px 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: rgba(255,255,255,.68);
+  color: var(--ink);
+  font: 500 12px Jost, sans-serif;
+  letter-spacing: .08em;
+  cursor: pointer;
+}
+.pd-variant-picker { max-width: 240px; margin: 20px 0; }
+
+@media (max-width: 620px) {
+  .hero-art .vial { width: 118px; height: 220px; bottom: 62px; }
+  .hero-art .vial span { margin: 33px 0 8px; font-size: 18px; }
+  .hero-art .vial b { font-size: 10px; }
+  .hero-art .vial small { font-size: 7px; }
+  .hero-art .vial-a { left: 1%; }
+  .hero-art .vial-b { left: 32%; bottom: 78px; }
+  .hero-art .vial-c { right: 1%; }
+}
+
 /* Category accent bar — a quiet wayfinding cue, not decoration for its own sake */
 .product-card::before {
   content: "";

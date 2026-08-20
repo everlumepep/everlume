@@ -32,6 +32,8 @@
     if (!slug) return notFound();
     const product = await catalog.find(slug);
     if (!product) return notFound();
+    const { products } = await catalog.load();
+    const variants = products.filter(item => item.name === product.name && item.category === product.category);
 
     const label = catalog.availabilityLabel(product);
     const price = catalog.formatPrice(product.price_cents);
@@ -58,12 +60,12 @@
 
     detail.innerHTML = `<div class="pd-layout">
       <div class="pd-visual">
-        <div class="mini-vial"><span>EL</span><b>${name.toUpperCase()}</b><small>${dose}</small></div>
+        <div class="mini-vial"><img src="assets/products/everlume-vial-master-v1.png" alt="" width="1024" height="1365"><span>EL</span><b>${name.toUpperCase()}</b><small>${dose}</small></div>
       </div>
       <div class="pd-copy">
         <p class="eyebrow">${escapeHtml(product.category)} research</p>
         <h1 class="page-title">${name}</h1>
-        <p class="pd-dose">${dose}</p>
+        ${variants.length > 1 ? `<label class="variant-picker pd-variant-picker"><span>Dosage</span><select id="pdVariant" aria-label="Select ${name} dosage">${variants.map(variant => `<option value="${escapeHtml(variant.slug)}"${variant.slug === product.slug ? ' selected' : ''}>${escapeHtml(variant.dose_label || '—')}</option>`).join('')}</select></label>` : `<p class="pd-dose">${dose}</p>`}
         <p class="policy-lead">${escapeHtml(product.description)}</p>
         <dl class="pd-specs">
           <div><dt>SKU</dt><dd>${escapeHtml(product.sku)}</dd></div>
@@ -89,6 +91,12 @@
           ? (result.capped ? 'Added — quantity limited by available stock.' : 'Added to your bag.')
           : 'This material is not available for purchase.';
         updateCartBadge();
+      });
+    }
+    const variantSelect = document.getElementById('pdVariant');
+    if (variantSelect) {
+      variantSelect.addEventListener('change', () => {
+        location.href = 'product.html?slug=' + encodeURIComponent(variantSelect.value);
       });
     }
   }
