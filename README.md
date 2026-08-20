@@ -24,7 +24,10 @@ The controlled preview intentionally blocks search indexing through page metadat
 
 ## Pages
 
-- `/` — research catalog and inquiry
+- `/` — photographic research catalog, local saved list, Pep Talk guidance, and inquiry
+- `/product.html` — material and format detail
+- `/account/` — customer portal (requires connected Supabase backend)
+- `/command/` — role-gated operations console (requires connected Supabase backend)
 - `/research-use.html` — research-use policy
 - `/privacy.html` — inquiry privacy notice
 - `/404.html` — branded not-found page

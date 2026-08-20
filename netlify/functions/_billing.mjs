@@ -6,6 +6,7 @@ export const env = name => {
   if (!value) throw new Error(`Missing ${name}`);
   return value;
 };
+export const billingEnabled = () => process.env.BILLING_ENABLED === 'true';
 export const stripe = () => new Stripe(env('STRIPE_SECRET_KEY'));
 export async function userFrom(event) {
   const token = (event.headers.authorization || '').replace(/^Bearer\s+/i, '');

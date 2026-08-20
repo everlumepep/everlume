@@ -1,6 +1,7 @@
-import { json, stripe, userFrom, rest } from './_billing.mjs';
+import { billingEnabled, json, stripe, userFrom, rest } from './_billing.mjs';
 export async function handler(event) {
   if (event.httpMethod !== 'POST') return json(405,{error:'Method not allowed'});
+  if (!billingEnabled()) return json(503,{error:'Subscriptions are not currently available'});
   try {
     const user=await userFrom(event); if(!user) return json(401,{error:'Sign in required'});
     const {slug,cadenceDays}=JSON.parse(event.body||'{}');

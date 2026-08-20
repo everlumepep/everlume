@@ -160,3 +160,20 @@ test('cart and checkout refuse direct URL access when commerce is closed', () =>
   assert.match(cartPage, /commerceEnabled\(\)/, 'bag page does not check the commerce flag');
   assert.match(checkout, /commerceEnabled\(\)/, 'checkout does not check the commerce flag');
 });
+
+test('subscription creation is gated server-side and Pep Talk describes preview capabilities honestly', () => {
+  const billing = readFileSync(new URL('../netlify/functions/create-subscription.mjs', import.meta.url), 'utf8');
+  const helper = readFileSync(new URL('../netlify/functions/_billing.mjs', import.meta.url), 'utf8');
+  const pepTalk = readFileSync(new URL('../js/pep-talk.js', import.meta.url), 'utf8');
+
+  assert.match(helper, /process\.env\.BILLING_ENABLED === 'true'/,
+    'billing authorization must be derived from a server environment variable');
+  assert.match(billing, /if \(!billingEnabled\(\)\) return json\(503/,
+    'the subscription endpoint must fail closed before authentication or Stripe calls');
+  assert.match(pepTalk, /deterministic catalog guidance/i,
+    'Pep Talk must identify its actual non-AI behavior');
+  assert.match(pepTalk, /Subscriptions are not active on this preview/,
+    'Pep Talk must not claim unavailable subscription functionality');
+  assert.match(pepTalk, /Ordering is not active on this preview/,
+    'Pep Talk must not claim unavailable order functionality');
+});
