@@ -95,6 +95,9 @@ html.js .reveal.visible {
 
 .hero {
   min-height: 640px;
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
   padding-top: clamp(68px, 7vw, 96px);
   padding-bottom: clamp(68px, 7vw, 96px);
   grid-template-columns: minmax(0, .92fr) minmax(500px, 1.08fr);
@@ -106,6 +109,8 @@ html.js .reveal.visible {
 
 .hero-copy {
   max-width: 680px;
+  position: relative;
+  z-index: 2;
 }
 
 .hero h1 {
@@ -818,6 +823,86 @@ footer {
   0%, 100% { opacity: .45; transform: scale(.78) rotate(0deg); }
   50% { opacity: 1; transform: scale(1.08) rotate(9deg); }
 }
+@keyframes everlume-orbit {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+@keyframes everlume-radiance {
+  0%, 100% { opacity: .42; transform: translate(-50%, -50%) scale(.88); }
+  50% { opacity: .82; transform: translate(-50%, -52%) scale(1.08); }
+}
+
+.hero-art { isolation: isolate; }
+.hero-energy {
+  position: absolute;
+  inset: -18% -20% -8%;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.hero-energy::before,
+.hero-energy::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(1px);
+}
+.hero-energy::before {
+  width: 12px;
+  height: 12px;
+  left: 23%;
+  top: 23%;
+  background: #d3aa66;
+  box-shadow: 230px 35px 0 -3px rgba(211,170,102,.7), 310px 260px 0 -4px rgba(255,247,221,.9);
+  animation: everlume-spark 4.8s ease-in-out infinite;
+}
+.hero-energy::after {
+  width: 260px;
+  height: 190px;
+  left: 50%;
+  top: 51%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(ellipse, rgba(255,247,220,.8), rgba(221,174,101,.18) 46%, transparent 72%);
+  filter: blur(24px);
+}
+.hero-orbit {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transform-origin: center;
+}
+.hero-orbit-a {
+  width: 78%;
+  height: 62%;
+  border: 1px solid rgba(172,126,65,.24);
+  box-shadow: 0 0 40px rgba(207,165,96,.08), inset 0 0 36px rgba(255,255,255,.25);
+  animation: everlume-orbit 30s linear infinite;
+}
+.hero-orbit-b {
+  width: 58%;
+  height: 84%;
+  border: 1px dashed rgba(190,149,86,.2);
+  animation: everlume-orbit 38s linear infinite reverse;
+}
+.hero-energy-core {
+  position: absolute;
+  left: 50%;
+  top: 56%;
+  width: 62%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(255,252,238,.96) 0 12%, rgba(234,198,135,.34) 34%, rgba(193,139,69,.1) 55%, transparent 72%);
+  filter: blur(12px);
+  animation: everlume-radiance 7.5s ease-in-out infinite;
+}
+.hero-art .arch { z-index: 1; }
+.hero-art .vial { z-index: 3; }
+.hero-art .vial-b { z-index: 4; }
+.hero-art .spark,
+.hero-art .hero-note { z-index: 5; }
 
 .hero-art .arch::after {
   content: "";
@@ -898,6 +983,9 @@ footer {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .hero-orbit,
+  .hero-energy-core,
+  .hero-energy::before,
   .hero-art .arch::after,
   .hero-art .vial,
   .hero-art .spark { animation: none !important; }
@@ -910,6 +998,9 @@ footer {
 }
 
 @media (max-width: 620px) {
+  .hero-energy { inset: -8% -30% -4%; }
+  .hero-orbit-b { display: none; }
+  .hero-energy-core { width: 78%; }
   .hero-art .vial { width: 118px; height: 220px; bottom: 62px; }
   .hero-art .vial span { margin: 29px 0 8px; font-size: 5.5px; }
   .hero-art .vial b { font-size: 9px; }
