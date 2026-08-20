@@ -38,6 +38,7 @@ function recordAcceptance(record) {
 function template() {
   return `
   <div class="gate-scrim"></div>
+  <div class="gate-reveal" aria-hidden="true"><span>EL</span><strong>EVERLUME</strong><small>ELEVATE · RENEW · GLOW</small></div>
   <div class="gate-panel" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
     <p class="gate-brand">EVERLUME</p>
     <h2 id="gateTitle">Adult Access &amp; Product Acknowledgement</h2>
@@ -117,9 +118,20 @@ function openGate() {
       return;
     }
     recordAcceptance(makeGateRecord(config));
-    overlay.remove();
-    document.documentElement.classList.remove('gate-open');
-    document.querySelector('#main-content')?.focus();
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const finishEntry = () => {
+      overlay.remove();
+      document.documentElement.classList.remove('gate-open');
+      document.documentElement.classList.remove('gate-entering');
+      document.querySelector('#main-content')?.focus();
+    };
+    if (reducedMotion) return finishEntry();
+
+    form.querySelectorAll('input, button').forEach(control => { control.disabled = true; });
+    overlay.classList.add('is-entering');
+    document.documentElement.classList.add('gate-entering');
+    overlay.setAttribute('aria-hidden', 'true');
+    window.setTimeout(finishEntry, 1550);
   });
 }
 
