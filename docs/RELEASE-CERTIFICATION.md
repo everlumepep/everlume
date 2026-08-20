@@ -1,9 +1,9 @@
 # Everlume — (X) MASTER Release Candidate
 
 **Audit date:** 2026-08-20  
-**Certified source:** `everlumepep/everlume` · `mderby5/everlume-photographic-vials` · `801b956`
-**Connected preview:** Netlify deploy `6a873a67c7878a5bdba432ff`
-**Release recommendation:** **NO-GO.** The exact connected preview is network-certified, but Auth administration, authenticated live isolation, cross-browser/device coverage, inquiry delivery, Cloudflare custody, backup restore, legal, and Founder gates remain open. Commerce remains stopped.
+**Certified source:** `everlumepep/everlume` · `mderby5/everlume-photographic-vials` · `494835ad6ab24fb9107a8117426439d179be45e7`
+**Connected preview:** Netlify deploy `6a87431c8d0cee0008ef716c` · `https://deploy-preview-5--everlume1.netlify.app`
+**Release recommendation:** **NO-GO.** The exact technical preview passes, including authenticated administrator COMMAND. Custody/recovery, Firefox and physical-device coverage, keyboard/screen-reader evidence, real recovery-email delivery, data restoration, proactive monitoring, legal, and Founder gates remain open. Commerce remains stopped.
 
 This is the authoritative completion board for Directive 03. `PASS` means evidence was collected. `BLOCKED` and `UNTESTED` never mean pass.
 
@@ -12,21 +12,21 @@ This is the authoritative completion board for Directive 03. `PASS` means eviden
 **Release status: STOPPED — PRODUCTION NO-GO.**
 
 - Source identity reverified: canonical folder, remote, branch, and baseline commit all match.
-- The directive's `b5b9034` is the hardened security baseline, not the latest candidate. PR #4 advanced to `801b956` and was externally merged as `780249b` before this final non-production run.
-- Scoped working tree reverified at pushed candidate `801b956`; unrelated `AGENTS.md` and `supabase/.temp/` remain excluded.
+- The directive's `b5b9034` is the hardened security baseline. Git ancestry proves the linear chain `b5b9034 → 4e7e746 → e3c1fe5 → 2e94ab4 → 4d5def5 → 14619fa → 195cbf7 → 801b956 → 494835a`.
+- Scoped working tree reverified at pushed candidate `494835a`; unrelated `AGENTS.md` and `supabase/.temp/` remain excluded.
 - Source suite: **PASS — 23/23** after adding the COMMAND identity regression guard.
 - Offline migrations and security invariants: **PASS — 43/43** across 13 ordered migrations, including the locally uncommitted performance-advisor remediation.
 - Dependency audit: **PASS — 0 known vulnerabilities**.
-- Exact PR #4 preview network battery: **PASS — 60/60** at commit `801b956`, Netlify deployment `6a873a67c7878a5bdba432ff`.
+- Exact PR #5 preview network battery: **PASS — 60/60** at commit `494835a`, Netlify deployment `6a87431c8d0cee0008ef716c`.
 - Dedicated backend: **PASS for connection/schema boundary** — preview-only Netlify variables resolve to Supabase `Everlume` (`zyerhqcqxcjdnfmdbutg`); production values remain empty; the project is `ACTIVE_HEALTHY`, has 13 live migrations, 18 public tables, and RLS on all 18.
 - Security advisor: **7 WARN** — anonymous and authenticated execution exposure for `is_staff`, `is_manager`, and `is_admin`, plus authenticated execution for the intentionally role-checking/audited `adjust_inventory` RPC. No advisor warning is silently treated as a pass.
-- Performance advisor remediation: **APPLIED LIVE / UNCOMMITTED LOCALLY** — all 10 unindexed foreign-key and all 14 per-row Auth/RLS notices cleared. Remaining: 35 intentional overlapping-policy notices and 24 unused-index notices on an almost-empty preview database.
+- Performance advisor remediation: **APPLIED LIVE / COMMITTED** at `494835a` — all 10 unindexed foreign-key and all 14 per-row Auth/RLS notices cleared. Remaining: 35 intentional overlapping-policy notices and 24 unused-index notices on an almost-empty preview database.
 - Corrective security migration: **APPLIED LIVE / COMMITTED AND PUSHED** at `b5b9034`.
 - Anonymous live authorization: **PASS** — identity RPCs return `false`, inventory mutation returns 401, and protected profile/audit reads return zero rows.
 - Auth configuration: **PASS** — Site URL `https://myeverlume.com`; exact PR preview and Netlify deploy wildcard allowed; email sign-up enabled; confirmation required; anonymous sign-in disabled. Default templates are active; custom SMTP/branding is not configured.
 - Authenticated live RLS battery: **PASS for tested customer/staff/manager/admin boundaries** — three `.invalid` accounts established sessions; customer isolation, privilege escalation refusal, staff visibility, manager inventory enforcement/attribution, and admin role-management/restore passed. Account deletion was not run because deletion was explicitly prohibited.
 - Password recovery: **PARTIAL** — approved redirect configured; Supabase correctly refused reserved `.invalid`/`example.com` delivery addresses, so real delivery remains unproved without authorization to send to an owned inbox.
-- Authenticated browser: customer sign-in and account portal passed; ordinary customer COMMAND refusal passed. Administrator COMMAND exposed a real query-scope defect when staff RLS returned multiple profiles. Fix and regression test are local and uncommitted; the deployed preview correctly remains uncertified until a new exact deploy passes.
+- Authenticated browser: customer sign-in/account portal and ordinary-customer COMMAND refusal passed. Administrator COMMAND passed in exact deploy `6a87431c8d0cee0008ef716c` after scoping the profile query to the signed-in user; regression coverage passes.
 - Netlify ownership: **PASS** — `everlume.admin@gmail.com` / DENISHA P is the sole Owner; rollback/deploy history is accessible. Recovery is **FAIL** because the sole owner has no 2FA and no second recovery owner.
 - GitHub custody: **PARTIAL** — authenticated viewer `XENTHGRP` has WRITE to `everlumepep/everlume`; repository-owner/admin custody remains unproved.
 - Cloudflare: authoritative nameservers verified; account/zone custody remains unproved.
@@ -70,11 +70,11 @@ The authenticated `adjust_inventory` warning is formally accepted for controlled
 | GitHub | `https://github.com/everlumepep/everlume.git` | PASS |
 | Active branch | `mderby5/everlume-photographic-vials` | PASS |
 | Hardened baseline | `b5b9034` | PASS — superseded |
-| Current candidate | `801b95633bfd26d0f0cd912f2d49b5bd3c2b17a1` | PASS |
-| Pull request | PR #4 closed and merged; head `801b956`, merge `780249b` | PASS |
+| Current candidate | `494835ad6ab24fb9107a8117426439d179be45e7` | PASS |
+| Pull request | PR #5 open and unmerged; head `494835a` | PASS — review only |
 | Netlify project | `everlume1`, team `everlume-admin`, owner `everlume.admin@gmail.com` | PASS |
 | Production source | `main` merge `780249bf46e0b1e7ddd43ce26899833141f99f28`; deploy `6a871f9299c9d8000863e666` | OBSERVED — not promoted during this run |
-| Preview source | PR #4 head `801b956`; connected deploy `6a873a67c7878a5bdba432ff` | PASS |
+| Preview source | PR #5 head `494835a`; connected deploy `6a87431c8d0cee0008ef716c` | PASS |
 | Production domain | `myeverlume.com` | PASS |
 | DNS / registrar | Cloudflare; `nick.ns.cloudflare.com`, `uma.ns.cloudflare.com`; routes to Netlify | PASS |
 | Preview/backend boundary | only Deploy Previews have Supabase URL/publishable key; production is empty; billing false | PASS |
@@ -85,7 +85,7 @@ Authoritative chain today:
 
 Candidate chain:
 
-`GitHub PR #4 / branch@801b956 → Netlify 6a873a67c7878a5bdba432ff → Supabase Everlume zyerhqcqxcjdnfmdbutg (preview-only)`
+`GitHub PR #5 / branch@494835a → Netlify 6a87431c8d0cee0008ef716c → Supabase Everlume zyerhqcqxcjdnfmdbutg (preview-only)`
 
 ## 2. Current product definition
 
