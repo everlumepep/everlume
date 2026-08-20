@@ -173,6 +173,31 @@
     document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
   }
 
+  // Signature light moment. Pointer position only controls a decorative glow;
+  // scroll depth is intentionally shallow and disabled for reduced motion.
+  const lumeMoment = document.querySelector('.lume-moment');
+  if (lumeMoment && !reducedMotion) {
+    if (window.matchMedia('(pointer:fine)').matches) {
+      lumeMoment.addEventListener('pointermove', event => {
+        const bounds = lumeMoment.getBoundingClientRect();
+        lumeMoment.style.setProperty('--mx', `${((event.clientX - bounds.left) / bounds.width) * 100}%`);
+        lumeMoment.style.setProperty('--my', `${((event.clientY - bounds.top) / bounds.height) * 100}%`);
+      });
+    }
+    let lumeFrame = 0;
+    const updateLumeDepth = () => {
+      lumeFrame = 0;
+      const bounds = lumeMoment.getBoundingClientRect();
+      if (bounds.bottom < 0 || bounds.top > innerHeight) return;
+      const progress = (innerHeight - bounds.top) / (innerHeight + bounds.height);
+      lumeMoment.style.setProperty('--lume-shift', `${(progress - .5) * 28}px`);
+    };
+    addEventListener('scroll', () => {
+      if (!lumeFrame) lumeFrame = requestAnimationFrame(updateLumeDepth);
+    }, { passive: true });
+    updateLumeDepth();
+  }
+
   // ── Inquiry form ─────────────────────────────────────────────────────────
   const inquiry = document.getElementById('inquiryForm');
   if (inquiry) {
