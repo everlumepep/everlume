@@ -62,6 +62,11 @@
   function updateCartBadge() {
     const badge = document.getElementById('cartCount');
     if (!badge) return;
+    const bagLink = badge.closest('.nav-bag');
+    if (!catalog.commerceEnabled()) {
+      bagLink.hidden = true;
+      return;
+    }
     const n = cart.count();
     badge.textContent = n > 0 ? String(n) : '';
     badge.hidden = n === 0;
@@ -201,6 +206,15 @@
         button.addEventListener('mouseenter', show);
         button.addEventListener('focus', show);
         button.addEventListener('click', show);
+      });
+      document.querySelector('.pd-visual')?.addEventListener('mouseleave', () => {
+        hotspotCard.classList.remove('is-visible');
+        document.querySelectorAll('[data-hotspot]').forEach(item => item.setAttribute('aria-expanded', 'false'));
+      });
+      document.addEventListener('keydown', event => {
+        if (event.key !== 'Escape') return;
+        hotspotCard.classList.remove('is-visible');
+        document.querySelectorAll('[data-hotspot]').forEach(item => item.setAttribute('aria-expanded', 'false'));
       });
     }
     const saveBtn = document.getElementById('pdSaveList');
