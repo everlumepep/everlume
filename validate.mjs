@@ -89,6 +89,13 @@ for (const phrase of ['weight loss', 'starter kit', 'syringe', 'dosage guide', '
   if (publicCopy.includes(phrase)) errors.push(`Consumer-use phrase remains in public copy: ${phrase}`);
 }
 
+// The controlled release is inquiry-only and intentionally ships no prices.
+// Do not let promotional copy imply that a public price catalog exists while
+// commerce and product authorization remain closed.
+for (const phrase of ['price catalog', 'introductory pricing', 'straightforward pricing']) {
+  if (publicCopy.includes(phrase)) errors.push(`Pricing promise contradicts inquiry-only release: ${phrase}`);
+}
+
 const netlify = readFileSync('netlify.toml', 'utf8');
 if (!netlify.includes('Content-Security-Policy')) errors.push('Netlify CSP header is missing');
 if (!netlify.includes('X-Content-Type-Options')) errors.push('Netlify content-type protection is missing');

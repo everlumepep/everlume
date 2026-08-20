@@ -4,6 +4,23 @@
 
 The site is a controlled, no-index preview for a laboratory-research supplier. It does not include checkout, dosing or administration guidance, consumer benefit claims, or public pricing.
 
+## Delivery certification — 2026-08-20
+
+- Canonical repository: `everlumepep/everlume`
+- Live controlled preview: `https://myeverlume.com`
+- Core tests and static validation: **20/20 passed**
+- Offline PostgreSQL migration and invariant battery: **39/39 passed**
+- Live public certification: **60/60 passed**
+- Public deployment boundary: internal source, migrations, tests, and handoff documents return **404**
+- Security posture: CSP, frame denial, MIME protection, referrer policy, permissions policy, noindex, and robots controls verified live
+
+The client delivery is **store complete / inquiry live**. Transactional commerce is not approved for launch. The remaining launch dependencies require external authority or credentials:
+
+1. provision and connect the Everlume Supabase project, then run `npm run verify:live`;
+2. obtain legal approval for the Terms & Conditions currently marked draft;
+3. obtain payment-processor approval and credentials before changing `PAYMENT_STATE` or enabling commerce;
+4. approve products, pricing, and inventory individually—never by bypassing the authorization gates.
+
 ## Netlify configuration
 
 - Repository: `everlumepep/everlume`
