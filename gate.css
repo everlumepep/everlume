@@ -1,7 +1,7 @@
 /* Everlume entry compliance gate */
 html.gate-open { overflow: hidden; }
 
-#el-gate { position: fixed; inset: 0; z-index: 2000; display: grid; place-items: center; padding: 22px; }
+#el-gate { position: fixed; inset: 0; z-index: 2000; display: grid; grid-template-columns: minmax(0, 1fr); place-items: center; padding: 22px; }
 #el-gate .gate-scrim {
   position: absolute;
   inset: 0;
@@ -85,9 +85,11 @@ html.gate-open { overflow: hidden; }
 
 #el-gate .gate-panel {
   position: relative;
-  width: min(510px, 100%);
+  width: 100%;
+  max-width: 510px;
+  min-width: 0;
   max-height: calc(100vh - 44px);
-  overflow-y: auto;
+  overflow: auto;
   background: linear-gradient(165deg, #fffdf9, #f8f0e4);
   border: 1px solid var(--line);
   border-radius: 22px;
@@ -143,10 +145,10 @@ html.gate-entering body > :not(#el-gate) { animation: gate-page-arrive 3500ms cu
 #el-gate h2 { margin: 0 0 12px; font: 500 clamp(30px, 4.5vw, 40px)/1.05 'Cormorant Garamond', serif; color: var(--ink); }
 #el-gate .gate-lead { margin: 0 0 20px; color: var(--muted); font-size: 13px; line-height: 1.6; }
 
-#el-gate .gate-dob { border: 1px solid var(--line); border-radius: 14px; padding: 13px 15px 16px; margin: 0 0 17px; display: flex; gap: 10px; }
+#el-gate .gate-dob { border: 1px solid var(--line); border-radius: 14px; padding: 13px 15px 16px; margin: 0 0 17px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
 #el-gate .gate-dob legend { padding: 0 8px; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); font-weight: 500; }
-#el-gate .gate-dob label { flex: 1; font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
-#el-gate .gate-dob input { width: 100%; margin-top: 6px; border: 1px solid var(--line); background: #fff; border-radius: 8px; padding: 10px; font: 400 15px Jost, sans-serif; color: var(--ink); }
+#el-gate .gate-dob label { min-width: 0; font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+#el-gate .gate-dob input { width: 100%; min-width: 0; margin-top: 6px; border: 1px solid var(--line); background: #fff; border-radius: 8px; padding: 10px; font: 400 15px Jost, sans-serif; color: var(--ink); }
 
 #el-gate .gate-check { display: flex; gap: 11px; align-items: flex-start; margin: 0 0 13px; font-size: 13px; line-height: 1.55; color: var(--ink); }
 #el-gate .gate-check input { margin-top: 3px; accent-color: var(--gold); width: 15px; height: 15px; flex: none; }
@@ -160,8 +162,10 @@ html.gate-entering body > :not(#el-gate) { animation: gate-page-arrive 3500ms cu
 #el-gate .gate-refusal p { color: var(--muted); line-height: 1.7; }
 
 @media (max-width: 620px) {
-  #el-gate .gate-panel { padding: 32px 24px; }
-  #el-gate .gate-dob { flex-direction: row; }
+  #el-gate { padding: 12px; }
+  #el-gate .gate-panel { width: calc(100vw - 24px); max-width: calc(100vw - 24px); max-height: calc(100vh - 24px); padding: 28px 18px; }
+  #el-gate .gate-dob { gap: 6px; padding-inline: 9px; }
+  #el-gate .gate-dob input { padding: 9px 7px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

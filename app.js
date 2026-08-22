@@ -209,6 +209,7 @@
       const button = form.querySelector('button[type="submit"]');
       button.disabled = true;
       button.textContent = 'Submitting…';
+      delete status.dataset.state;
       status.textContent = '';
       try {
         const response = await fetch('/', {
@@ -218,8 +219,10 @@
         });
         if (!response.ok) throw new Error('Submission failed');
         form.reset();
+        status.dataset.state = 'success';
         status.textContent = 'Thank you. Your research inquiry has been received.';
       } catch (error) {
+        status.dataset.state = 'error';
         status.textContent = 'We could not submit your inquiry. Please try again shortly.';
       } finally {
         button.disabled = false;
