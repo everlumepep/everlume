@@ -25,3 +25,9 @@ test('first-time visitors see the confirmation after the intro', () => {
 test('post-confirmation reveal supersedes intro and panel-arrival states', () => {
   assert.match(source, /overlay\.classList\.remove\('is-intro', 'is-ready'\);\s*overlay\.classList\.add\('is-entering'\)/);
 });
+
+test('entrance animation preserves the original Everlume wordmark', () => {
+  assert.match(source, /gate-intro[\s\S]*?<strong>EVERLUME<\/strong>[\s\S]*?ELEVATE · RENEW · GLOW/);
+  assert.match(source, /gate-reveal[\s\S]*?<strong>EVERLUME<\/strong><small>ELEVATE · RENEW · GLOW<\/small>/);
+  assert.doesNotMatch(source, /gate-(?:intro|reveal)[\s\S]{0,160}everlume-logo-client-lockup/);
+});

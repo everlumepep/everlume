@@ -50,10 +50,10 @@ function template() {
   return `
   <div class="gate-scrim"></div>
   <div class="gate-intro" aria-hidden="true">
-    <img src="/assets/everlume-logo-client-lockup.png" alt="">
-    <p>Everlume brings the light.</p>
+    <strong>EVERLUME</strong>
+    <small>ELEVATE · RENEW · GLOW</small>
   </div>
-  <div class="gate-reveal" aria-hidden="true"><img src="/assets/everlume-logo-client-lockup.png" alt=""></div>
+  <div class="gate-reveal" aria-hidden="true"><strong>EVERLUME</strong><small>ELEVATE · RENEW · GLOW</small></div>
   <div class="gate-panel" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
     <img class="gate-brand" src="/assets/everlume-logo-client-lockup.png" alt="Everlume">
     <h2 id="gateTitle">Welcome to Everlume</h2>
