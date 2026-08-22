@@ -163,7 +163,7 @@ console.log('\nH. Forms');
     formName && honeypotField,
     `${formName ? 'name ✓' : 'name ✗'} · ${honeypotField ? 'bot-field ✓' : 'bot-field ✗'}`);
   record('H', 'hidden honeypot is excluded from keyboard and accessibility navigation',
-    /class=["']honeypot["'][^>]*aria-hidden=["']true["'][^>]*\binert\b/.test(idx.body)
+    /class=["']honeypot["'][^>]*aria-hidden=["']true["'][^>]*\binert\b[^>]*\bhidden\b/.test(idx.body)
       && /name=["']bot-field["'][^>]*tabindex=["']-1["']/.test(idx.body), 'aria-hidden · tabindex -1');
   record('H', 'research-use acknowledgement is required',
     /research-use-acknowledgment[^>]*required|required[^>]*research-use-acknowledgment/.test(idx.body)
