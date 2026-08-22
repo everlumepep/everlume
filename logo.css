@@ -1,12 +1,16 @@
 .brand-monogram {
   display: block;
-  width: 54px;
-  height: 54px;
+  width: 116px;
+  height: 106px;
   object-fit: contain;
 }
 
+.site-header:has(.brand-monogram) {
+  height: 116px;
+}
+
 .brand-copy {
-  display: block;
+  display: none;
 }
 
 .brand-copy strong {
@@ -19,9 +23,11 @@
 }
 
 .footer-monogram {
-  width: 64px;
-  height: 64px;
-  filter: brightness(0) invert(82%) sepia(24%) saturate(634%) hue-rotate(357deg) brightness(89%);
+  display: block;
+  width: 168px;
+  height: 150px;
+  object-fit: contain;
+  border-radius: 2px;
 }
 
 .footer-brand span {
@@ -39,8 +45,12 @@
 
 @media (max-width: 620px) {
   .brand-monogram {
-    width: 46px;
-    height: 46px;
+    width: 82px;
+    height: 78px;
+  }
+
+  .site-header:has(.brand-monogram) {
+    height: 92px;
   }
 
   .brand-copy strong {

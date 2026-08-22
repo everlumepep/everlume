@@ -38,9 +38,9 @@ function recordAcceptance(record) {
 function template() {
   return `
   <div class="gate-scrim"></div>
-  <div class="gate-reveal" aria-hidden="true"><strong>EVERLUME</strong><small>ELEVATE · RENEW · GLOW</small></div>
+  <div class="gate-reveal" aria-hidden="true"><img src="/assets/everlume-logo-client-lockup.png" alt=""></div>
   <div class="gate-panel" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
-    <p class="gate-brand">EVERLUME</p>
+    <img class="gate-brand" src="/assets/everlume-logo-client-lockup.png" alt="Everlume">
     <h2 id="gateTitle">Welcome to Everlume</h2>
     <p class="gate-lead">Confirm your date of birth and acknowledge the research-use terms to enter.</p>
     <form id="gateForm" novalidate>

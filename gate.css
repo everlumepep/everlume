@@ -74,17 +74,14 @@ html.gate-open { overflow: hidden; }
   box-shadow: 0 0 65px 25px rgba(255,241,202,.72);
   transform: rotate(21deg) scaleY(.18);
 }
-#el-gate .gate-reveal strong,
-#el-gate .gate-reveal small { position: relative; z-index: 1; }
-#el-gate .gate-reveal strong {
-  font: 500 clamp(58px, 11vw, 168px)/.85 'Cormorant Garamond', serif;
-  letter-spacing: .18em;
-  text-indent: .18em;
-  color: #f8e9c8;
-  text-shadow: 0 0 12px rgba(255,235,190,.2), 0 0 58px rgba(219,165,81,.14);
-  white-space: nowrap;
+#el-gate .gate-reveal img {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: min(560px, 72vw);
+  height: auto;
+  filter: drop-shadow(0 0 42px rgba(219,165,81,.24));
 }
-#el-gate .gate-reveal small { margin-top: 28px; font: 500 10px Jost, sans-serif; letter-spacing: .5em; color:#fff4dc; }
 
 #el-gate .gate-panel {
   position: relative;
@@ -139,11 +136,10 @@ html.gate-open { overflow: hidden; }
 #el-gate.is-entering .gate-reveal { opacity: 1; }
 #el-gate.is-entering .gate-reveal::before { animation: gate-light-open 3500ms cubic-bezier(.18,.74,.2,1) forwards; }
 #el-gate.is-entering .gate-reveal::after { animation: gate-light-open 3500ms cubic-bezier(.18,.74,.2,1) 120ms forwards; }
-#el-gate.is-entering .gate-reveal strong,
-#el-gate.is-entering .gate-reveal small { animation: gate-reveal-mark 3500ms cubic-bezier(.2,.7,.2,1) forwards; }
+#el-gate.is-entering .gate-reveal img { animation: gate-reveal-mark 3500ms cubic-bezier(.2,.7,.2,1) forwards; }
 html.gate-entering body > :not(#el-gate) { animation: gate-page-arrive 3500ms cubic-bezier(.2,.8,.2,1) forwards; transform-origin: center; }
 
-#el-gate .gate-brand { margin: 0 0 6px; font: 500 15px 'Cormorant Garamond', serif; letter-spacing: 0.42em; color: var(--gold); }
+#el-gate .gate-brand { display:block; width: 116px; height: 106px; object-fit: contain; margin: -18px 0 0; }
 #el-gate h2 { margin: 0 0 12px; font: 500 clamp(30px, 4.5vw, 40px)/1.05 'Cormorant Garamond', serif; color: var(--ink); }
 #el-gate .gate-lead { margin: 0 0 20px; color: var(--muted); font-size: 13px; line-height: 1.6; }
 
