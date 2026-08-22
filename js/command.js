@@ -290,7 +290,13 @@
   (async function init() {
     const { data: { session } } = await client.auth.getSession();
     if (!session) { lock('Sign in required.', 'COMMAND is available to authorized Everlume staff only.'); return; }
-    const { data: profile } = await client.from('profiles').select('role, first_name, email').maybeSingle();
+    // Staff can read more than one profile through RLS. Always scope the
+    // identity lookup to the authenticated user's row so maybeSingle cannot
+    // fail as soon as another customer exists.
+    const { data: profile } = await client.from('profiles')
+      .select('role, first_name, email')
+      .eq('id', session.user.id)
+      .maybeSingle();
     const role = profile?.role;
     if (!['staff', 'manager', 'admin'].includes(role)) {
       lock('Not authorized.', 'This console is restricted to Everlume staff. Your account does not have staff access.');

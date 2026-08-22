@@ -10,6 +10,7 @@ import {
 } from './gate-logic.mjs';
 
 const config = window.EVERLUME_CONFIG;
+const INTRO_STORAGE_KEY = 'everlume.intro.seen';
 
 function readStored() {
   try { return JSON.parse(localStorage.getItem(GATE_STORAGE_KEY)); }
@@ -35,12 +36,26 @@ function recordAcceptance(record) {
   }).then(() => {}, () => {});
 }
 
+function introSeen() {
+  try { return sessionStorage.getItem(INTRO_STORAGE_KEY) === 'true'; }
+  catch { return false; }
+}
+
+function markIntroSeen() {
+  try { sessionStorage.setItem(INTRO_STORAGE_KEY, 'true'); }
+  catch {}
+}
+
 function template() {
   return `
   <div class="gate-scrim"></div>
+  <div class="gate-intro" aria-hidden="true">
+    <strong>EVERLUME</strong>
+    <small>ELEVATE · RENEW · GLOW</small>
+  </div>
   <div class="gate-reveal" aria-hidden="true"><strong>EVERLUME</strong><small>ELEVATE · RENEW · GLOW</small></div>
   <div class="gate-panel" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
-    <p class="gate-brand">EVERLUME</p>
+    <img class="gate-brand" src="/assets/everlume-logo-client-lockup.png" alt="Everlume">
     <h2 id="gateTitle">Welcome to Everlume</h2>
     <p class="gate-lead">Confirm your date of birth and acknowledge the research-use terms to enter.</p>
     <form id="gateForm" novalidate>
@@ -69,18 +84,62 @@ function messageFor(reasons) {
   return 'Please complete the form to continue.';
 }
 
-function openGate() {
+function openGate({ requiresConsent, playIntro }) {
   const overlay = document.createElement('div');
   overlay.id = 'el-gate';
   overlay.innerHTML = template();
   document.body.appendChild(overlay);
   document.documentElement.classList.add('gate-open');
 
+  const panel = overlay.querySelector('.gate-panel');
   const form = overlay.querySelector('#gateForm');
   const error = overlay.querySelector('#gateError');
   const refusal = overlay.querySelector('#gateRefusal');
   const focusables = () => overlay.querySelectorAll('a[href], button, input');
-  overlay.querySelector('input[name="month"]').focus();
+  const month = overlay.querySelector('input[name="month"]');
+
+  const finishEntry = () => {
+    overlay.remove();
+    document.documentElement.classList.remove('gate-open');
+    document.documentElement.classList.remove('gate-entering');
+    document.querySelector('#main-content')?.focus();
+  };
+
+  const revealSite = () => {
+    overlay.classList.remove('is-intro', 'is-ready');
+    overlay.classList.add('is-entering');
+    document.documentElement.classList.add('gate-entering');
+    overlay.setAttribute('aria-hidden', 'true');
+    window.setTimeout(finishEntry, 3600);
+  };
+
+  const revealGate = () => {
+    overlay.classList.remove('is-intro');
+    overlay.classList.add('is-ready');
+    panel.removeAttribute('aria-hidden');
+    panel.removeAttribute('inert');
+    month.focus();
+  };
+
+  if (playIntro) {
+    overlay.classList.add('is-intro');
+    panel.setAttribute('aria-hidden', 'true');
+    panel.setAttribute('inert', '');
+    markIntroSeen();
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reducedMotion) {
+      if (requiresConsent) revealGate(); else finishEntry();
+    } else {
+      window.setTimeout(() => {
+        if (requiresConsent) revealGate(); else revealSite();
+      }, 1900);
+    }
+  } else if (requiresConsent) {
+    overlay.classList.add('is-ready');
+    month.focus();
+  } else {
+    finishEntry();
+  }
 
   // Keep keyboard focus inside the dialog until the gate is resolved.
   overlay.addEventListener('keydown', event => {
@@ -115,20 +174,13 @@ function openGate() {
     }
     recordAcceptance(makeGateRecord(config));
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const finishEntry = () => {
-      overlay.remove();
-      document.documentElement.classList.remove('gate-open');
-      document.documentElement.classList.remove('gate-entering');
-      document.querySelector('#main-content')?.focus();
-    };
     if (reducedMotion) return finishEntry();
 
     form.querySelectorAll('input, button').forEach(control => { control.disabled = true; });
-    overlay.classList.add('is-entering');
-    document.documentElement.classList.add('gate-entering');
-    overlay.setAttribute('aria-hidden', 'true');
-    window.setTimeout(finishEntry, 3600);
+    revealSite();
   });
 }
 
-if (needsReconsent(readStored(), config)) openGate();
+const requiresConsent = needsReconsent(readStored(), config);
+const playIntro = !introSeen();
+if (requiresConsent || playIntro) openGate({ requiresConsent, playIntro });

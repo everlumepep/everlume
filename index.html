@@ -11,7 +11,7 @@
   <meta property="og:description" content="Laboratory research materials, documentation, and controlled inquiry.">
   <meta name="twitter:card" content="summary">
   <title>Everlume — Research Catalog</title>
-  <link rel="icon" type="image/svg+xml" href="assets/everlume-mark-v3.svg">
+  <link rel="icon" type="image/png" href="assets/everlume-logo-client-monogram.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500&family=Jost:wght@300;400;500;600&family=Pinyon+Script&display=swap" rel="stylesheet">
@@ -26,8 +26,7 @@
   <div class="announcement">Research products only · Not for human consumption</div>
   <header class="site-header">
     <a class="brand" href="#top" aria-label="Everlume home">
-      <img class="brand-monogram" src="assets/everlume-mark-v3.svg" alt="" width="54" height="54">
-      <span class="brand-copy"><strong>EVERLUME</strong><small>PEPTIDES</small></span>
+      <img class="brand-monogram" src="assets/everlume-logo-client-lockup.png" alt="Everlume" width="116" height="106">
     </a>
     <button class="menu-toggle" aria-label="Open menu" aria-expanded="false">☰</button>
     <nav class="nav" aria-label="Primary navigation">
@@ -166,12 +165,25 @@
       </div>
     </section>
 
+    <section class="inquiry-path" aria-labelledby="inquiryPathTitle">
+      <div class="inquiry-path-heading reveal">
+        <p class="eyebrow">A clear path forward</p>
+        <h2 id="inquiryPathTitle">From material to<br><em>responsible inquiry.</em></h2>
+        <p>Everlume keeps discovery separate from authorization. No payment is collected on this website.</p>
+      </div>
+      <ol class="inquiry-path-steps">
+        <li class="reveal"><span>01</span><div><strong>Select</strong><p>Choose the material and available format relevant to your research.</p></div></li>
+        <li class="reveal"><span>02</span><div><strong>Request</strong><p>Submit the intended research use and documentation request.</p></div></li>
+        <li class="reveal"><span>03</span><div><strong>Review</strong><p>Everlume confirms records, requirements, availability, and next steps.</p></div></li>
+      </ol>
+    </section>
+
     <section class="contact" id="contact">
       <div class="contact-inner reveal">
-        <div><p class="eyebrow">Questions or availability</p><h2>Connect with Everlume.</h2><p>Submit a research inquiry and include the products you are interested in.</p></div>
+        <div class="contact-intro"><p class="eyebrow">Questions or availability</p><h2>Connect with Everlume.</h2><p>Submit a research inquiry and include the products you are interested in.</p><p class="contact-boundary"><span aria-hidden="true">✦</span> Inquiry only · No payment information collected</p></div>
         <form id="inquiryForm" name="research-inquiry" method="POST" data-netlify="true" netlify-honeypot="bot-field">
           <input type="hidden" name="form-name" value="research-inquiry">
-          <p class="honeypot"><label>Do not fill this out if you are human: <input name="bot-field"></label></p>
+          <p class="honeypot" aria-hidden="true" inert hidden><label>Do not fill this out if you are human: <input name="bot-field" tabindex="-1" autocomplete="off"></label></p>
           <label>Name<input name="name" required autocomplete="name"></label>
           <label>Organization<input name="organization" required autocomplete="organization"></label>
           <label>Email<input type="email" name="email" required autocomplete="email"></label>
@@ -186,8 +198,8 @@
   </main>
 
   <footer>
-    <div class="footer-brand"><img class="footer-monogram" src="assets/everlume-mark-v3.svg" alt="" width="64" height="64"><div><strong>EVERLUME</strong><span>PEPTIDES</span><small>Elevate · Renew · Glow</small></div></div>
-    <div class="footer-links"><a href="#collection">Collection</a><a href="#catalog">Documentation</a><a href="#faq">FAQ</a><a href="research-use.html">Research-use policy</a><a href="privacy.html">Privacy</a><a href="#contact">Contact</a></div>
+    <div class="footer-brand"><img class="footer-monogram" src="assets/everlume-logo-client-lockup.png" alt="Everlume" width="168" height="150"></div>
+    <div class="footer-links"><a href="#collection">Collection</a><a href="#catalog">Documentation</a><a href="#faq">FAQ</a><a href="research-use.html">Research-use policy</a><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="shipping.html">Shipping</a><a href="refund.html">Refunds</a><a href="#contact">Contact</a></div>
     <p>© <span id="year"></span> Everlume. Laboratory research use only. Not for human or veterinary use. No medical claims are made.</p>
   </footer>
   <script src="js/runtime-config.js"></script>

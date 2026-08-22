@@ -177,3 +177,9 @@ test('subscription creation is gated server-side and Pep Talk describes preview 
   assert.match(pepTalk, /Ordering is not active on this preview/,
     'Pep Talk must not claim unavailable order functionality');
 });
+
+test('COMMAND resolves only the signed-in staff profile', () => {
+  const command = readFileSync(new URL('../js/command.js', import.meta.url), 'utf8');
+  assert.match(command, /\.eq\('id',\s*session\.user\.id\)/,
+    'COMMAND identity lookup must target the session user; staff RLS can expose multiple profiles');
+});

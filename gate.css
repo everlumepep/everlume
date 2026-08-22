@@ -1,7 +1,7 @@
 /* Everlume entry compliance gate */
 html.gate-open { overflow: hidden; }
 
-#el-gate { position: fixed; inset: 0; z-index: 2000; display: grid; place-items: center; padding: 22px; }
+#el-gate { position: fixed; inset: 0; z-index: 2000; display: grid; grid-template-columns: minmax(0, 1fr); place-items: center; padding: 22px; }
 #el-gate .gate-scrim {
   position: absolute;
   inset: 0;
@@ -75,7 +75,10 @@ html.gate-open { overflow: hidden; }
   transform: rotate(21deg) scaleY(.18);
 }
 #el-gate .gate-reveal strong,
-#el-gate .gate-reveal small { position: relative; z-index: 1; }
+#el-gate .gate-reveal small {
+  position: relative;
+  z-index: 1;
+}
 #el-gate .gate-reveal strong {
   font: 500 clamp(58px, 11vw, 168px)/.85 'Cormorant Garamond', serif;
   letter-spacing: .18em;
@@ -86,11 +89,36 @@ html.gate-open { overflow: hidden; }
 }
 #el-gate .gate-reveal small { margin-top: 28px; font: 500 10px Jost, sans-serif; letter-spacing: .5em; color:#fff4dc; }
 
+#el-gate .gate-intro {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 16px;
+  opacity: 0;
+  pointer-events: none;
+  color: #d2b77d;
+  text-align: center;
+}
+#el-gate .gate-intro strong {
+  font: 500 clamp(58px, 11vw, 168px)/.85 'Cormorant Garamond', serif;
+  letter-spacing: .18em;
+  text-indent: .18em;
+  color: #f8e9c8;
+  text-shadow: 0 0 12px rgba(255,235,190,.22), 0 0 58px rgba(219,165,81,.18);
+  white-space: nowrap;
+}
+#el-gate .gate-intro small { font: 500 10px Jost, sans-serif; letter-spacing: .5em; color:#fff4dc; }
+
 #el-gate .gate-panel {
   position: relative;
-  width: min(510px, 100%);
+  width: 100%;
+  max-width: 510px;
+  min-width: 0;
   max-height: calc(100vh - 44px);
-  overflow-y: auto;
+  overflow: auto;
   background: linear-gradient(165deg, #fffdf9, #f8f0e4);
   border: 1px solid var(--line);
   border-radius: 22px;
@@ -105,6 +133,17 @@ html.gate-open { overflow: hidden; }
 @keyframes gate-stars-twinkle {
   0% { opacity: .25; filter: brightness(.75); transform: scale(1); }
   100% { opacity: .78; filter: brightness(1.35); transform: scale(1.015); }
+}
+
+@keyframes gate-intro-arrive {
+  0% { opacity: 0; transform: scale(.94); filter: blur(12px); }
+  30%, 76% { opacity: 1; transform: scale(1); filter: blur(0); }
+  100% { opacity: 0; transform: scale(1.04); filter: blur(5px); }
+}
+
+@keyframes gate-panel-arrive {
+  from { opacity: 0; transform: translateY(18px) scale(.97); filter: blur(8px); }
+  to { opacity: 1; transform: none; filter: none; }
 }
 
 @keyframes gate-panel-recede {
@@ -135,6 +174,9 @@ html.gate-open { overflow: hidden; }
 }
 
 #el-gate.is-entering .gate-panel { animation: gate-panel-recede 900ms cubic-bezier(.5,0,.2,1) forwards; }
+#el-gate.is-intro .gate-panel { opacity: 0; pointer-events: none; }
+#el-gate.is-intro .gate-intro { animation: gate-intro-arrive 1900ms cubic-bezier(.2,.7,.2,1) forwards; }
+#el-gate.is-ready .gate-panel { animation: gate-panel-arrive 620ms cubic-bezier(.2,.7,.2,1) both; }
 #el-gate.is-entering .gate-scrim { animation: gate-scrim-to-light 3500ms cubic-bezier(.2,.7,.2,1) forwards; }
 #el-gate.is-entering .gate-reveal { opacity: 1; }
 #el-gate.is-entering .gate-reveal::before { animation: gate-light-open 3500ms cubic-bezier(.18,.74,.2,1) forwards; }
@@ -143,14 +185,14 @@ html.gate-open { overflow: hidden; }
 #el-gate.is-entering .gate-reveal small { animation: gate-reveal-mark 3500ms cubic-bezier(.2,.7,.2,1) forwards; }
 html.gate-entering body > :not(#el-gate) { animation: gate-page-arrive 3500ms cubic-bezier(.2,.8,.2,1) forwards; transform-origin: center; }
 
-#el-gate .gate-brand { margin: 0 0 6px; font: 500 15px 'Cormorant Garamond', serif; letter-spacing: 0.42em; color: var(--gold); }
+#el-gate .gate-brand { display:block; width: 116px; height: 106px; object-fit: contain; margin: -18px 0 0; }
 #el-gate h2 { margin: 0 0 12px; font: 500 clamp(30px, 4.5vw, 40px)/1.05 'Cormorant Garamond', serif; color: var(--ink); }
 #el-gate .gate-lead { margin: 0 0 20px; color: var(--muted); font-size: 13px; line-height: 1.6; }
 
-#el-gate .gate-dob { border: 1px solid var(--line); border-radius: 14px; padding: 13px 15px 16px; margin: 0 0 17px; display: flex; gap: 10px; }
+#el-gate .gate-dob { border: 1px solid var(--line); border-radius: 14px; padding: 13px 15px 16px; margin: 0 0 17px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
 #el-gate .gate-dob legend { padding: 0 8px; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); font-weight: 500; }
-#el-gate .gate-dob label { flex: 1; font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
-#el-gate .gate-dob input { width: 100%; margin-top: 6px; border: 1px solid var(--line); background: #fff; border-radius: 8px; padding: 10px; font: 400 15px Jost, sans-serif; color: var(--ink); }
+#el-gate .gate-dob label { min-width: 0; font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+#el-gate .gate-dob input { width: 100%; min-width: 0; margin-top: 6px; border: 1px solid var(--line); background: #fff; border-radius: 8px; padding: 10px; font: 400 15px Jost, sans-serif; color: var(--ink); }
 
 #el-gate .gate-check { display: flex; gap: 11px; align-items: flex-start; margin: 0 0 13px; font-size: 13px; line-height: 1.55; color: var(--ink); }
 #el-gate .gate-check input { margin-top: 3px; accent-color: var(--gold); width: 15px; height: 15px; flex: none; }
@@ -164,8 +206,10 @@ html.gate-entering body > :not(#el-gate) { animation: gate-page-arrive 3500ms cu
 #el-gate .gate-refusal p { color: var(--muted); line-height: 1.7; }
 
 @media (max-width: 620px) {
-  #el-gate .gate-panel { padding: 32px 24px; }
-  #el-gate .gate-dob { flex-direction: row; }
+  #el-gate { padding: 12px; }
+  #el-gate .gate-panel { width: calc(100vw - 24px); max-width: calc(100vw - 24px); max-height: calc(100vh - 24px); padding: 28px 18px; }
+  #el-gate .gate-dob { gap: 6px; padding-inline: 9px; }
+  #el-gate .gate-dob input { padding: 9px 7px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

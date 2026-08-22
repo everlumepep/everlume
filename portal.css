@@ -49,6 +49,7 @@
 /* XENTH / EVERLUME COMMAND */
 body.command { background: #211b15; color: #ece3d3; }
 .command-topbar { display: flex; align-items: baseline; gap: 14px; padding: 26px 5vw; border-bottom: 1px solid #3a3128; }
+.command-topbar .command-logo { width: 118px; height: 74px; object-fit: contain; border-radius: 2px; align-self: center; }
 .command-topbar b { font: 500 18px Jost, sans-serif; letter-spacing: 0.4em; }
 .command-topbar span { font: 500 11px 'Cormorant Garamond', serif; letter-spacing: 0.34em; color: #c9a66e; }
 .command-topbar .who { margin-left: auto; font-size: 11px; color: #a3937d; letter-spacing: 0.1em; }
