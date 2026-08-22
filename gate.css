@@ -83,6 +83,32 @@ html.gate-open { overflow: hidden; }
   filter: drop-shadow(0 0 42px rgba(219,165,81,.24));
 }
 
+#el-gate .gate-intro {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 16px;
+  opacity: 0;
+  pointer-events: none;
+  color: #d2b77d;
+  text-align: center;
+}
+#el-gate .gate-intro img {
+  display: block;
+  width: min(430px, 68vw);
+  height: auto;
+  filter: drop-shadow(0 0 34px rgba(219,165,81,.3));
+}
+#el-gate .gate-intro p {
+  margin: 0;
+  font: 400 clamp(13px, 1.5vw, 17px)/1.3 'Cormorant Garamond', serif;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+}
+
 #el-gate .gate-panel {
   position: relative;
   width: 100%;
@@ -104,6 +130,17 @@ html.gate-open { overflow: hidden; }
 @keyframes gate-stars-twinkle {
   0% { opacity: .25; filter: brightness(.75); transform: scale(1); }
   100% { opacity: .78; filter: brightness(1.35); transform: scale(1.015); }
+}
+
+@keyframes gate-intro-arrive {
+  0% { opacity: 0; transform: scale(.94); filter: blur(12px); }
+  30%, 76% { opacity: 1; transform: scale(1); filter: blur(0); }
+  100% { opacity: 0; transform: scale(1.04); filter: blur(5px); }
+}
+
+@keyframes gate-panel-arrive {
+  from { opacity: 0; transform: translateY(18px) scale(.97); filter: blur(8px); }
+  to { opacity: 1; transform: none; filter: none; }
 }
 
 @keyframes gate-panel-recede {
@@ -134,6 +171,9 @@ html.gate-open { overflow: hidden; }
 }
 
 #el-gate.is-entering .gate-panel { animation: gate-panel-recede 900ms cubic-bezier(.5,0,.2,1) forwards; }
+#el-gate.is-intro .gate-panel { opacity: 0; pointer-events: none; }
+#el-gate.is-intro .gate-intro { animation: gate-intro-arrive 1900ms cubic-bezier(.2,.7,.2,1) forwards; }
+#el-gate.is-ready .gate-panel { animation: gate-panel-arrive 620ms cubic-bezier(.2,.7,.2,1) both; }
 #el-gate.is-entering .gate-scrim { animation: gate-scrim-to-light 3500ms cubic-bezier(.2,.7,.2,1) forwards; }
 #el-gate.is-entering .gate-reveal { opacity: 1; }
 #el-gate.is-entering .gate-reveal::before { animation: gate-light-open 3500ms cubic-bezier(.18,.74,.2,1) forwards; }
