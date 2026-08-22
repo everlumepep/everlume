@@ -162,6 +162,9 @@ console.log('\nH. Forms');
   record('H', 'inquiry form registered with honeypot field',
     formName && honeypotField,
     `${formName ? 'name ✓' : 'name ✗'} · ${honeypotField ? 'bot-field ✓' : 'bot-field ✗'}`);
+  record('H', 'hidden honeypot is excluded from keyboard and accessibility navigation',
+    /class=["']honeypot["'][^>]*aria-hidden=["']true["']/.test(idx.body)
+      && /name=["']bot-field["'][^>]*tabindex=["']-1["']/.test(idx.body), 'aria-hidden · tabindex -1');
   record('H', 'research-use acknowledgement is required',
     /research-use-acknowledgment[^>]*required|required[^>]*research-use-acknowledgment/.test(idx.body)
       || /name="research-use-acknowledgment"[\s\S]{0,120}required/.test(idx.body), '');
