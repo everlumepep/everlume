@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <title>Everlume Operations Desk · Synthetic Preview</title>
+  <link rel="stylesheet" href="ops.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to dashboard</a>
+  <header class="topbar">
+    <div class="brand"><img class="mark" src="../assets/everlume-mark-v3.svg" alt="Everlume EL mark" width="42" height="42"><span>EVERLUME <small>OPERATIONS DESK</small></span></div>
+    <div class="header-tools"><span class="synthetic-badge">SYNTHETIC DATA · LOCAL ONLY</span><label class="role-picker">View as <select id="roleSelect" aria-label="Dashboard role"><option value="owner">Owner</option><option value="co_owner">Co-owner</option><option value="reviewer">Reviewer</option></select></label></div>
+  </header>
+  <div class="shell">
+    <nav class="sidebar" aria-label="Operations modules">
+      <button class="nav-item active" data-view="overview">Today <span>01</span></button>
+      <button class="nav-item" data-view="orders">Orders &amp; preorders <span>02</span></button>
+      <button class="nav-item" data-view="inventory">Inventory <span>03</span></button>
+      <button class="nav-item" data-view="income">Income <span>04</span></button>
+      <button class="nav-item" data-view="expenses">Expenses <span>05</span></button>
+      <button class="nav-item" data-view="catalog">Catalog registry <span>06</span></button>
+      <button class="nav-item" data-view="exceptions">Exceptions <span>07</span></button>
+      <button class="nav-item" data-view="handoffs">Handoffs &amp; access <span>08</span></button>
+      <div class="sidebar-note"><strong>Read-only preview</strong><br>Records are fabricated for workflow review. Nothing is saved, sent, charged, or synced.</div>
+    </nav>
+    <main id="main" tabindex="-1" aria-live="polite"></main>
+  </div>
+  <script src="ops.js"></script>
+</body>
+</html>
