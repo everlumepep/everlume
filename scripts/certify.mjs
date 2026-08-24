@@ -53,7 +53,7 @@ console.log(`Target: ${target}\n`);
 console.log('A. Public surfaces');
 const PAGES = [
   '', 'index.html', 'product.html?slug=tirzepatide-10mg', 'cart.html', 'checkout.html',
-  'account/', 'account/signin.html', 'account/reset.html', 'command/',
+  'account/', 'account/signin.html', 'account/reset.html',
   'privacy.html', 'terms.html', 'research-use.html', 'shipping.html', 'refund.html',
   'contact.html', '404.html', 'robots.txt'
 ];
@@ -62,6 +62,7 @@ for (const p of PAGES) await expectStatus('A', p, 200);
 // ── B. Internal surfaces refused ───────────────────────────────────────────
 console.log('\nB. Deployment boundary (must all 404)');
 const INTERNAL = [
+  'command', 'command/', 'command/index.html', 'js/command.js',
   'everlume-research-catalog.png', 'everlume-built.zip',
   'docs/commerce/README.md', 'docs/commerce/03-payment-adapter-contract.md',
   'supabase/migrations/20260728000003_commerce.sql',
