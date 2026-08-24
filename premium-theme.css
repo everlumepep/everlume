@@ -30,6 +30,11 @@ body {
   isolation: isolate;
 }
 
+/* Keep the animated brand rail visually clipped without widening the page at tablet widths. */
+html {
+  overflow-x: hidden;
+}
+
 body::before {
   content: "";
   position: fixed;
@@ -1917,6 +1922,9 @@ footer>p{font-size:10px;letter-spacing:.17em}
 .hero-copy .hero-text{max-width:620px}
 @media(max-width:980px){.hero{min-height:650px}.hero-copy{min-height:650px;padding:130px 7vw 100px}.hero-family-hero{opacity:.25}}
 @media(max-width:620px){.hero{min-height:650px}.hero-copy{min-height:650px;padding:100px 22px 80px}.hero-family-hero{opacity:.2}.hero::after{background:linear-gradient(90deg,rgba(250,246,238,.94),rgba(250,246,238,.52)),linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,.1))}}
+
+/* Final responsive guard: the marquee must never widen the document at tablet widths. */
+html{overflow-x:hidden}
 
 /* ── Premium sweep pass: richer surface texture, stronger hierarchy, cleaner hero focus ── */
 .hero::before {
