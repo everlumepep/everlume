@@ -1904,6 +1904,20 @@ footer>p{font-size:10px;letter-spacing:.17em}
 @media(max-width:620px){.lume-marquee-track{animation-duration:28s}.hero-art{margin:0;min-height:390px}.hero-family-hero{border-radius:0;mask-image:linear-gradient(90deg,transparent 0%,#000 11%,#000 100%);-webkit-mask-image:linear-gradient(90deg,transparent 0%,#000 11%,#000 100%)}.product-wheel{width:350px}.product-wheel img{width:44px;height:64px}.product-wheel img:nth-child(n){transform-origin:0 0}.footer-monogram{width:174px}}
 @media(prefers-reduced-motion:reduce){.lume-marquee-track,.product-wheel,.el-glow{animation:none}.el-glow{opacity:.3}}
 
+/* Continuous hero composition: the dawn scene becomes a quiet Everlume watermark. */
+.hero{display:block;min-height:720px;padding:0;background:#f8f0e4}
+.hero::after{z-index:1;border:0;background:linear-gradient(90deg,rgba(250,246,238,.98) 0%,rgba(250,246,238,.9) 24%,rgba(250,246,238,.48) 49%,rgba(250,246,238,.12) 78%,rgba(250,246,238,.18) 100%),linear-gradient(180deg,rgba(255,255,255,.18),transparent 42%,rgba(64,39,22,.1));mix-blend-mode:normal}
+.hero-art{position:absolute;inset:0;width:100%;height:100%;min-height:0;margin:0;z-index:0;overflow:hidden;pointer-events:none}
+.hero-family-hero{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.3;filter:saturate(.72) contrast(.94) brightness(1.08);mask-image:none;-webkit-mask-image:none}
+.hero-art::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,rgba(248,240,228,.68),transparent 44%,rgba(248,240,228,.08) 84%),linear-gradient(180deg,rgba(255,255,255,.24),transparent 48%,rgba(59,35,20,.1));box-shadow:none}
+.hero-art::after{z-index:2;background:linear-gradient(180deg,rgba(255,255,255,.14),transparent 44%,rgba(44,28,17,.12));opacity:.24}
+.hero-art .arch,.hero-art .vial,.hero-art .hero-energy,.hero-art .hero-note,.hero-art .hero-light-toggle,.hero-art .hero-specs,.hero-art .product-wheel,.hero-art .el-glow,.hero-art .lume-caption{display:none!important}
+.hero-copy{max-width:720px;min-height:720px;padding:170px 6vw 120px;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;z-index:3}
+.hero-copy::before{display:none}
+.hero-copy .hero-text{max-width:620px}
+@media(max-width:980px){.hero{min-height:650px}.hero-copy{min-height:650px;padding:130px 7vw 100px}.hero-family-hero{opacity:.25}}
+@media(max-width:620px){.hero{min-height:650px}.hero-copy{min-height:650px;padding:100px 22px 80px}.hero-family-hero{opacity:.2}.hero::after{background:linear-gradient(90deg,rgba(250,246,238,.94),rgba(250,246,238,.52)),linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,.1))}}
+
 /* ── Premium sweep pass: richer surface texture, stronger hierarchy, cleaner hero focus ── */
 .hero::before {
   opacity: 0.28;
@@ -2107,3 +2121,16 @@ footer>p{font-size:10px;letter-spacing:.17em}
     inset: 6% 2%;
   }
 }
+
+/* Hero watermark lock: final override keeps the image continuous across the copy. */
+.hero{display:block;min-height:720px;padding:0;background:#f8f0e4}
+.hero::after{z-index:1;border:0;background:linear-gradient(90deg,rgba(250,246,238,.98) 0%,rgba(250,246,238,.9) 24%,rgba(250,246,238,.48) 49%,rgba(250,246,238,.12) 78%,rgba(250,246,238,.18) 100%),linear-gradient(180deg,rgba(255,255,255,.18),transparent 42%,rgba(64,39,22,.1));mix-blend-mode:normal}
+.hero-art{position:absolute;inset:0;width:100%;height:100%;min-height:0;margin:0;border-radius:0;background:transparent;box-shadow:none;z-index:0;overflow:hidden;pointer-events:none}
+.hero-family-hero{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:58% center;opacity:.3;filter:saturate(.72) contrast(.94) brightness(1.08);mask-image:none;-webkit-mask-image:none}
+.hero-art::before{content:"";position:absolute;inset:0;z-index:1;border:0;border-radius:0;background:linear-gradient(90deg,rgba(248,240,228,.68),transparent 44%,rgba(248,240,228,.08) 84%),linear-gradient(180deg,rgba(255,255,255,.24),transparent 48%,rgba(59,35,20,.1));box-shadow:none}
+.hero-art::after{z-index:2;border-radius:0;background:linear-gradient(180deg,rgba(255,255,255,.14),transparent 44%,rgba(44,28,17,.12));opacity:.24}
+.hero-art .arch,.hero-art .vial,.hero-art .hero-energy,.hero-art .hero-note,.hero-art .hero-light-toggle,.hero-art .hero-specs,.hero-art .product-wheel,.hero-art .el-glow,.hero-art .lume-caption{display:none!important}
+.hero-copy{max-width:720px;min-height:720px;padding:170px 6vw 120px;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;z-index:3}
+.hero-copy::before{display:none}
+@media(max-width:980px){.hero{min-height:650px}.hero-copy{min-height:650px;padding:130px 7vw 100px}.hero-family-hero{opacity:.25}}
+@media(max-width:620px){.hero{min-height:650px}.hero-copy{min-height:650px;padding:100px 22px 80px}.hero-family-hero{opacity:.2}.hero::after{background:linear-gradient(90deg,rgba(250,246,238,.94),rgba(250,246,238,.52)),linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,.1))}}
