@@ -11,6 +11,8 @@ import {
 
 const config = window.EVERLUME_CONFIG;
 const INTRO_STORAGE_KEY = 'everlume.intro.seen';
+const INTRO_DURATION = 3200;
+const ENTRY_DURATION = 5600;
 
 function readStored() {
   try { return JSON.parse(localStorage.getItem(GATE_STORAGE_KEY)); }
@@ -110,7 +112,7 @@ function openGate({ requiresConsent, playIntro }) {
     overlay.classList.add('is-entering');
     document.documentElement.classList.add('gate-entering');
     overlay.setAttribute('aria-hidden', 'true');
-    window.setTimeout(finishEntry, 3600);
+    window.setTimeout(finishEntry, ENTRY_DURATION);
   };
 
   const revealGate = () => {
@@ -132,7 +134,7 @@ function openGate({ requiresConsent, playIntro }) {
     } else {
       window.setTimeout(() => {
         if (requiresConsent) revealGate(); else revealSite();
-      }, 1900);
+      }, INTRO_DURATION);
     }
   } else if (requiresConsent) {
     overlay.classList.add('is-ready');

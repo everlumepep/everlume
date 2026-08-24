@@ -7,8 +7,8 @@ html.gate-open { overflow: hidden; }
   inset: 0;
   overflow: hidden;
   background:
-    radial-gradient(circle at 50% 46%, rgba(77,52,23,.2), transparent 24%),
-    #030303;
+    radial-gradient(ellipse at 50% 94%, rgba(255,235,182,.96) 0 7%, rgba(255,207,137,.55) 18%, transparent 42%),
+    linear-gradient(180deg, #70667a 0%, #9b7180 35%, #d39479 67%, #f4d19b 100%);
   backdrop-filter: blur(12px);
 }
 #el-gate .gate-scrim::before,
@@ -20,23 +20,21 @@ html.gate-open { overflow: hidden; }
   pointer-events: none;
 }
 #el-gate .gate-scrim::before {
-  opacity: .72;
+  opacity: .3;
   background-image:
-    radial-gradient(circle, rgba(255,248,224,.95) 0 1px, transparent 1.7px),
-    radial-gradient(circle, rgba(197,152,83,.78) 0 1px, transparent 1.8px),
-    radial-gradient(circle, rgba(255,255,255,.52) 0 .7px, transparent 1.4px);
-  background-size: 143px 137px, 211px 197px, 91px 109px;
-  background-position: 9px 18px, 62px 31px, 25px 73px;
-  animation: gate-stars-drift 28s linear infinite;
+    radial-gradient(circle at 50% 87%, rgba(255,250,222,.98) 0 4%, rgba(255,218,150,.72) 9%, transparent 25%),
+    linear-gradient(165deg, rgba(255,255,255,.16), transparent 42%);
+  background-size: 100% 100%, 100% 100%;
+  animation: gate-dawn-drift 28s ease-in-out infinite alternate;
 }
 #el-gate .gate-scrim::after {
-  opacity: .55;
-  background-image:
-    radial-gradient(circle, #fff4d4 0 1.5px, transparent 2.2px),
-    radial-gradient(circle, rgba(205,157,83,.9) 0 1px, transparent 2px);
-  background-size: 317px 289px, 257px 331px;
-  background-position: 41px 81px, 130px 12px;
-  animation: gate-stars-twinkle 5.5s ease-in-out infinite alternate;
+  opacity: .72;
+  inset: 58% 0 0;
+  background:
+    linear-gradient(180deg, transparent 0 54%, rgba(124,91,91,.12) 55%, transparent 57%),
+    radial-gradient(ellipse at 50% 88%, rgba(255,246,212,.8), transparent 42%),
+    linear-gradient(180deg, transparent, rgba(255,219,164,.26));
+  animation: gate-dawn-glow 11s ease-in-out infinite alternate;
 }
 
 #el-gate .gate-reveal {
@@ -102,6 +100,32 @@ html.gate-open { overflow: hidden; }
   color: #d2b77d;
   text-align: center;
 }
+#el-gate .gate-intro::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 53%;
+  width: min(28vmax, 320px);
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,251,226,.9) 0 12%, rgba(255,218,149,.45) 32%, transparent 68%);
+  box-shadow: 0 0 90px 22px rgba(255,221,156,.2);
+  opacity: .72;
+  animation: gate-sun-breathe 3200ms ease-in-out both;
+}
+#el-gate .gate-intro::after {
+  content: "";
+  position: absolute;
+  left: 12%;
+  right: 12%;
+  top: 55%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,245,215,.46), transparent);
+  opacity: .5;
+}
+#el-gate .gate-intro strong,
+#el-gate .gate-intro small { position: relative; z-index: 1; }
 #el-gate .gate-intro strong {
   font: 500 clamp(58px, 11vw, 168px)/.85 'Cormorant Garamond', serif;
   letter-spacing: .18em;
@@ -134,11 +158,15 @@ html.gate-open { overflow: hidden; }
   0% { opacity: .25; filter: brightness(.75); transform: scale(1); }
   100% { opacity: .78; filter: brightness(1.35); transform: scale(1.015); }
 }
+@keyframes gate-dawn-drift { from { transform: translate3d(-1%,0,0) scale(1); } to { transform: translate3d(1%,1%,0) scale(1.03); } }
+@keyframes gate-dawn-glow { from { opacity: .45; transform: scale(.98); } to { opacity: .78; transform: scale(1.04); } }
+@keyframes gate-sun-breathe { from { opacity: 0; transform: scale(.72); } 42% { opacity: .72; } to { opacity: .35; transform: scale(1.08); } }
 
 @keyframes gate-intro-arrive {
-  0% { opacity: 0; transform: scale(.94); filter: blur(12px); }
-  30%, 76% { opacity: 1; transform: scale(1); filter: blur(0); }
-  100% { opacity: 0; transform: scale(1.04); filter: blur(5px); }
+  0% { opacity: 0; transform: scale(.9) translateY(10px); filter: blur(14px); }
+  24% { opacity: .72; transform: scale(.98) translateY(0); filter: blur(3px); }
+  48%, 82% { opacity: 1; transform: scale(1); filter: blur(0); }
+  100% { opacity: 0; transform: scale(1.035) translateY(-6px); filter: blur(5px); }
 }
 
 @keyframes gate-panel-arrive {
@@ -149,7 +177,7 @@ html.gate-open { overflow: hidden; }
 @keyframes gate-panel-recede {
   0% { opacity: 1; transform: scale(1); filter: blur(0); }
   32% { opacity: .12; transform: scale(.94); filter: blur(6px); }
-  100% { opacity: 0; transform: scale(.8); filter: blur(18px); }
+  100% { opacity: 0; transform: scale(.84); filter: blur(18px); }
 }
 @keyframes gate-light-open {
   0%, 34% { opacity: 0; transform: scale(.04); }
@@ -163,8 +191,8 @@ html.gate-open { overflow: hidden; }
   100% { opacity: 0; transform: scale(1.14); filter: blur(5px); }
 }
 @keyframes gate-scrim-to-light {
-  0%, 30% { background: #090705; backdrop-filter: blur(12px); }
-  68% { background: #171006; backdrop-filter: blur(7px); }
+  0%, 30% { background: linear-gradient(180deg, #70667a, #d39479 67%, #f4d19b); backdrop-filter: blur(12px); }
+  68% { background: linear-gradient(180deg, #9b7180, #edb786 68%, #ffe1a9); backdrop-filter: blur(7px); }
   90% { background: rgba(255,239,201,.92); backdrop-filter: blur(3px); }
   100% { background: rgba(255,253,247,0); backdrop-filter: blur(0); }
 }
@@ -173,17 +201,17 @@ html.gate-open { overflow: hidden; }
   100% { transform: scale(1); filter: none; }
 }
 
-#el-gate.is-entering .gate-panel { animation: gate-panel-recede 900ms cubic-bezier(.5,0,.2,1) forwards; }
+#el-gate.is-entering .gate-panel { animation: gate-panel-recede 1500ms cubic-bezier(.5,0,.2,1) forwards; }
 #el-gate.is-intro .gate-panel { opacity: 0; pointer-events: none; }
-#el-gate.is-intro .gate-intro { animation: gate-intro-arrive 1900ms cubic-bezier(.2,.7,.2,1) forwards; }
-#el-gate.is-ready .gate-panel { animation: gate-panel-arrive 620ms cubic-bezier(.2,.7,.2,1) both; }
-#el-gate.is-entering .gate-scrim { animation: gate-scrim-to-light 3500ms cubic-bezier(.2,.7,.2,1) forwards; }
+#el-gate.is-intro .gate-intro { animation: gate-intro-arrive 3200ms cubic-bezier(.2,.7,.2,1) forwards; }
+#el-gate.is-ready .gate-panel { animation: gate-panel-arrive 900ms cubic-bezier(.2,.7,.2,1) both; }
+#el-gate.is-entering .gate-scrim { animation: gate-scrim-to-light 5600ms cubic-bezier(.2,.7,.2,1) forwards; }
 #el-gate.is-entering .gate-reveal { opacity: 1; }
-#el-gate.is-entering .gate-reveal::before { animation: gate-light-open 3500ms cubic-bezier(.18,.74,.2,1) forwards; }
-#el-gate.is-entering .gate-reveal::after { animation: gate-light-open 3500ms cubic-bezier(.18,.74,.2,1) 120ms forwards; }
+#el-gate.is-entering .gate-reveal::before { animation: gate-light-open 5600ms cubic-bezier(.18,.74,.2,1) forwards; }
+#el-gate.is-entering .gate-reveal::after { animation: gate-light-open 5600ms cubic-bezier(.18,.74,.2,1) 180ms forwards; }
 #el-gate.is-entering .gate-reveal strong,
-#el-gate.is-entering .gate-reveal small { animation: gate-reveal-mark 3500ms cubic-bezier(.2,.7,.2,1) forwards; }
-html.gate-entering body > :not(#el-gate) { animation: gate-page-arrive 3500ms cubic-bezier(.2,.8,.2,1) forwards; transform-origin: center; }
+#el-gate.is-entering .gate-reveal small { animation: gate-reveal-mark 5600ms cubic-bezier(.2,.7,.2,1) forwards; }
+html.gate-entering body > :not(#el-gate) { animation: gate-page-arrive 5600ms cubic-bezier(.2,.8,.2,1) forwards; transform-origin: center; }
 
 #el-gate .gate-brand { display:block; width: 116px; height: 106px; object-fit: contain; margin: -18px 0 0; }
 #el-gate h2 { margin: 0 0 12px; font: 500 clamp(30px, 4.5vw, 40px)/1.05 'Cormorant Garamond', serif; color: var(--ink); }
