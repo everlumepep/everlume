@@ -29,12 +29,10 @@ const required = [
   'js/auth.js',
   'js/reset.js',
   'js/account.js',
-  'js/command.js',
   'vendor/supabase.js',
   'account/index.html',
   'account/signin.html',
   'account/reset.html',
-  'command/index.html',
   'cart.html',
   'product.html',
   'checkout.html',
@@ -64,7 +62,7 @@ for (const file of required) {
 const pages = [
   'index.html', 'catalog.html', 'research-use.html', 'privacy.html', 'terms.html', '404.html',
   'cart.html', 'product.html', 'checkout.html', 'shipping.html', 'refund.html', 'contact.html',
-  'account/index.html', 'account/signin.html', 'account/reset.html', 'command/index.html'
+  'account/index.html', 'account/signin.html', 'account/reset.html'
 ];
 for (const page of pages) {
   if (!existsSync(page)) continue;
@@ -101,6 +99,9 @@ const netlify = readFileSync('netlify.toml', 'utf8');
 if (!netlify.includes('Content-Security-Policy')) errors.push('Netlify CSP header is missing');
 if (!netlify.includes('X-Content-Type-Options')) errors.push('Netlify content-type protection is missing');
 if (!/connect-src 'self' https:\/\/\*\.supabase\.co/.test(netlify)) errors.push('CSP connect-src missing Supabase origin');
+if (!/from\s*=\s*"\/command\/\*"[\s\S]*?status\s*=\s*404[\s\S]*?force\s*=\s*true/.test(netlify)) {
+  errors.push('Public /command/* must be refused with a forced 404 redirect');
+}
 
 // ── Publish-surface control ────────────────────────────────────────────────
 // netlify.toml sets publish = "." — EVERY tracked file at the root is served
@@ -123,7 +124,7 @@ for (const file of tracked) {
 }
 
 // Structural exposure: non-site files that ship because publish = "."
-const SITE = /^(index|catalog|404|privacy|terms|research-use|forms 2|cart|product|checkout|shipping|refund|contact)\.html$|^account\/|^command\/|^assets\/|^js\/|^vendor\/|^(styles|logo|premium-theme|gate|portal)\.css$|^(app|boot|policy)\.js$|^favicon\.svg$|^robots\.txt$|^netlify\.toml$/;
+const SITE = /^(index|catalog|404|privacy|terms|research-use|forms 2|cart|product|checkout|shipping|refund|contact)\.html$|^account\/|^assets\/|^js\/|^vendor\/|^(styles|logo|premium-theme|gate|portal)\.css$|^(app|boot|policy)\.js$|^favicon\.svg$|^robots\.txt$|^netlify\.toml$/;
 // Every non-site file must be refused by a forced 404 redirect. Without
 // force = true Netlify serves the static file and the rule never fires, so the
 // flag is checked explicitly rather than assumed from the rule's presence.
