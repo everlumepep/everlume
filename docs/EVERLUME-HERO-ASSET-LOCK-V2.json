@@ -1,0 +1,12 @@
+{
+  "asset": "assets/editorial/everlume-mother-daughter-dawn-v2.png",
+  "role": "Approved Everlume hero visual",
+  "version": "v2",
+  "concept": "Mother and daughter coastal dawn walk — selectively lifted dawn exposure",
+  "identity": "Original, non-identifying generated artwork; not a likeness of the reference family",
+  "sha256": "d8bbbbd785ebbb5cd25de74c2abb7fe642faf1d13d316f3fb983611deaa48500",
+  "status": "LOCKED FOR PREVIEW",
+  "approved_surfaces": ["index.html hero"],
+  "edit_scope": "Lighting-only refinement; watermark fade remains controlled by the existing CSS composition.",
+  "prohibited": ["text overlay baked into asset", "product bottle rendering", "identity recreation", "composition change"]
+}
