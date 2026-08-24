@@ -12,6 +12,23 @@
   let allProducts = [];
   let activeFilter = 'all';
   const selectedVariants = new Map();
+  const LABEL_CONFIG = window.EVERLUME_LABEL_CONFIG || {};
+  const LABEL_ORDER = LABEL_CONFIG.LABEL_ORDER || [];
+  const LABEL_DOSES = LABEL_CONFIG.LABEL_DOSES || {};
+  const LABEL_ASSETS = LABEL_CONFIG.LABEL_ASSETS || {};
+  const labelRank = typeof LABEL_CONFIG.labelRank === 'function'
+    ? LABEL_CONFIG.labelRank
+    : function labelRank(slug) {
+      const rank = LABEL_ORDER.findIndex((value) => value === slug);
+      return rank === -1 ? LABEL_ORDER.length : rank;
+    };
+  const vialDoseFor = typeof LABEL_CONFIG.labelDoseFor === 'function'
+    ? product => String(LABEL_CONFIG.labelDoseFor(product)).replace(/\s*\/\s*/g, '/').toUpperCase()
+    : product => String(Object.prototype.hasOwnProperty.call(LABEL_DOSES, product.slug) ? LABEL_DOSES[product.slug] : (product.dose_label || ''))
+      .replace(/\s*\/\s*/g, '/').toUpperCase();
+  const labelAssetFor = typeof LABEL_CONFIG.labelAssetFor === 'function'
+    ? LABEL_CONFIG.labelAssetFor
+    : product => LABEL_ASSETS[product.slug] || '';
 
   function escapeHtml(value) {
     return String(value).replace(/[&<>"']/g, ch => ({
@@ -21,7 +38,7 @@
 
   function groupProducts(products) {
     const groups = new Map();
-    products.forEach(product => {
+    products.slice().sort((a, b) => labelRank(a.slug) - labelRank(b.slug) || String(a.slug).localeCompare(String(b.slug))).forEach(product => {
       const key = `${product.category}:${product.name}`;
       if (!groups.has(key)) groups.set(key, []);
       groups.get(key).push(product);
@@ -39,6 +56,11 @@
     const price = catalog.commerceEnabled() ? catalog.formatPrice(product.price_cents) : null;
     const name = escapeHtml(product.name);
     const dose = escapeHtml(product.dose_label || '—');
+    const vialDose = escapeHtml(vialDoseFor(product));
+    const labelAsset = labelAssetFor(product);
+    const vialLabel = labelAsset
+      ? `<img class="vial-label-art" src="${labelAsset}" alt="Everlume ${name} ${vialDose} label" loading="lazy">`
+      : `<span class="vial-label"><img class="vial-label-mark" src="assets/everlume-logo-client-monogram.png" alt=""><span class="vial-label-brand">EVERLUME</span><b>${name}<br>${vialDose}</b><small>FOR RESEARCH<br>PURPOSES ONLY</small></span>`;
     const href = 'product.html?slug=' + encodeURIComponent(product.slug);
     const doseControl = variants.length > 1
       ? `<label class="variant-picker"><span>Available quantity</span><select data-variant-group="${escapeHtml(key)}" aria-label="Select ${name} available quantity">${variants.map(variant =>
@@ -52,7 +74,7 @@
 
     return `<article class="product-card reveal visible" data-category="${escapeHtml(product.category)}">
       <a class="product-visual" href="${href}" aria-label="${name} ${dose} details">
-        <div class="mini-vial"><img src="assets/products/everlume-vial-master-v1.png" alt="" width="1024" height="1365" loading="lazy"><span>EVERLUME</span><b>${escapeHtml(product.sku)}</b><small>RESEARCH ONLY</small></div>
+        <div class="mini-vial${labelAsset ? ' has-label-art' : ''}"><img src="assets/products/everlume-vial-master-v1.png" alt="" width="1024" height="1365" loading="lazy">${vialLabel}</div>
       </a>
       <div class="product-copy">
         <p class="product-cat">${escapeHtml(product.category)} research</p>

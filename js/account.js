@@ -5,6 +5,8 @@
   const app = document.getElementById('accountApp');
   const fallback = document.getElementById('accountFallback');
   const panel = document.getElementById('accountPanel');
+  const nav = document.querySelector('.account-nav');
+  const navButtons = Array.from(document.querySelectorAll('.account-nav button'));
   const esc = value => String(value ?? '').replace(/[&<>"']/g, c =>
     ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
@@ -143,12 +145,49 @@
     });
   }
 
-  document.querySelectorAll('.account-nav button').forEach(btn =>
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.account-nav button').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      render(btn.dataset.section);
-    }));
+  function setActiveTab(button, focus = false) {
+    const section = button.dataset.section;
+    navButtons.forEach(btn => {
+      const active = btn === button;
+      btn.classList.toggle('active', active);
+      btn.setAttribute('aria-selected', String(active));
+      btn.setAttribute('tabindex', active ? '0' : '-1');
+      btn.setAttribute('aria-controls', 'accountPanel');
+      btn.setAttribute('role', 'tab');
+    });
+    if (nav) nav.setAttribute('role', 'tablist');
+    panel.setAttribute('role', 'tabpanel');
+    panel.setAttribute('aria-labelledby', button.id || button.getAttribute('aria-controls'));
+    render(section);
+    panel.focus?.();
+    if (focus) button.focus();
+  }
+
+  function onNavKeydown(event, index) {
+    const max = navButtons.length;
+    if (!max) return;
+    let nextIndex = null;
+    if (event.key === 'ArrowRight' || event.key === 'ArrowDown') nextIndex = (index + 1) % max;
+    if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') nextIndex = (index - 1 + max) % max;
+    if (event.key === 'Home') nextIndex = 0;
+    if (event.key === 'End') nextIndex = max - 1;
+    if (nextIndex === null) return;
+    event.preventDefault();
+    setActiveTab(navButtons[nextIndex], true);
+  }
+
+  navButtons.forEach((btn, index) => {
+    btn.id = btn.id || `accountTab-${btn.dataset.section}`;
+    btn.setAttribute('role', 'tab');
+    btn.setAttribute('aria-controls', 'accountPanel');
+    btn.setAttribute('tabindex', index === 0 ? '0' : '-1');
+    btn.setAttribute('aria-selected', String(index === 0));
+    btn.addEventListener('click', () => setActiveTab(btn));
+    btn.addEventListener('keydown', event => onNavKeydown(event, index));
+  });
+  if (nav) nav.setAttribute('role', 'tablist');
+  panel.setAttribute('tabindex', '0');
+  panel.setAttribute('role', 'tabpanel');
 
   document.getElementById('signOutBtn').addEventListener('click', async event => {
     event.preventDefault();
@@ -164,6 +203,8 @@
     profile = p;
     fallback.hidden = true;
     app.hidden = false;
-    render('overview');
+    const initial = navButtons.find(btn => btn.dataset.section === 'overview') || navButtons[0];
+    if (initial) setActiveTab(initial);
+    else render('overview');
   })();
 })();

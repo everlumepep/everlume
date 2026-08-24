@@ -9,6 +9,38 @@
 (function () {
   const SUPPORT_EMAIL = 'hello@myeverlume.com';
 
+  // Physical label sheet order is the presentation order for the storefront.
+  // Products not represented on the current sheet remain available after this
+  // sequence so no existing catalog record is silently removed.
+  const LABEL_CONFIG = window.EVERLUME_LABEL_CONFIG || {};
+  const LABEL_ORDER = LABEL_CONFIG.LABEL_ORDER || [];
+  const LABEL_DOSES = LABEL_CONFIG.LABEL_DOSES || {};
+  const LABEL_RANK = LABEL_CONFIG.LABEL_RANK || new Map(LABEL_ORDER.map((slug, index) => [slug, index]));
+  const labelRank = typeof LABEL_CONFIG.labelRank === 'function'
+    ? LABEL_CONFIG.labelRank
+    : function labelRank(slug) {
+      const rank = LABEL_RANK.has(slug) ? LABEL_RANK.get(slug) : LABEL_ORDER.length;
+      return rank;
+    };
+  const labelDoseFor = typeof LABEL_CONFIG.labelDoseFor === 'function'
+    ? LABEL_CONFIG.labelDoseFor
+    : function labelDose(product) {
+      const dose = Object.prototype.hasOwnProperty.call(LABEL_DOSES, product.slug)
+        ? LABEL_DOSES[product.slug]
+        : (product.dose_label || '');
+      return String(dose).replace(/\s*\/\s*/g, '/');
+    };
+  function orderByLabelSheet(products) {
+    return products.slice().sort((a, b) => {
+      const rankA = labelRank(a.slug);
+      const rankB = labelRank(b.slug);
+      return rankA - rankB || String(a.name).localeCompare(String(b.name)) || String(a.slug).localeCompare(String(b.slug));
+    });
+  }
+  function labelDose(product) {
+    return labelDoseFor(product);
+  }
+
   // Mirror of migrations 0006 + 0009. Catalog RATIFIED by the client
   // 2026-07-30: SKU convention (EL-TR/RT/TSM explicit, remainder derived as
   // EL-{ABBREV}{mg}), both dose ranges, and the full product list. Settled —
@@ -127,7 +159,7 @@
     if (cache) return cache;
     const client = window.everlumeSupabase;
     if (!client) {
-      cache = { products: SEED.slice(), source: 'fallback' };
+      cache = { products: orderByLabelSheet(SEED), source: 'fallback' };
       return cache;
     }
     try {
@@ -154,13 +186,13 @@
           inventory_status: (inv && inv.status) || 'out'
         };
       });
-      cache = { products, source: 'supabase' };
+      cache = { products: orderByLabelSheet(products), source: 'supabase' };
       return cache;
     } catch (error) {
       // Never fail the storefront open. A backend error must not turn into a
       // catalog with unknown authorization state, so fall back to the seed —
       // which is pending_review, i.e. not purchasable.
-      cache = { products: SEED.slice(), source: 'fallback-after-error' };
+      cache = { products: orderByLabelSheet(SEED), source: 'fallback-after-error' };
       return cache;
     }
   }
@@ -178,6 +210,7 @@
     availabilityLabel,
     available,
     formatPrice,
+    labelDose,
     categories: CATEGORIES,
     supportEmail: SUPPORT_EMAIL
   };

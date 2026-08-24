@@ -52,6 +52,16 @@
       status: 'Approved tesamorelin drug products have narrow, product-specific labeling. This research-material listing is not an approved drug and does not imply therapeutic interchangeability.'
     }
   };
+  const LABEL_CONFIG = window.EVERLUME_LABEL_CONFIG || {};
+  const LABEL_DOSES = LABEL_CONFIG.LABEL_DOSES || {};
+  const LABEL_ASSETS = LABEL_CONFIG.LABEL_ASSETS || {};
+  const vialDoseFor = typeof LABEL_CONFIG.labelDoseFor === 'function'
+    ? product => String(LABEL_CONFIG.labelDoseFor(product)).replace(/\s*\/\s*/g, '/').toUpperCase()
+    : product => String(Object.prototype.hasOwnProperty.call(LABEL_DOSES, product.slug) ? LABEL_DOSES[product.slug] : (product.dose_label || ''))
+      .replace(/\s*\/\s*/g, '/').toUpperCase();
+  const labelAssetFor = typeof LABEL_CONFIG.labelAssetFor === 'function'
+    ? LABEL_CONFIG.labelAssetFor
+    : product => LABEL_ASSETS[product.slug] || '';
 
   function escapeHtml(value) {
     return String(value).replace(/[&<>"']/g, ch => ({
@@ -95,6 +105,11 @@
     const price = catalog.commerceEnabled() ? catalog.formatPrice(product.price_cents) : null;
     const name = escapeHtml(product.name);
     const dose = escapeHtml(product.dose_label || '—');
+    const vialDose = escapeHtml(vialDoseFor(product));
+    const labelAsset = labelAssetFor(product);
+    const vialLabel = labelAsset
+      ? `<img class="vial-label-art" src="${labelAsset}" alt="Everlume ${name} ${vialDose} label">`
+      : `<span class="vial-label"><img class="vial-label-mark" src="assets/everlume-logo-client-monogram.png" alt=""><span class="vial-label-brand">EVERLUME</span><b>${name}<br>${vialDose}</b><small>FOR RESEARCH<br>PURPOSES ONLY</small></span>`;
 
     document.title = `${product.name} ${product.dose_label} — Everlume`.replace(/\s+/g, ' ').trim();
     if (crumb) crumb.textContent = product.name;
@@ -147,7 +162,7 @@
     detail.innerHTML = `<div class="pd-layout">
       <div class="pd-visual pd-visual-${escapeHtml(product.category)}">
         <span class="pd-orbit pd-orbit-one" aria-hidden="true"></span><span class="pd-orbit pd-orbit-two" aria-hidden="true"></span>
-        <div class="mini-vial"><img src="assets/products/everlume-vial-master-v1.png" alt="" width="1024" height="1365"><span>EVERLUME</span><b>${escapeHtml(product.sku)}</b><small>RESEARCH ONLY</small></div>
+      <div class="mini-vial${labelAsset ? ' has-label-art' : ''}"><img src="assets/products/everlume-vial-master-v1.png" alt="" width="1024" height="1365">${vialLabel}</div>
         ${hotspots}
       </div>
       <div class="pd-copy">

@@ -8,6 +8,8 @@
   const locked = document.getElementById('commandLocked');
   const app = document.getElementById('commandApp');
   const main = document.getElementById('commandMain');
+  const nav = document.querySelector('.command-nav');
+  const navButtons = Array.from(document.querySelectorAll('.command-nav button'));
   const esc = value => String(value ?? '').replace(/[&<>"']/g, c =>
     ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
@@ -280,12 +282,47 @@
     }
   }
 
-  document.querySelectorAll('.command-nav button').forEach(btn =>
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.command-nav button').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      render(btn.dataset.module);
-    }));
+  function setActiveNav(button, focus = false) {
+    const module = button.dataset.module;
+    navButtons.forEach(btn => {
+      const active = btn === button;
+      btn.classList.toggle('active', active);
+      btn.setAttribute('aria-selected', String(active));
+      btn.setAttribute('tabindex', active ? '0' : '-1');
+      btn.setAttribute('role', 'tab');
+      btn.setAttribute('aria-controls', 'commandMain');
+    });
+    if (nav) nav.setAttribute('role', 'tablist');
+    main.setAttribute('role', 'tabpanel');
+    render(module);
+    if (focus) button.focus();
+  }
+
+  function onNavKeydown(event, index) {
+    const max = navButtons.length;
+    if (!max) return;
+    let nextIndex = null;
+    if (event.key === 'ArrowRight' || event.key === 'ArrowDown') nextIndex = (index + 1) % max;
+    if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') nextIndex = (index - 1 + max) % max;
+    if (event.key === 'Home') nextIndex = 0;
+    if (event.key === 'End') nextIndex = max - 1;
+    if (nextIndex === null) return;
+    event.preventDefault();
+    setActiveNav(navButtons[nextIndex], true);
+  }
+
+  navButtons.forEach((btn, index) => {
+    btn.id = btn.id || `commandNav-${btn.dataset.module}`;
+    btn.setAttribute('role', 'tab');
+    btn.setAttribute('aria-controls', 'commandMain');
+    btn.setAttribute('tabindex', index === 0 ? '0' : '-1');
+    btn.setAttribute('aria-selected', String(index === 0));
+    btn.addEventListener('click', () => setActiveNav(btn));
+    btn.addEventListener('keydown', event => onNavKeydown(event, index));
+  });
+  if (nav) nav.setAttribute('role', 'tablist');
+  main.setAttribute('tabindex', '0');
+  main.setAttribute('role', 'tabpanel');
 
   (async function init() {
     const { data: { session } } = await client.auth.getSession();
@@ -305,6 +342,8 @@
     document.getElementById('whoami').textContent = `${profile.first_name || profile.email} · ${role}`;
     locked.hidden = true;
     app.hidden = false;
-    render('dashboard');
+    const initial = navButtons.find(button => button.dataset.module === 'dashboard') || navButtons[0];
+    if (initial) setActiveNav(initial);
+    else render('dashboard');
   })();
 })();

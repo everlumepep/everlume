@@ -984,6 +984,63 @@ footer {
 .hero-art .arch { z-index: 1; }
 .hero-art .vial { z-index: 3; }
 .hero-art .vial-b { z-index: 4; }
+.hero-art .vial .vial-label,.mini-vial .vial-label,.lume-vial .vial-label { position:absolute; inset:37% 22% 12%; z-index:2; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; text-align:center; color:#30261f; pointer-events:none; margin:0 !important; padding:0 !important; width:auto !important; max-width:none !important; font:inherit !important; font-size:0 !important; letter-spacing:normal !important; }
+.vial-label-mark { position:static !important; width:29% !important; height:auto !important; aspect-ratio:auto !important; object-fit:contain !important; mix-blend-mode:multiply; opacity:.9; }
+.hero-art .vial .vial-label-brand,.mini-vial .vial-label-brand,.lume-vial .vial-label-brand { margin:2px 0 5px !important; font:500 3.5px Jost,sans-serif !important; letter-spacing:.2em !important; color:#9c763e; }
+.hero-art .vial .vial-label b,.mini-vial .vial-label b,.lume-vial .vial-label b { width:100%; max-width:none; min-height:0; margin:0 !important; font:600 clamp(4px,.55vw,8px)/1.02 'Cormorant Garamond',serif !important; letter-spacing:.01em; white-space:normal; }
+.hero-art .vial .vial-label b,.mini-vial .vial-label b,.lume-vial .vial-label b { text-transform:uppercase; }
+.hero-art .vial .vial-label small,.mini-vial .vial-label small,.lume-vial .vial-label small { width:100%; max-width:none; margin-top:5px !important; font:600 2.5px/1.12 Jost,sans-serif !important; letter-spacing:.06em; white-space:normal; }
+.mini-vial .vial-label { inset:36% 20% 10%; }
+.mini-vial .vial-label-mark { width:27% !important; }
+.mini-vial .vial-label-brand { margin:2px 0 4px !important; font-size:2.5px !important; }
+.mini-vial .vial-label b { font-size:5px !important; }
+.mini-vial .vial-label small { margin-top:4px !important; font-size:2px !important; }
+.hero-art .vial:not(.has-label-art) .vial-label,
+.mini-vial:not(.has-label-art) .vial-label,
+.lume-vial:not(.has-label-art) .vial-label {
+  background:
+    radial-gradient(circle at 28% 18%, rgba(255,255,255,.54), transparent 42%),
+    repeating-linear-gradient(112deg, rgba(117,93,63,.025) 0 1px, transparent 1px 4px),
+    linear-gradient(180deg, rgba(251,249,244,.97), rgba(242,237,228,.97));
+  border: 1px solid rgba(160,132,96,.22);
+  border-radius: 2px;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.28), 0 2px 5px rgba(60,40,24,.08);
+}
+.hero-art .vial:not(.has-label-art) .vial-label-brand,
+.mini-vial:not(.has-label-art) .vial-label-brand,
+.lume-vial:not(.has-label-art) .vial-label-brand {
+  width: 70% !important;
+  padding-bottom: 3px !important;
+  border-bottom: 1px solid rgba(156,118,62,.34);
+}
+.hero-art .vial:not(.has-label-art) .vial-label small,
+.mini-vial:not(.has-label-art) .vial-label small,
+.lume-vial:not(.has-label-art) .vial-label small {
+  color: #302a25 !important;
+  letter-spacing: .08em !important;
+}
+.hero-art .vial .vial-label-art,
+.mini-vial .vial-label-art,
+.lume-vial .vial-label-art {
+  position: absolute !important;
+  top: 36% !important;
+  left: 20% !important;
+  right: auto !important;
+  bottom: auto !important;
+  z-index: 2 !important;
+  width: 60% !important;
+  height: 50% !important;
+  max-width: none !important;
+  object-fit: contain !important;
+  mix-blend-mode: normal !important;
+  opacity: 1 !important;
+  pointer-events: none;
+}
+.hero-art .vial .vial-label-art { top: 36% !important; left: 20% !important; width: 60% !important; height: 50% !important; }
+.lume-vial .vial-label-art { top: 36% !important; left: 19% !important; width: 62% !important; height: 50% !important; }
+.lume-vial .vial-label { inset:36% 19% 10%; }
+.lume-vial .vial-label b { font-size:clamp(10px,1.4vw,18px) !important; }
+.lume-vial .vial-label small { font-size:clamp(2px,.35vw,4px) !important; }
 .hero-art .spark,
 .hero-art .hero-note { z-index: 5; }
 
@@ -1131,7 +1188,7 @@ footer {
 
 /* Signature editorial beat: a quiet cinematic contrast between the soft hero
    and the catalog. It reuses the verified master vial and stays decorative. */
-.lume-moment{--mx:50%;--my:45%;position:relative;min-height:680px;padding:clamp(76px,8vw,118px) 7vw;display:grid;grid-template-columns:minmax(300px,.88fr) minmax(360px,1.12fr);align-items:center;gap:6vw;overflow:hidden;color:#f9f1e5;background:radial-gradient(circle at var(--mx) var(--my),rgba(213,176,112,.19),transparent 23%),radial-gradient(circle at 72% 48%,rgba(245,216,165,.12),transparent 28%),linear-gradient(135deg,#110e0c 0%,#241b16 48%,#0e0c0b 100%);isolation:isolate}
+.lume-moment{--mx:50%;--my:45%;position:relative;min-height:680px;padding:clamp(76px,8vw,118px) 7vw;display:grid;grid-template-columns:minmax(300px,.88fr) minmax(360px,1.12fr);align-items:center;gap:6vw;overflow:hidden;color:#f9f1e5;background:radial-gradient(circle at 50% 78%,rgba(244,201,132,.2),transparent 18%),radial-gradient(circle at var(--mx) var(--my),rgba(213,176,112,.14),transparent 23%),linear-gradient(135deg,#2d2830 0%,#7c5d62 42%,#d19b73 78%,#f0c993 100%);isolation:isolate}
 .lume-moment::before{content:"";position:absolute;inset:0;z-index:-1;opacity:.24;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);background-size:72px 72px;mask-image:linear-gradient(to bottom,transparent,#000 24%,#000 76%,transparent)}
 .lume-moment::after{content:"EVERLUME";position:absolute;left:4vw;bottom:-.18em;z-index:-1;color:transparent;-webkit-text-stroke:1px rgba(230,196,139,.08);font:500 clamp(110px,18vw,310px)/.8 "Cormorant Garamond",serif;letter-spacing:.08em;white-space:nowrap}
 .lume-copy{position:relative;z-index:2;max-width:580px}
@@ -1175,6 +1232,54 @@ html.js .lume-stage.reveal.visible{transform:translateY(var(--lume-shift,0px))}
 .standards-story>img{width:100%;height:100%;min-height:760px;object-fit:cover;object-position:47% center}
 .standards-story-copy{display:flex;flex-direction:column;justify-content:center;padding:clamp(64px,7vw,120px);background:linear-gradient(135deg,#fffaf2,#f3e7d5)}
 .standards-story-copy h2{margin:.25em 0;font:500 clamp(3.8rem,6.8vw,7.3rem)/.82 "Cormorant Garamond",serif;letter-spacing:-.04em;color:#382b22}
+
+/* XENTH 10/10 responsive release polish: keep the first screen balanced and
+   make every reduced-navigation state visibly operable. */
+.announcement{white-space:normal;line-height:1.45;padding:9px 24px;overflow-wrap:anywhere}
+.hero{width:min(100%,1600px);margin-inline:auto;grid-template-columns:minmax(0,.84fr) minmax(0,1.16fr);gap:clamp(28px,4vw,72px);align-items:center}
+.hero-copy{max-width:720px}
+.hero-text{max-width:620px;font-size:clamp(16px,1.25vw,19px);line-height:1.7}
+.hero-art{height:clamp(560px,46vw,720px);min-height:560px}
+.hero-art .vial{width:clamp(150px,12vw,198px);height:clamp(310px,27vw,410px);bottom:clamp(76px,8vw,116px)}
+.hero-art .vial:before{width:78%;height:44px;top:-30px}
+.hero-art .vial-b{bottom:clamp(106px,10vw,148px);transform:scale(1.08)}
+.hero-art .vial span{font-size:clamp(20px,1.8vw,31px);margin-bottom:22px}
+.hero-art .vial b{font-size:clamp(14px,1.2vw,20px)}
+.hero-note{right:3%;bottom:36px;padding:20px 24px}
+.trust-strip{padding-block:28px}
+.trust-strip small{max-width:22rem}
+.menu-toggle{position:relative;z-index:60;color:#44362c;border:1px solid rgba(164,125,71,.35);border-radius:999px;width:44px;height:40px;line-height:1;background:rgba(255,252,247,.9);font-size:0}
+.menu-toggle::before{content:'☰';font-size:21px}
+@media(max-width:1120px){
+  .nav{position:absolute;top:84px;left:0;right:0;background:var(--cream);padding:24px;display:none;flex-direction:column;align-items:stretch;gap:18px;border-bottom:1px solid var(--line);box-shadow:0 16px 30px rgba(76,55,33,.08)}
+  .nav.open{display:flex}
+  .menu-toggle{display:block}
+}
+@media(max-width:980px){
+  .hero{grid-template-columns:1fr;gap:24px;padding-top:62px;padding-bottom:62px}
+  .hero-copy{max-width:760px}
+  .hero-art{height:clamp(520px,65vw,640px);min-height:520px}
+}
+@media(max-width:620px){
+  .announcement{font-size:9px;letter-spacing:.16em;padding-inline:16px}
+  .hero{padding-top:40px}
+  .hero h1{font-size:clamp(2.85rem,12vw,4.1rem);line-height:.9}
+  .hero-text{font-size:15px;line-height:1.55}
+  .hero-actions{margin-top:20px}
+  .hero-art{height:470px;min-height:470px}
+  .hero-art .vial{width:112px;height:232px;bottom:56px}
+  .hero-art .vial-b{bottom:74px}
+  .hero-art .vial span{font-size:18px;margin-bottom:15px}
+  .hero-art .vial b{font-size:12px}
+  .hero-note{right:0;bottom:14px;padding:14px 16px}
+}
+
+/* Keep the persistent guide present without covering the first-screen CTA on
+   compact phones. The control remains discoverable and fully interactive. */
+@media(max-width:620px){
+  .pep-launcher{right:10px;bottom:10px;transform:scale(.72);transform-origin:bottom right}
+  .pep-launcher:hover{transform:scale(.72) translateY(-3px)}
+}
 .standards-story-copy>p:not(.eyebrow){max-width:38rem;color:#746659;font-size:1.02rem;line-height:1.75}
 .standards-story-copy ol{list-style:none;margin:2.1rem 0 2.4rem;padding:0;border-top:1px solid rgba(164,125,71,.25)}
 .standards-story-copy li{display:grid;grid-template-columns:2.6rem 1fr;align-items:center;gap:1rem;padding:1rem 0;border-bottom:1px solid rgba(164,125,71,.25);color:#4a392d;font-size:.85rem;letter-spacing:.06em}

@@ -32,7 +32,10 @@
 .account-layout { display: grid; grid-template-columns: 230px 1fr; gap: 34px; width: min(1180px, 100%); margin: 0 auto; padding: 50px 22px 90px; }
 .account-nav { display: flex; flex-direction: column; gap: 4px; position: sticky; top: 110px; align-self: start; }
 .account-nav button { text-align: left; background: none; border: 0; border-left: 2px solid transparent; padding: 11px 16px; font: 500 11px Jost, sans-serif; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); cursor: pointer; }
-.account-nav button.active { color: var(--ink); border-left-color: var(--gold); background: rgba(169, 121, 63, 0.07); }
+.account-nav button.active,
+.account-nav button[aria-selected="true"] { color: var(--ink); border-left-color: var(--gold); background: rgba(169, 121, 63, 0.07); }
+.account-nav button:focus-visible,
+.account-nav button:focus { outline: 2px solid rgba(169, 121, 63, 0.45); outline-offset: 2px; }
 .account-panel { background: var(--paper); border: 1px solid var(--line); border-radius: 20px; padding: 38px 42px; min-height: 420px; }
 .account-panel h2 { margin: 0 0 6px; font: 500 34px 'Cormorant Garamond', serif; }
 .account-panel .panel-sub { margin: 0 0 26px; color: var(--muted); font-size: 13px; }
@@ -56,7 +59,9 @@ body.command { background: #211b15; color: #ece3d3; }
 .command-layout { display: grid; grid-template-columns: 210px 1fr; gap: 0; min-height: calc(100vh - 90px); }
 .command-nav { border-right: 1px solid #3a3128; padding: 26px 0; display: flex; flex-direction: column; }
 .command-nav button { text-align: left; background: none; border: 0; border-left: 2px solid transparent; padding: 12px 26px; font: 500 10px Jost, sans-serif; letter-spacing: 0.18em; text-transform: uppercase; color: #a3937d; cursor: pointer; }
-.command-nav button.active { color: #f2e8d5; border-left-color: #c9a66e; background: rgba(201, 166, 110, 0.06); }
+.command-nav button.active,
+.command-nav button[aria-selected="true"] { color: #f2e8d5; border-left-color: #c9a66e; background: rgba(201, 166, 110, 0.06); }
+.command-nav button:focus-visible { outline: 2px solid rgba(201, 166, 110, 0.45); outline-offset: 2px; }
 .command-main { padding: 40px 5vw; }
 .command-main h2 { margin: 0 0 4px; font: 500 36px 'Cormorant Garamond', serif; color: #f2e8d5; }
 .command-main .panel-sub { color: #a3937d; font-size: 12px; margin: 0 0 30px; }
