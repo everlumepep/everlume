@@ -1934,6 +1934,15 @@ footer>p{font-size:10px;letter-spacing:.17em}
 @media(max-width:980px){.hero-family-hero{opacity:.34}}
 @media(max-width:620px){.hero-family-hero{opacity:.3}.hero::after{background:linear-gradient(90deg,rgba(250,246,238,.92) 0%,rgba(250,246,238,.52) 46%,rgba(34,20,12,.08) 100%),linear-gradient(180deg,rgba(255,255,255,.1),rgba(35,20,11,.08))}.hero-copy .micro-trust{gap:10px;font-size:10px}}
 
+/* Final proportion pass: a little more air and reach in the wordmark composition. */
+.hero-family-hero{opacity:.36;filter:saturate(.82) contrast(1) brightness(.98)}
+.hero-copy{max-width:780px}
+.hero-copy h1{font-size:clamp(58px,5.8vw,100px);letter-spacing:-.012em}
+.hero-copy .hero-text{max-width:680px}
+.hero-copy .micro-trust{letter-spacing:.08em}
+@media(max-width:980px){.hero-family-hero{opacity:.31}}
+@media(max-width:620px){.hero-family-hero{opacity:.28}.hero-copy h1{font-size:clamp(3rem,13vw,4.4rem)}}
+
 /* Final responsive guard: the marquee must never widen the document at tablet widths. */
 html{overflow-x:hidden}
 
