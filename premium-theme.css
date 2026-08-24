@@ -867,6 +867,209 @@ footer {
   .pd-boundary .eyebrow { margin-bottom: 8px; }
 }
 
+/* Final Everlume signature overrides: keep the light-table treatment last so
+   the visual direction cannot be diluted by earlier experimental sweeps. */
+.hero {
+  background:
+    radial-gradient(circle at 76% 42%, rgba(241, 195, 147, .34), transparent 22%),
+    radial-gradient(circle at 64% 22%, rgba(214, 174, 183, .16), transparent 28%),
+    linear-gradient(125deg, #fffdf9 0%, #fbf3e9 52%, #f1dfd2 100%);
+}
+.hero-copy::before { display: none; }
+.hero-art::before {
+  border-radius: 34px;
+  background:
+    radial-gradient(circle at 55% 62%, rgba(255, 221, 164, .42), transparent 24%),
+    linear-gradient(145deg, rgba(255,255,255,.7), rgba(255,244,229,.18));
+}
+.hero-art .arch {
+  background:
+    radial-gradient(circle at 50% 63%, rgba(255, 228, 173, .78), transparent 22%),
+    radial-gradient(circle at 52% 35%, rgba(225, 184, 184, .24), transparent 44%),
+    linear-gradient(155deg, #f5e9dd, #ead8d0 66%, #dbc0b8);
+  border-color: rgba(164,125,71,.28);
+  box-shadow: 0 28px 72px rgba(118, 79, 55, .16), inset 0 0 70px rgba(255,255,255,.42);
+}
+.hero-art .arch::after {
+  content: "";
+  position: absolute;
+  inset: 9% 10%;
+  border: 1px solid rgba(164,125,71,.22);
+  border-radius: 50%;
+  box-shadow: 0 0 0 34px rgba(255,255,255,.08), 0 0 0 70px rgba(164,125,71,.06);
+}
+.hero-art .vial-b { transform: scale(1.16) translateY(-8px); }
+.hero-light-toggle {
+  position: absolute;
+  z-index: 8;
+  left: 50%;
+  bottom: 16px;
+  transform: translateX(-50%);
+  border: 1px solid rgba(164,125,71,.38);
+  border-radius: 999px;
+  padding: 10px 15px;
+  background: rgba(255,252,247,.76);
+  color: #60462f;
+  font: 500 9px Jost, sans-serif;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 12px 26px rgba(92,61,36,.12);
+  transition: .22s ease;
+}
+.hero-light-toggle span { color: var(--gold); margin-right: 6px; }
+.hero-light-toggle:hover,
+.hero-light-toggle[aria-pressed="true"] { background: #44362c; color: #fff9ed; border-color: #d0ad72; transform: translateX(-50%) translateY(-2px); }
+.hero-specs {
+  position: absolute;
+  z-index: 7;
+  left: 7%;
+  top: 14%;
+  display: grid;
+  gap: 10px;
+  color: #785b3d;
+  font-size: 9px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  opacity: .68;
+  transition: opacity .3s ease, transform .3s ease;
+}
+.hero-specs span { display: flex; align-items: center; gap: 8px; }
+.hero-specs span::after { content: ""; width: 26px; height: 1px; background: rgba(164,125,71,.42); }
+.hero-specs b { font: 500 13px "Cormorant Garamond", serif; color: var(--gold); }
+.hero-art.is-revealed .hero-specs { opacity: 1; transform: translateX(5px); }
+.hero-art.is-revealed .hero-energy-core { opacity: .9; transform: translate(-50%, -50%) scale(1.18); }
+.hero-art.is-revealed .vial-b { filter: drop-shadow(0 30px 28px rgba(100, 58, 24, .32)) brightness(1.04); }
+.hero-art.is-revealed .arch::after { box-shadow: 0 0 0 34px rgba(255,255,255,.13), 0 0 0 70px rgba(164,125,71,.1); }
+.lume-vial img { filter: drop-shadow(0 42px 42px rgba(0,0,0,.38)); }
+.lume-vial span, .lume-vial b, .lume-vial small { display: none !important; }
+@media (max-width: 620px) {
+  .hero-light-toggle { bottom: 4px; font-size: 8px; }
+  .hero-specs { left: 2%; top: 10%; font-size: 8px; }
+  .hero-art .vial-b { transform: scale(1.05) translateY(-4px) !important; }
+}
+
+/* Open composition correction: remove the generic window/card behind the
+   bottle and let the approved specimen sit in the Everlume dawn field. */
+.hero-art::before { display: none; }
+.hero-art .arch {
+  inset: 0;
+  border: 0;
+  border-radius: 0;
+  background:
+    radial-gradient(circle at 51% 67%, rgba(255, 226, 171, .64), transparent 20%),
+    radial-gradient(circle at 54% 38%, rgba(224, 181, 185, .24), transparent 42%),
+    linear-gradient(145deg, rgba(255,255,255,.08), rgba(234,211,204,.34) 62%, rgba(221,188,172,.08));
+  box-shadow: none;
+}
+.hero-art .arch::after {
+  inset: 8% 12%;
+  border-color: rgba(164,125,71,.2);
+  box-shadow: 0 0 0 34px rgba(255,255,255,.06), 0 0 0 72px rgba(164,125,71,.055);
+}
+.hero-note {
+  width: auto;
+  right: 7%;
+  bottom: 28px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  text-align: right;
+}
+.hero-note b { color: #5e4735; font-size: 18px; }
+.hero-note span { color: #9c763e; font-size: 9px; letter-spacing: .18em; }
+@media (max-width: 620px) {
+  .hero-note { right: 3%; bottom: 22px; }
+  .hero-note b { font-size: 15px; }
+}
+
+/* Everlume signature pass: a calmer dawn field with a purposeful Light Table. */
+.hero {
+  background:
+    radial-gradient(circle at 76% 42%, rgba(241, 195, 147, .34), transparent 22%),
+    radial-gradient(circle at 64% 22%, rgba(214, 174, 183, .16), transparent 28%),
+    linear-gradient(125deg, #fffdf9 0%, #fbf3e9 52%, #f1dfd2 100%);
+}
+.hero-copy::before { display: none; }
+.hero-art::before {
+  border-radius: 34px;
+  background:
+    radial-gradient(circle at 55% 62%, rgba(255, 221, 164, .42), transparent 24%),
+    linear-gradient(145deg, rgba(255,255,255,.7), rgba(255,244,229,.18));
+}
+.hero-art .arch {
+  background:
+    radial-gradient(circle at 50% 63%, rgba(255, 228, 173, .78), transparent 22%),
+    radial-gradient(circle at 52% 35%, rgba(225, 184, 184, .24), transparent 44%),
+    linear-gradient(155deg, #f5e9dd, #ead8d0 66%, #dbc0b8);
+  border-color: rgba(164,125,71,.28);
+  box-shadow: 0 28px 72px rgba(118, 79, 55, .16), inset 0 0 70px rgba(255,255,255,.42);
+}
+.hero-art .arch::after {
+  content: "";
+  position: absolute;
+  inset: 9% 10%;
+  border: 1px solid rgba(164,125,71,.22);
+  border-radius: 50%;
+  box-shadow: 0 0 0 34px rgba(255,255,255,.08), 0 0 0 70px rgba(164,125,71,.06);
+}
+.hero-art .vial-b { transform: scale(1.16) translateY(-8px); }
+.hero-light-toggle {
+  position: absolute;
+  z-index: 8;
+  left: 50%;
+  bottom: 16px;
+  transform: translateX(-50%);
+  border: 1px solid rgba(164,125,71,.38);
+  border-radius: 999px;
+  padding: 10px 15px;
+  background: rgba(255,252,247,.76);
+  color: #60462f;
+  font: 500 9px Jost, sans-serif;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 12px 26px rgba(92,61,36,.12);
+  transition: .22s ease;
+}
+.hero-light-toggle span { color: var(--gold); margin-right: 6px; }
+.hero-light-toggle:hover,
+.hero-light-toggle[aria-pressed="true"] { background: #44362c; color: #fff9ed; border-color: #d0ad72; transform: translateX(-50%) translateY(-2px); }
+.hero-specs {
+  position: absolute;
+  z-index: 7;
+  left: 7%;
+  top: 14%;
+  display: grid;
+  gap: 10px;
+  color: #785b3d;
+  font-size: 9px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  opacity: .68;
+  transition: opacity .3s ease, transform .3s ease;
+}
+.hero-specs span { display: flex; align-items: center; gap: 8px; }
+.hero-specs span::after { content: ""; width: 26px; height: 1px; background: rgba(164,125,71,.42); }
+.hero-specs b { font: 500 13px "Cormorant Garamond", serif; color: var(--gold); }
+.hero-art.is-revealed .hero-specs { opacity: 1; transform: translateX(5px); }
+.hero-art.is-revealed .hero-energy-core { opacity: .9; transform: translate(-50%, -50%) scale(1.18); }
+.hero-art.is-revealed .vial-b { filter: drop-shadow(0 30px 28px rgba(100, 58, 24, .32)) brightness(1.04); }
+.hero-art.is-revealed .arch::after { box-shadow: 0 0 0 34px rgba(255,255,255,.13), 0 0 0 70px rgba(164,125,71,.1); }
+
+/* The signature section now uses the approved SKU asset; no HTML/CSS label drawing. */
+.lume-vial img { filter: drop-shadow(0 42px 42px rgba(0,0,0,.38)); }
+.lume-vial span, .lume-vial b, .lume-vial small { display: none !important; }
+
+@media (max-width: 620px) {
+  .hero-light-toggle { bottom: 4px; font-size: 8px; }
+  .hero-specs { left: 2%; top: 10%; font-size: 8px; }
+  .hero-art .vial-b { transform: scale(1.05) translateY(-4px) !important; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .pd-visual::before { animation: none; }
   .pd-editorial-media img, .pd-focus-card, .pd-related-card { transition: none; }
@@ -1778,6 +1981,60 @@ html.js .lume-stage.reveal.visible{transform:translateY(var(--lume-shift,0px))}
   .hero-art .vial-b {
     left: 34%;
   }
+}
+
+/* Approved v1 hero direction: the Everlume story leads with dawn, movement, and connection. */
+.hero-art {
+  overflow: hidden;
+  border-radius: 34px;
+  min-height: 530px;
+  background: #d9b893;
+  box-shadow: 0 24px 70px rgba(76, 52, 26, 0.2);
+}
+
+.hero-family-hero {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: 58% center;
+  filter: saturate(.9) contrast(.98);
+}
+
+.hero-art .hero-energy,
+.hero-art .arch,
+.hero-art .vial,
+.hero-art .hero-note,
+.hero-art .hero-light-toggle,
+.hero-art .hero-specs {
+  display: none;
+}
+
+.hero-art::before {
+  inset: 0;
+  z-index: 2;
+  border: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 90px rgba(42, 28, 20, .14);
+  background: linear-gradient(90deg, rgba(30, 23, 19, .08), transparent 52%, rgba(30, 23, 19, .12));
+}
+
+.hero-art::after {
+  z-index: 3;
+  opacity: .36;
+  background: linear-gradient(180deg, rgba(255,255,255,.08), transparent 46%, rgba(44,28,17,.12));
+}
+
+@media (max-width: 980px) {
+  .hero-art { min-height: 470px; }
+}
+
+@media (max-width: 620px) {
+  .hero-art { min-height: 390px; border-radius: 24px; }
+  .hero-family-hero { object-position: 60% center; }
 }
 
 @media (max-width: 620px) {
