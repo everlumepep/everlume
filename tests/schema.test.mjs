@@ -177,3 +177,19 @@ test('subscription creation is gated server-side and Pep Talk describes preview 
   assert.match(pepTalk, /Ordering is not active on this preview/,
     'Pep Talk must not claim unavailable order functionality');
 });
+test('COMMAND resolves only the signed-in staff profile', () => {
+  const command = readFileSync(new URL('../js/command.js', import.meta.url), 'utf8');
+  assert.match(command, /\.eq\('id',\s*session\.user\.id\)/,
+    'COMMAND identity lookup must target the session user; staff RLS can expose multiple profiles');
+});
+
+test('COMMAND labels the preview boundary and hides manager controls from staff', () => {
+  const command = readFileSync(new URL('../js/command.js', import.meta.url), 'utf8');
+  const page = readFileSync(new URL('../command/index.html', import.meta.url), 'utf8');
+  assert.match(page, /Non-production · Commerce disabled/,
+    'COMMAND must visibly identify its non-production commerce-disabled environment');
+  assert.match(command, /\['manager', 'admin'\]\.includes\(currentRole\)/,
+    'inventory adjustment controls must only render for manager or admin roles');
+  assert.match(command, /Commerce, payment collection, and live fulfillment are disabled/,
+    'COMMAND overview must preserve the release boundary');
+});

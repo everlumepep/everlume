@@ -8,6 +8,7 @@
   const locked = document.getElementById('commandLocked');
   const app = document.getElementById('commandApp');
   const main = document.getElementById('commandMain');
+  let currentRole = null;
   const esc = value => String(value ?? '').replace(/[&<>"']/g, c =>
     ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
@@ -68,7 +69,11 @@
           .catch(() => 0),
         count('orders', q => q.eq('commercial_status', 'confirmed').in('fulfillment_status', ['unfulfilled', 'reserved', 'processing', 'ready']))
       ]);
-      return `<h2>Overview</h2><p class="panel-sub">Business snapshot — live from the Everlume data model.</p>
+      return `<div class="command-boundary" role="status">
+          <strong>Controlled non-production environment</strong>
+          <span>Commerce, payment collection, and live fulfillment are disabled.</span>
+        </div>
+        <h2>Overview</h2><p class="panel-sub">Operational snapshot — live from the dedicated Everlume preview data model.</p>
         <div class="stat-row">
           <div class="stat-tile"><b>${money(captured)}</b><span>Revenue (captured)</span></div>
           <div class="stat-tile"><b>${orders}</b><span>Orders</span></div>
@@ -138,11 +143,11 @@
             </div>
             <div class="inv-actions">
               ${pill(i.status)}
-              <button class="adjust-btn" data-sku="${esc(i.sku)}" type="button">Adjust</button>
+              ${['manager', 'admin'].includes(currentRole) ? `<button class="adjust-btn" data-sku="${esc(i.sku)}" type="button">Adjust</button>` : ''}
             </div>
           </div>`;
         }).join('')}</div>
-        <div class="adjust-panel" id="adjustPanel" hidden>
+        ${['manager', 'admin'].includes(currentRole) ? `<div class="adjust-panel" id="adjustPanel" hidden>
           <h3>Adjust stock — <span id="adjustSku"></span></h3>
           <p class="panel-sub">Manager or admin only. Every adjustment writes an audit record in the same transaction, so an adjustment that cannot be recorded does not happen.</p>
           <label>Change (+ / −)<input type="number" id="adjustDelta" step="1" placeholder="e.g. 12 or -3"></label>
@@ -152,7 +157,7 @@
             <button class="request-btn" id="adjustCancel" type="button">Cancel</button>
           </div>
           <p class="pd-status" id="adjustStatus" role="status" aria-live="polite"></p>
-        </div>`;
+        </div>` : '<p class="empty-note">Inventory adjustments require manager or administrator authorization.</p>'}`;
     },
     async customers() {
       const { data } = await client.from('profiles')
@@ -290,12 +295,18 @@
   (async function init() {
     const { data: { session } } = await client.auth.getSession();
     if (!session) { lock('Sign in required.', 'COMMAND is available to authorized Everlume staff only.'); return; }
-    const { data: profile } = await client.from('profiles').select('role, first_name, email').maybeSingle();
+    // Staff RLS can expose multiple profiles. Resolve only the authenticated
+    // operator's row so authorization never depends on which other users exist.
+    const { data: profile } = await client.from('profiles')
+      .select('role, first_name, email')
+      .eq('id', session.user.id)
+      .maybeSingle();
     const role = profile?.role;
     if (!['staff', 'manager', 'admin'].includes(role)) {
       lock('Not authorized.', 'This console is restricted to Everlume staff. Your account does not have staff access.');
       return;
     }
+    currentRole = role;
     document.getElementById('whoami').textContent = `${profile.first_name || profile.email} · ${role}`;
     locked.hidden = true;
     app.hidden = false;
