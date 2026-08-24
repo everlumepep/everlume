@@ -36,13 +36,13 @@ function asset(slug, name, dose) {
   <desc id="desc">${esc(title)}. For research purposes only.</desc>
   <image x="0" y="0" width="1122" height="1402" preserveAspectRatio="none" href="data:image/png;base64,${base}"/>
   <g aria-hidden="true" text-anchor="middle">
-    <text x="561" y="688" fill="#a88451" font-family="Cormorant Garamond, Georgia, serif" font-size="84" letter-spacing="4">EL</text>
-    <text x="561" y="748" fill="#a88451" font-family="Jost, Arial, sans-serif" font-size="27" letter-spacing="10">EVERLUME</text>
-    <line x1="426" y1="780" x2="696" y2="780" stroke="#a88451" stroke-width="2" opacity=".62"/>
-    <text x="561" y="${dose ? 866 : 900}" fill="#2d2925" font-family="Cormorant Garamond, Georgia, serif" font-size="${nameSize}" font-weight="600" letter-spacing="1.5">${esc(name)}</text>
-    ${dose ? `<text x="561" y="${doseY}" fill="#2d2925" font-family="Cormorant Garamond, Georgia, serif" font-size="42" font-weight="600" letter-spacing="2">${esc(dose)}</text>` : ''}
-    <text x="561" y="1018" fill="#2d2925" font-family="Jost, Arial, sans-serif" font-size="18" font-weight="600" letter-spacing="3">FOR RESEARCH</text>
-    <text x="561" y="1045" fill="#2d2925" font-family="Jost, Arial, sans-serif" font-size="18" font-weight="600" letter-spacing="3">PURPOSES ONLY</text>
+    <text x="561" y="700" fill="#a88451" font-family="Cormorant Garamond, Georgia, serif" font-size="116" letter-spacing="4">EL</text>
+    <text x="561" y="766" fill="#a88451" font-family="Jost, Arial, sans-serif" font-size="34" letter-spacing="11">EVERLUME</text>
+    <line x1="402" y1="800" x2="720" y2="800" stroke="#a88451" stroke-width="2" opacity=".62"/>
+    <text x="561" y="${dose ? 878 : 918}" fill="#2d2925" font-family="Cormorant Garamond, Georgia, serif" font-size="${nameSize}" font-weight="600" letter-spacing="1.5">${esc(name)}</text>
+    ${dose ? `<text x="561" y="${doseY + 10}" fill="#2d2925" font-family="Cormorant Garamond, Georgia, serif" font-size="46" font-weight="600" letter-spacing="2">${esc(dose)}</text>` : ''}
+    <text x="561" y="1030" fill="#2d2925" font-family="Jost, Arial, sans-serif" font-size="20" font-weight="600" letter-spacing="3">FOR RESEARCH</text>
+    <text x="561" y="1060" fill="#2d2925" font-family="Jost, Arial, sans-serif" font-size="20" font-weight="600" letter-spacing="3">PURPOSES ONLY</text>
   </g>
   </svg>\n`.replace(/^[ \t]+$/gm, '');
 }
