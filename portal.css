@@ -52,6 +52,16 @@ body.command { background: #211b15; color: #ece3d3; }
 .command-topbar b { font: 500 18px Jost, sans-serif; letter-spacing: 0.4em; }
 .command-topbar span { font: 500 11px 'Cormorant Garamond', serif; letter-spacing: 0.34em; color: #c9a66e; }
 .command-topbar .who { margin-left: auto; font-size: 11px; color: #a3937d; letter-spacing: 0.1em; }
+.command-topbar .command-environment {
+  margin-left: 12px;
+  padding: 7px 10px;
+  border: 1px solid rgba(201, 166, 110, .36);
+  border-radius: 999px;
+  color: #e6c998;
+  font: 500 9px Jost, sans-serif;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
 .command-layout { display: grid; grid-template-columns: 210px 1fr; gap: 0; min-height: calc(100vh - 90px); }
 .command-nav { border-right: 1px solid #3a3128; padding: 26px 0; display: flex; flex-direction: column; }
 .command-nav button { text-align: left; background: none; border: 0; border-left: 2px solid transparent; padding: 12px 26px; font: 500 10px Jost, sans-serif; letter-spacing: 0.18em; text-transform: uppercase; color: #a3937d; cursor: pointer; }
@@ -64,6 +74,19 @@ body.command { background: #211b15; color: #ece3d3; }
 .command-main .data-list, .command-main .data-list .row { border-color: #3a3128; }
 .command-main .pill { background: #33291d; color: #d6b57e; }
 .command-main .empty-note { color: #a3937d; }
+.command-boundary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 22px;
+  margin: 0 0 28px;
+  padding: 15px 18px;
+  border: 1px solid rgba(201, 166, 110, .28);
+  border-radius: 12px;
+  background: rgba(201, 166, 110, .055);
+}
+.command-boundary strong { color: #ead8b8; font: 500 13px Jost, sans-serif; letter-spacing: .04em; }
+.command-boundary span { color: #a3937d; font-size: 11px; }
 .command-locked { min-height: 60vh; display: grid; place-content: center; text-align: center; padding: 40px; }
 .command-locked h2 { font: 500 40px 'Cormorant Garamond', serif; margin: 12px 0; color: #f2e8d5; }
 .command-locked p { color: #a3937d; max-width: 460px; line-height: 1.8; }
@@ -75,6 +98,10 @@ body.command { background: #211b15; color: #ece3d3; }
   .account-nav button.active { border-bottom-color: var(--gold); }
   .command-layout { grid-template-columns: 1fr; }
   .command-nav { flex-direction: row; overflow-x: auto; border-right: 0; border-bottom: 1px solid #3a3128; padding: 0; }
+  .command-topbar { flex-wrap: wrap; }
+  .command-topbar .command-environment { order: 3; margin-left: 0; }
+  .command-topbar .who { order: 4; width: 100%; margin-left: 0; }
+  .command-boundary { align-items: flex-start; flex-direction: column; gap: 6px; }
   .account-panel { padding: 26px 20px; }
 }
 
