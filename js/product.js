@@ -108,9 +108,10 @@
     const dose = escapeHtml(product.dose_label || '—');
     const vialDose = escapeHtml(vialDoseFor(product));
     const labelAsset = labelAssetFor(product);
-    const vialLabel = labelAsset
+    const isReferenceLock = Boolean(labelAsset);
+    const vialLabel = isReferenceLock
       ? `<img class="vial-label-art" src="${labelAsset}" alt="Everlume ${name} ${vialDose} label">`
-      : `<span class="vial-label"><img class="vial-label-mark" src="assets/everlume-logo-client-monogram.png" alt=""><span class="vial-label-brand">EVERLUME</span><b>${labelName}<br>${vialDose}</b><small>FOR RESEARCH<br>PURPOSES ONLY</small></span>`;
+      : `<span class="vial-label vial-label-paper"><img class="vial-label-mark" src="assets/everlume-logo-client-monogram.png" alt=""><span class="vial-label-brand">EVERLUME</span><b>${labelName}<br>${vialDose}</b><small>FOR RESEARCH<br>PURPOSES ONLY</small></span>`;
 
     document.title = `${product.name} ${product.dose_label} — Everlume`.replace(/\s+/g, ' ').trim();
     if (crumb) crumb.textContent = product.name;
@@ -163,7 +164,7 @@
     detail.innerHTML = `<div class="pd-layout">
       <div class="pd-visual pd-visual-${escapeHtml(product.category)}">
         <span class="pd-orbit pd-orbit-one" aria-hidden="true"></span><span class="pd-orbit pd-orbit-two" aria-hidden="true"></span>
-      <div class="mini-vial${labelAsset ? ' has-label-art' : ''}"><img src="assets/products/everlume-vial-master-v1.png" alt="" width="1024" height="1365">${vialLabel}</div>
+      <div class="mini-vial${isReferenceLock ? ' has-label-art' : ''}">${isReferenceLock ? `<img class="vial-locked-asset" src="${labelAsset}" alt="Everlume ${name} ${vialDose}" width="1122" height="1402">` : `<img src="assets/products/everlume-vial-master-v1.png" alt="" width="1024" height="1365">${vialLabel}`}</div>
         ${hotspots}
       </div>
       <div class="pd-copy">

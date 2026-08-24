@@ -3,7 +3,10 @@
     'tirzepatide-20mg', 'tirzepatide-40mg',
     'retatrutide-10mg', 'retatrutide-20mg',
     'klow-blend', 'ghk-cu', 'nad-plus-1000mg', 'glutathione-1200mg',
-    'kpv', 'bpc-157', 'tb-500', 'semax', '5-am', 'mots-c', 'tesamorelin'
+    'kpv', 'bpc-157', 'tb-500', 'semax', '5-am', 'mots-c', 'tesamorelin',
+    'tirzepatide-10mg', 'tirzepatide-30mg', 'tirzepatide-50mg',
+    'retatrutide-10mg', 'retatrutide-20mg', 'retatrutide-30mg', 'retatrutide-40mg', 'retatrutide-50mg',
+    'selank-10mg', 'kisspeptin-5mg', 'ss31-10mg', 'l-carnitine-600mg'
   ];
 
   const LABEL_DOSES = {
@@ -24,9 +27,8 @@
     'tesamorelin': ''
   };
 
-  const LABEL_ASSETS = {
-    'tirzepatide-20mg': 'assets/products/labels/tirzepatide-20mg-bottle-locked-reference-v1.png'
-  };
+  const LABEL_ASSETS = Object.fromEntries(LABEL_ORDER.map(slug => [slug, `assets/products/locked-v1/${slug}.svg`]));
+  const LABEL_ORDER_SET = new Set(LABEL_ORDER);
 
   const LABEL_RANK = new Map(LABEL_ORDER.map((slug, index) => [slug, index]));
 
@@ -50,6 +52,12 @@
     LABEL_ORDER,
     LABEL_DOSES,
     LABEL_ASSETS,
+    LABEL_ORDER_SET,
+    LABEL_AUDIT: {
+      totalConfigured: LABEL_ORDER.length,
+      assetLockedCount: LABEL_ORDER.reduce((total, slug) => total + (LABEL_ASSETS[slug] ? 1 : 0), 0),
+      textLockCount: LABEL_ORDER.reduce((total, slug) => total + (LABEL_ASSETS[slug] ? 0 : 1), 0)
+    },
     LABEL_RANK,
     labelRank,
     labelDoseFor,

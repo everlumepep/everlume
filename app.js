@@ -59,9 +59,10 @@
     const dose = escapeHtml(product.dose_label || '—');
     const vialDose = escapeHtml(vialDoseFor(product));
     const labelAsset = labelAssetFor(product);
-    const vialLabel = labelAsset
+    const isReferenceLock = Boolean(labelAsset);
+    const vialLabel = isReferenceLock
       ? `<img class="vial-label-art" src="${labelAsset}" alt="Everlume ${name} ${vialDose} label" loading="lazy">`
-      : `<span class="vial-label"><img class="vial-label-mark" src="assets/everlume-logo-client-monogram.png" alt=""><span class="vial-label-brand">EVERLUME</span><b>${labelName}<br>${vialDose}</b><small>FOR RESEARCH<br>PURPOSES ONLY</small></span>`;
+      : `<span class="vial-label vial-label-paper"><img class="vial-label-mark" src="assets/everlume-logo-client-monogram.png" alt=""><span class="vial-label-brand">EVERLUME</span><b>${labelName}<br>${vialDose}</b><small>FOR RESEARCH<br>PURPOSES ONLY</small></span>`;
     const href = 'product.html?slug=' + encodeURIComponent(product.slug);
     const doseControl = variants.length > 1
       ? `<label class="variant-picker"><span>Available quantity</span><select data-variant-group="${escapeHtml(key)}" aria-label="Select ${name} available quantity">${variants.map(variant =>
@@ -75,7 +76,7 @@
 
     return `<article class="product-card reveal visible" data-category="${escapeHtml(product.category)}">
       <a class="product-visual" href="${href}" aria-label="${name} ${dose} details">
-        <div class="mini-vial${labelAsset ? ' has-label-art' : ''}"><img src="assets/products/everlume-vial-master-v1.png" alt="" width="1024" height="1365" loading="lazy">${vialLabel}</div>
+        <div class="mini-vial${isReferenceLock ? ' has-label-art' : ''}">${isReferenceLock ? `<img class="vial-locked-asset" src="${labelAsset}" alt="Everlume ${name} ${vialDose}" width="1122" height="1402" loading="lazy">` : `<img src="assets/products/everlume-vial-master-v1.png" alt="" width="1024" height="1365" loading="lazy">${vialLabel}`}</div>
       </a>
       <div class="product-copy">
         <p class="product-cat">${escapeHtml(product.category)} research</p>
