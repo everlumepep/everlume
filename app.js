@@ -62,7 +62,7 @@
     const isReferenceLock = Boolean(labelAsset);
     const vialLabel = isReferenceLock
       ? `<img class="vial-label-art" src="${labelAsset}" alt="Everlume ${name} ${vialDose} label" loading="lazy">`
-      : `<span class="vial-label vial-label-paper"><img class="vial-label-mark" src="assets/everlume-logo-client-monogram.png" alt=""><span class="vial-label-brand">EVERLUME</span><b>${labelName}<br>${vialDose}</b><small>FOR RESEARCH<br>PURPOSES ONLY</small></span>`;
+      : `<span class="vial-label vial-label-paper"><img class="vial-label-lockup" src="assets/everlume-logo-client-lockup.png" alt="Everlume"><b>${labelName}<br>${vialDose}</b><small>FOR RESEARCH<br>PURPOSES ONLY</small></span>`;
     const href = 'product.html?slug=' + encodeURIComponent(product.slug);
     const doseControl = variants.length > 1
       ? `<label class="variant-picker"><span>Available quantity</span><select data-variant-group="${escapeHtml(key)}" aria-label="Select ${name} available quantity">${variants.map(variant =>

@@ -1923,6 +1923,17 @@ footer>p{font-size:10px;letter-spacing:.17em}
 @media(max-width:980px){.hero{min-height:650px}.hero-copy{min-height:650px;padding:130px 7vw 100px}.hero-family-hero{opacity:.25}}
 @media(max-width:620px){.hero{min-height:650px}.hero-copy{min-height:650px;padding:100px 22px 80px}.hero-family-hero{opacity:.2}.hero::after{background:linear-gradient(90deg,rgba(250,246,238,.94),rgba(250,246,238,.52)),linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,.1))}}
 
+/* Founder visual lock: keep the copy legible while allowing the dawn scene to read on the right. */
+.hero::after{background:linear-gradient(90deg,rgba(250,246,238,.98) 0%,rgba(250,246,238,.82) 24%,rgba(250,246,238,.3) 47%,rgba(250,246,238,.03) 63%,rgba(34,20,12,.04) 100%),linear-gradient(180deg,rgba(255,255,255,.1),transparent 42%,rgba(34,20,12,.08))}
+.hero-family-hero{opacity:.4;filter:saturate(.84) contrast(1.02) brightness(.94)}
+.hero-art::before{background:linear-gradient(90deg,rgba(248,240,228,.78) 0%,rgba(248,240,228,.46) 28%,rgba(248,240,228,.08) 51%,transparent 68%),linear-gradient(180deg,rgba(255,255,255,.12),transparent 44%,rgba(35,20,11,.12))}
+.hero-art::after{background:linear-gradient(90deg,transparent 0%,transparent 48%,rgba(39,23,13,.2) 100%);opacity:.9}
+.hero .eyebrow{font-size:11px;letter-spacing:.22em}
+.hero-copy .micro-trust{align-self:stretch;justify-content:center;text-align:center;gap:18px;font-size:11px;line-height:1.45}
+.vial-label-lockup{display:block;width:58% !important;height:auto !important;max-height:none !important;object-fit:contain !important;margin:0 auto 5px !important;mix-blend-mode:multiply;opacity:.94}
+@media(max-width:980px){.hero-family-hero{opacity:.34}}
+@media(max-width:620px){.hero-family-hero{opacity:.3}.hero::after{background:linear-gradient(90deg,rgba(250,246,238,.92) 0%,rgba(250,246,238,.52) 46%,rgba(34,20,12,.08) 100%),linear-gradient(180deg,rgba(255,255,255,.1),rgba(35,20,11,.08))}.hero-copy .micro-trust{gap:10px;font-size:10px}}
+
 /* Final responsive guard: the marquee must never widen the document at tablet widths. */
 html{overflow-x:hidden}
 
