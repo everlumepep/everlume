@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="robots" content="noindex,nofollow,noarchive">
-  <title>Everlume Operations Desk · Synthetic Preview</title>
+  <title>Everlume Operations Desk</title>
   <link rel="stylesheet" href="ops.css">
 </head>
 <body>
@@ -12,9 +12,9 @@
   <header class="topbar">
     <div class="brand"><img class="mark" src="../assets/everlume-mark-v3.svg" alt="Everlume EL mark" width="42" height="42"><span>EVERLUME <small>OPERATIONS DESK</small></span></div>
     <div class="header-tools">
-      <span class="connection-state"><i aria-hidden="true"></i> Local fixture healthy</span>
-      <span class="synthetic-badge">SYNTHETIC DATA · LOCAL ONLY</span>
-      <label class="role-picker">View as <select id="roleSelect" aria-label="Dashboard role"><option value="owner">Owner</option><option value="co_owner">Co-owner</option><option value="reviewer">Reviewer</option></select></label>
+      <span class="connection-state" id="connectionState"><i aria-hidden="true"></i> Initializing secure view</span>
+      <span class="synthetic-badge" id="modeBadge">NO CLIENT DATA LOADED</span>
+      <span class="role-picker" id="identity">Signed out</span>
     </div>
   </header>
   <div class="shell">
@@ -27,11 +27,15 @@
       <button class="nav-item" data-view="catalog">Catalog registry <span>06</span></button>
       <button class="nav-item" data-view="exceptions">Exceptions <span>07</span></button>
       <button class="nav-item" data-view="handoffs">Handoffs &amp; access <span>08</span></button>
-      <div class="sidebar-note"><strong>Read-only preview</strong><br>Records are fabricated for workflow review. Nothing is saved, sent, charged, or synced.<br><span>Fixture: EVD-SYN-20260824</span></div>
+      <div class="sidebar-note" id="sidebarNote"><strong>Read-only operations desk</strong><br>Connecting to the governed source.</div>
     </nav>
     <main id="main" tabindex="-1" aria-live="polite"></main>
   </div>
   <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+  <script src="../js/runtime-config.js"></script>
+  <script src="../vendor/supabase.js"></script>
+  <script src="../js/config.js"></script>
+  <script src="../js/supabase-client.js"></script>
   <script src="ops.js"></script>
 </body>
 </html>

@@ -10,6 +10,10 @@
   const referralField = document.getElementById('referralField');
   const passwordField = document.getElementById('passwordField');
   let mode = 'signin';
+  const requestedNext = new URLSearchParams(location.search).get('next');
+  const safeNext = requestedNext && requestedNext.startsWith('/') && !requestedNext.startsWith('//')
+    ? requestedNext
+    : './';
 
   if (!client) {
     document.getElementById('configNotice').hidden = false;
@@ -55,7 +59,7 @@
       if (mode === 'signin') {
         const { error } = await client.auth.signInWithPassword({ email, password });
         if (error) return fail('Sign in failed. Check your email and password.');
-        location.href = './';
+        location.href = safeNext;
       } else if (mode === 'signup') {
         if (!password || password.length < 8) return fail('Please choose a password of at least 8 characters.');
         const { error } = await client.auth.signUp({
