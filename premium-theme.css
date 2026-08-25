@@ -2353,3 +2353,22 @@ html{overflow-x:hidden}
   .pep-launcher-arrow{width:36px;height:36px}
   .pd-inspect-hint{bottom:74px}
 }
++
+/* Precision bottle geometry: upright orbit, true center, disciplined card art. */
+.product-wheel{animation:lume-wheel 42s linear infinite}
+.product-wheel>span{position:absolute;inset:0;transform:rotate(var(--orbit-angle));pointer-events:none}
+.product-wheel>span:nth-child(1){--orbit-angle:0deg;--counter-start:0deg;--counter-end:-360deg}
+.product-wheel>span:nth-child(2){--orbit-angle:60deg;--counter-start:-60deg;--counter-end:-420deg}
+.product-wheel>span:nth-child(3){--orbit-angle:120deg;--counter-start:-120deg;--counter-end:-480deg}
+.product-wheel>span:nth-child(4){--orbit-angle:180deg;--counter-start:-180deg;--counter-end:-540deg}
+.product-wheel>span:nth-child(5){--orbit-angle:240deg;--counter-start:-240deg;--counter-end:-600deg}
+.product-wheel>span:nth-child(6){--orbit-angle:300deg;--counter-start:-300deg;--counter-end:-660deg}
+.product-wheel>span>img{left:50%;top:-4px;transform:translateX(-50%) rotate(var(--counter-start));transform-origin:50% 50%;animation:lume-bottle-counter 42s linear infinite}
+@keyframes lume-bottle-counter{from{transform:translateX(-50%) rotate(var(--counter-start))}to{transform:translateX(-50%) rotate(var(--counter-end))}}
+.lume-vial{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);animation:lume-centered-float 6s ease-in-out infinite}
+@keyframes lume-centered-float{0%,100%{transform:translate(-50%,-50%)}50%{transform:translate(-50%,-50%) translateY(-12px) scale(1.008)}}
+.category-card-visual{left:50%;right:auto;top:24px;width:112px;height:138px;transform:translateX(-50%);opacity:.13}
+.category-card:hover .category-card-visual{opacity:.24;transform:translateX(-50%) translateY(-5px) scale(1.045)}
+.category-card h3{margin-top:142px}
+@media(max-width:620px){.category-card-visual{top:22px;width:104px;height:128px}.category-card h3{margin-top:130px}}
+@media(prefers-reduced-motion:reduce){.product-wheel,.product-wheel>span>img,.lume-vial{animation:none}.product-wheel>span>img{transform:translateX(-50%) rotate(var(--counter-start))}.lume-vial{transform:translate(-50%,-50%)}}
