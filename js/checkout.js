@@ -115,18 +115,34 @@
     submit.disabled = true;
     status.textContent = 'Submitting…';
 
-    // E3 wires this to Supabase order creation, where prices, totals, and
-    // inventory reservation are re-derived server-side. Until the backend
-    // exists the shell states plainly that the order was not transmitted,
-    // rather than pretending it succeeded.
     if (!window.everlumeSupabase) {
       submit.disabled = false;
       status.textContent = 'Ordering is not yet connected. Please submit an inquiry from the catalog page and Everlume will follow up directly.';
       return;
     }
-
-    submit.disabled = false;
-    status.textContent = 'Order request received. Everlume will confirm availability and totals by email.';
+    try {
+      const { data: { session } } = await window.everlumeSupabase.auth.getSession();
+      if (!session) {
+        submit.disabled = false;
+        status.innerHTML = 'Please <a href="signin.html?next=checkout">sign in</a> before continuing to secure payment.';
+        return;
+      }
+      const fields = new FormData(form);
+      const response = await fetch('/.netlify/functions/create-checkout-session',{
+        method:'POST',headers:{'content-type':'application/json',authorization:`Bearer ${session.access_token}`},
+        body:JSON.stringify({
+          items:items.map(item=>({slug:item.slug,quantity:item.qty})),
+          address:{line1:fields.get('address1'),line2:fields.get('address2'),city:fields.get('city'),region:fields.get('region'),postal_code:fields.get('postal'),country:fields.get('country')},
+          acknowledgements:{research:fields.get('ack_research')==='on',capacity:fields.get('ack_capacity')==='on',terms:fields.get('ack_terms')==='on'}
+        })
+      });
+      const result = await response.json();
+      if (!response.ok || !result.url) throw new Error(result.error || 'Checkout unavailable');
+      location.assign(result.url);
+    } catch (error) {
+      submit.disabled = false;
+      status.textContent = error.message || 'Secure checkout is temporarily unavailable.';
+    }
   });
 
   (async function init() {

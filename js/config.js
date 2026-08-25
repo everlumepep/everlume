@@ -16,11 +16,11 @@ window.EVERLUME_CONFIG = {
   // This is an ADDITIONAL gate, never a bypass. Commerce requires this flag
   // AND per-product authorization (active + approved + priced + in stock).
   // Turning it on does not make any product purchasable on its own — G1 stands.
-  COMMERCE_ENABLED: false,
+  COMMERCE_ENABLED: runtime.COMMERCE_ENABLED === true,
 
   // Payment provider state. PENDING_PROVIDER until a processor has actually
   // approved Everlume's business — not when credentials merely exist.
-  PAYMENT_STATE: 'PENDING_PROVIDER',
+  PAYMENT_STATE: runtime.PAYMENT_STATE || 'PENDING_PROVIDER',
 
   // Entry gate configuration. Bumping GATE_VERSION or any policy version
   // forces every visitor to re-complete the gate.

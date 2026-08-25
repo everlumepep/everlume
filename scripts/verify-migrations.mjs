@@ -161,16 +161,23 @@ await check('deleted account leaves an anonymized ledger, not a hole', async () 
 });
 
 console.log('\nCommerce triggers & constraints');
-// The count is incidental and moves whenever the client revises the catalog.
-// The invariant that must never move: nothing arrives purchasable.
-await check('every catalogued product is pending_review; only six carry confirmed prices', async () => {
+// Two client-approved products have prices, but neither receives invented
+// inventory. All other products remain pending review.
+await check('approved catalog receipts remain fail-closed without inventory', async () => {
   const r = await one(`select count(*)::int total,
-    count(*) filter (where compliance_status <> 'pending_review')::int bad_status,
-    count(*) filter (where price_cents is not null)::int priced from public.products`);
+    count(*) filter (where compliance_status = 'approved')::int approved,
+    count(*) filter (where price_cents is not null)::int priced,
+    count(*) filter (where compliance_status = 'approved' and slug not in ('semax','lipo-c'))::int unexpected_approval
+    from public.products`);
   assert(r.total > 0, 'catalog is empty — the seed did not apply');
-  assert(r.bad_status === 0, `${r.bad_status} product(s) not pending_review`);
-  assert(r.priced === 6, `expected 6 confirmed prices, found ${r.priced}`);
-  return `${r.total} products, 0 approved, 6 priced`;
+  assert(r.approved === 2, `expected 2 approved products, found ${r.approved}`);
+  assert(r.priced === 8, `expected 8 confirmed prices, found ${r.priced}`);
+  assert(r.unexpected_approval === 0, `${r.unexpected_approval} unexpected product approval(s)`);
+  const stock = await one(`select count(*)::int invented from public.inventory i
+    join public.products p on p.id=i.product_id
+    where p.slug in ('semax','lipo-c') and (i.quantity_on_hand<>0 or i.quantity_reserved<>0)`);
+  assert(stock.invented === 0, 'approval receipt invented inventory');
+  return `${r.total} products, 2 approved, 8 priced, 0 invented inventory`;
 });
 
 await check('0009 — SKUs follow the client convention and are unique', async () => {
@@ -202,6 +209,64 @@ await check('inventory status derives from quantity vs threshold', async () => {
   s = await one(`select status from public.inventory where id=$1`, [inv.id]);
   assert(s.status === 'out', `expected out, got ${s.status}`);
   return 'ok → low → out derived correctly';
+});
+
+let checkoutOrderId;
+await check('one-time checkout reserves approved inventory atomically', async () => {
+  await db.exec(`update public.inventory set quantity_on_hand=3,quantity_reserved=0
+    where product_id=(select id from public.products where slug='semax')`);
+  const r = await one(`select public.create_checkout_order(
+    '${userB}','b@test.invalid',
+    '{"line1":"1 Research Way","city":"Lab City","region":"CA","postal_code":"90001","country":"US"}'::jsonb,
+    '[{"slug":"semax","quantity":2}]'::jsonb,true) receipt`);
+  const receipt = typeof r.receipt === 'string' ? JSON.parse(r.receipt) : r.receipt;
+  checkoutOrderId = receipt.order_id;
+  assert(Number(receipt.subtotal_cents) === 6000, `subtotal=${receipt.subtotal_cents}`);
+  const inv = await one(`select quantity_on_hand,quantity_reserved from public.inventory
+    where product_id=(select id from public.products where slug='semax')`);
+  assert(inv.quantity_on_hand === 3 && inv.quantity_reserved === 2,
+    `inventory=${inv.quantity_on_hand}/${inv.quantity_reserved}`);
+  return `${receipt.order_number} reserved 2 units at server price`;
+});
+
+await check('captured checkout commits inventory exactly once', async () => {
+  await db.query(`select public.attach_checkout_session($1,$2)`,[checkoutOrderId,'cs_test_harness']);
+  await db.query(`select public.capture_checkout_order($1,$2)`,['cs_test_harness','pi_test_harness']);
+  await db.query(`select public.capture_checkout_order($1,$2)`,['cs_test_harness','pi_test_harness']);
+  const inv = await one(`select quantity_on_hand,quantity_reserved from public.inventory
+    where product_id=(select id from public.products where slug='semax')`);
+  const order = await one(`select commercial_status,payment_status,fulfillment_status from public.orders where id=$1`,[checkoutOrderId]);
+  assert(inv.quantity_on_hand === 1 && inv.quantity_reserved === 0,
+    `inventory=${inv.quantity_on_hand}/${inv.quantity_reserved}`);
+  assert(order.commercial_status==='confirmed' && order.payment_status==='captured' && order.fulfillment_status==='unfulfilled',
+    `states=${order.commercial_status}/${order.payment_status}/${order.fulfillment_status}`);
+  return '3 on hand → 1 on hand, duplicate capture was a no-op';
+});
+
+await check('expired checkout releases inventory without deducting stock', async () => {
+  const r = await one(`select public.create_checkout_order(
+    '${userB}','b@test.invalid',
+    '{"line1":"1 Research Way","city":"Lab City","region":"CA","postal_code":"90001","country":"US"}'::jsonb,
+    '[{"slug":"semax","quantity":1}]'::jsonb,true) receipt`);
+  const receipt = typeof r.receipt === 'string' ? JSON.parse(r.receipt) : r.receipt;
+  await db.query(`select public.release_checkout_order($1,$2)`,[receipt.order_id,'harness_expired']);
+  const inv = await one(`select quantity_on_hand,quantity_reserved from public.inventory
+    where product_id=(select id from public.products where slug='semax')`);
+  assert(inv.quantity_on_hand === 1 && inv.quantity_reserved === 0,
+    `inventory=${inv.quantity_on_hand}/${inv.quantity_reserved}`);
+  return 'reservation released; physical stock unchanged';
+});
+
+await check('insufficient inventory fails without partial order or reservation', async () => {
+  const before = await one(`select count(*)::int orders from public.orders`);
+  const m = await expectFailure(db,`select public.create_checkout_order(
+    '${userB}','b@test.invalid',
+    '{"line1":"1 Research Way","city":"Lab City","region":"CA","postal_code":"90001","country":"US"}'::jsonb,
+    '[{"slug":"semax","quantity":2}]'::jsonb,true)`, 'oversell');
+  assert(/insufficient inventory/.test(m), `unexpected error: ${m}`);
+  const after = await one(`select count(*)::int orders from public.orders`);
+  assert(after.orders === before.orders, 'failed checkout left a partial order');
+  return 'oversell refused and transaction rolled back';
 });
 
 await check('order number is auto-assigned from the sequence', async () => {

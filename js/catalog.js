@@ -63,7 +63,8 @@
     ['tesamorelin', 'Tesamorelin', '10mg', 'metabolic', 'EL-TSM10', 'Synthetic GHRH analog for controlled laboratory investigation of receptor pharmacology, pituitary signaling, GH-axis biology, peptide stability, and analytical workflows.'],
     ['selank-10mg', 'Selank', '10mg', 'peptide', 'EL-SEL10', 'Material format for controlled peptide research.'],
     ['kisspeptin-5mg', 'Kisspeptin', '5mg', 'peptide', 'EL-KISS5', 'Material format for controlled peptide research.'],
-    ['semax', 'Semax', '', 'peptide', 'EL-SEMAX', 'Material format for controlled peptide research.'],
+    ['semax', 'Semax', '', 'peptide', 'EL-SEMAX', 'Material format for controlled peptide research.', 3000, 'approved'],
+    ['lipo-c', 'Lipo C', '', 'cellular', 'EL-LIPOC', 'Material format for controlled laboratory research.', 4500, 'approved'],
     ['ghk-cu', 'GHK-Cu', '50mg / 100mg', 'peptide', 'EL-GHKCU', 'Copper-peptide research formats.'],
     ['glutathione-1200mg', 'Glutathione', '1200mg', 'peptide', 'EL-GLUT1200', 'Material format for biochemical research.', 4500],
     ['klow-blend', 'Klow Blend', 'Blend', 'peptide', 'EL-KLOW', 'Multi-component peptide research format.', 11500],
@@ -75,7 +76,7 @@
     ['ss31-10mg', 'SS-31', '10mg', 'cellular', 'EL-SS31-10', 'Material format for mitochondrial-pathway research.'],
     ['5-am', '5-AM', '5mg', 'cellular', 'EL-5AM5', 'Material format for metabolic-pathway investigation.'],
     ['l-carnitine-600mg', 'L-Carnitine', '600mg/10ml', 'cellular', 'EL-LCAR600', 'Solution format for cellular-pathway investigation.']
-  ].map(([slug, name, dose, category, sku, description, priceCents = null]) => ({
+  ].map(([slug, name, dose, category, sku, description, priceCents = null, complianceStatus = 'pending_review']) => ({
     slug,
     name,
     dose_label: dose,
@@ -83,7 +84,7 @@
     description,
     price_cents: priceCents,
     status: 'active',
-    compliance_status: 'pending_review',
+    compliance_status: complianceStatus,
     sku,
     quantity_on_hand: 0,
     quantity_reserved: 0,
