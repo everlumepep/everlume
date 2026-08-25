@@ -15,9 +15,10 @@ export async function userFrom(event) {
   return response.ok ? response.json() : null;
 }
 export async function rest(path, options={}) {
+  const serverKey = env('SUPABASE_SECRET_KEY');
   const response = await fetch(`${env('SUPABASE_URL')}/rest/v1/${path}`, {
     ...options,
-    headers: { apikey: env('SUPABASE_SERVICE_ROLE_KEY'), authorization: `Bearer ${env('SUPABASE_SERVICE_ROLE_KEY')}`, 'content-type':'application/json', prefer:'return=representation', ...(options.headers||{}) }
+    headers: { apikey: serverKey, authorization: `Bearer ${serverKey}`, 'content-type':'application/json', prefer:'return=representation', ...(options.headers||{}) }
   });
   const text = await response.text();
   if (!response.ok) throw new Error(`Database request failed: ${response.status} ${text}`);

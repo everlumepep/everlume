@@ -8,6 +8,7 @@ const endpoint = fs.readFileSync(path.join(root,'netlify/functions/create-checko
 const webhook = fs.readFileSync(path.join(root,'netlify/functions/stripe-webhook.mjs'),'utf8');
 const checkout = fs.readFileSync(path.join(root,'js/checkout.js'),'utf8');
 const migration = fs.readFileSync(path.join(root,'supabase/migrations/20260824000012_one_time_checkout.sql'),'utf8');
+const billing = fs.readFileSync(path.join(root,'netlify/functions/_billing.mjs'),'utf8');
 
 test('one-time checkout requires every server-side release gate',()=>{
   assert.match(endpoint,/billingEnabled\(\)/);
@@ -28,6 +29,8 @@ test('server checkout uses hosted payment and idempotency',()=>{
   assert.match(endpoint,/idempotencyKey:`everlume-order-\$\{order\.order_id\}`/);
   assert.match(endpoint,/payment_intent_data/);
   assert.match(endpoint,/release_checkout_order/);
+  assert.match(billing,/SUPABASE_SECRET_KEY/);
+  assert.doesNotMatch(billing,/SUPABASE_SERVICE_ROLE_KEY/);
 });
 
 test('signed webhooks capture or release one-time orders',()=>{
