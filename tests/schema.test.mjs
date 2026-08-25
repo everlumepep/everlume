@@ -185,3 +185,18 @@ test('COMMAND resolves only the signed-in staff profile', () => {
   assert.match(command, /\.eq\('id',\s*session\.user\.id\)/,
     'COMMAND identity lookup must target the session user; staff RLS can expose multiple profiles');
 });
+
+test('COMMAND dashboard is source-backed and keeps financial definitions explicit', () => {
+  const command = readFileSync(new URL('../js/command.js', import.meta.url), 'utf8');
+  for (const source of ["from('orders')", "from('inventory')", "from('products')", "count('profiles')", "count('inquiries'"]) {
+    assert.ok(command.includes(source), `dashboard source missing: ${source}`);
+  }
+  assert.match(command, /payment_status === 'captured'/,
+    'revenue and AOV must be limited to captured payments');
+  assert.match(command, /Last 14 days/,
+    'dashboard must expose a bounded movement window');
+  assert.match(command, /Live from Supabase/,
+    'dashboard must identify source freshness');
+  assert.match(command, /unavailable sources display an em dash rather than sample data/,
+    'dashboard must disclose unavailable-source behavior');
+});

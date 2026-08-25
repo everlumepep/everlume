@@ -70,6 +70,39 @@ body.command { background: #211b15; color: #ece3d3; }
 .command-main .data-list, .command-main .data-list .row { border-color: #3a3128; }
 .command-main .pill { background: #33291d; color: #d6b57e; }
 .command-main .empty-note { color: #a3937d; }
+.command-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; margin-bottom: 26px; }
+.command-kicker { margin: 0 0 7px; color: #c9a66e; font: 500 9px Jost, sans-serif; letter-spacing: .22em; text-transform: uppercase; }
+.freshness { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 0 8px; color: #d9c7aa; font-size: 10px; letter-spacing: .09em; text-transform: uppercase; padding-top: 8px; white-space: nowrap; }
+.freshness small { grid-column: 2; color: #756a5c; font-size: 9px; margin-top: 3px; }
+.live-dot { width: 7px; height: 7px; border-radius: 50%; background: #8daf78; box-shadow: 0 0 0 5px rgba(141,175,120,.1); }
+.command-kpis { display: grid; grid-template-columns: 1.35fr repeat(3, 1fr); gap: 14px; margin-bottom: 14px; }
+.command-kpi { min-width: 0; border: 1px solid #3a3128; border-radius: 16px; padding: 22px; background: linear-gradient(145deg, #282119, #231d17); }
+.command-kpi-primary { background: linear-gradient(145deg, #34291d, #241e18); border-color: rgba(201,166,110,.35); }
+.command-kpi > span, .card-heading span { display: block; color: #9f8f79; font: 500 9px Jost, sans-serif; letter-spacing: .16em; text-transform: uppercase; }
+.command-kpi b { display: block; margin: 13px 0 7px; color: #f2e8d5; font: 500 clamp(28px,3vw,40px)/1 'Cormorant Garamond', serif; }
+.command-kpi small { color: #786d5f; font-size: 10px; }
+.command-grid { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(270px, .8fr); gap: 14px; margin-bottom: 14px; }
+.command-card { border: 1px solid #3a3128; border-radius: 16px; background: #262019; padding: 24px; }
+.card-heading { display: flex; justify-content: space-between; align-items: flex-start; gap: 18px; margin-bottom: 22px; }
+.card-heading h3 { margin: 6px 0 0; color: #eee4d3; font: 500 24px/1.1 'Cormorant Garamond', serif; }
+.card-heading > small { color: #756a5c; font-size: 10px; text-align: right; }
+.mini-chart { height: 170px; display: grid; grid-template-columns: repeat(14, 1fr); align-items: end; gap: clamp(5px, 1vw, 11px); border-bottom: 1px solid #44392e; padding: 10px 4px 0; }
+.mini-day { display: grid; grid-template-rows: 1fr 20px; height: 100%; align-items: end; text-align: center; }
+.mini-bar-wrap { height: 100%; display: flex; align-items: end; justify-content: center; }
+.mini-bar { display: block; width: min(22px, 72%); min-height: 2px; border-radius: 7px 7px 2px 2px; background: linear-gradient(180deg, #d8b676, #8e6840); transition: opacity .2s, transform .2s; }
+.mini-day:hover .mini-bar { opacity: .8; transform: translateY(-2px); }
+.mini-day small { color: #665d51; font-size: 9px; }
+.chart-legend { display: flex; justify-content: space-between; gap: 15px; margin-top: 13px; color: #6f6558; font-size: 9px; }
+.chart-legend i { display: inline-block; width: 8px; height: 8px; margin-right: 6px; border-radius: 2px; background: #b58b54; }
+.readiness-list { border-top: 1px solid #3a3128; }
+.readiness-list > div { display: flex; justify-content: space-between; gap: 18px; padding: 14px 0; border-bottom: 1px solid #3a3128; font-size: 11px; }
+.readiness-list span { color: #a3937d; }
+.readiness-list strong { font-weight: 500; }
+.readiness-good { color: #9fc48a; }.readiness-warn { color: #dbb87c; }.readiness-bad { color: #e0a294; }
+.command-readiness > p, .metric-note { color: #70675a; font-size: 10px; line-height: 1.65; }
+.command-readiness > p { margin: 18px 0 0; }
+.command-recent { margin-bottom: 14px; }
+.metric-note { margin: 15px 2px 0; max-width: 920px; }
 .command-locked { min-height: 60vh; display: grid; place-content: center; text-align: center; padding: 40px; }
 .command-locked h2 { font: 500 40px 'Cormorant Garamond', serif; margin: 12px 0; color: #f2e8d5; }
 .command-locked p { color: #a3937d; max-width: 460px; line-height: 1.8; }
@@ -82,6 +115,19 @@ body.command { background: #211b15; color: #ece3d3; }
   .command-layout { grid-template-columns: 1fr; }
   .command-nav { flex-direction: row; overflow-x: auto; border-right: 0; border-bottom: 1px solid #3a3128; padding: 0; }
   .account-panel { padding: 26px 20px; }
+  .command-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .command-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 560px) {
+  .command-main { padding: 28px 18px 60px; }
+  .command-heading { display: block; }
+  .freshness { margin-top: 12px; width: max-content; }
+  .command-kpis { grid-template-columns: 1fr; }
+  .command-card, .command-kpi { padding: 19px; }
+  .mini-chart { gap: 4px; height: 140px; }
+  .card-heading { display: block; }
+  .card-heading > small { display: block; text-align: left; margin-top: 8px; }
 }
 
 /* ── COMMAND ops surfaces (E5) ──────────────────────────────────────────── */

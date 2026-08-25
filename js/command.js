@@ -37,6 +37,18 @@
     minimumFractionDigits: 2, maximumFractionDigits: 2
   });
 
+  const compactMoney = cents => '$' + (Number(cents || 0) / 100).toLocaleString(undefined, {
+    maximumFractionDigits: 0
+  });
+
+  const dayKey = date => new Date(date).toISOString().slice(0, 10);
+  const shortDay = date => new Date(date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+  const relativeDelta = (current, previous) => {
+    if (!previous) return current ? 'New activity' : 'No change';
+    const value = Math.round(((current - previous) / previous) * 100);
+    return `${value > 0 ? '+' : ''}${value}% vs prior 7 days`;
+  };
+
   // Pill tone per machine, so an operator reads state at a glance rather than
   // parsing three similar-looking words.
   const TONE = {
@@ -60,26 +72,76 @@
     async dashboard() {
       // Revenue counts CAPTURED money only. Authorized-but-uncaptured is not
       // revenue, and showing it as such would overstate the business.
-      const [orders, customers, low, newInquiries, captured, awaiting] = await Promise.all([
-        count('orders'),
+      const now = new Date();
+      const start30 = new Date(now); start30.setDate(start30.getDate() - 30);
+      const start14 = new Date(now); start14.setDate(start14.getDate() - 13); start14.setHours(0, 0, 0, 0);
+      const start7 = new Date(now); start7.setDate(start7.getDate() - 7);
+      const startPrior7 = new Date(now); startPrior7.setDate(startPrior7.getDate() - 14);
+
+      const [orderResult, customers, inventoryResult, newInquiries, complianceResult] = await Promise.all([
+        client.from('orders')
+          .select('id, order_number, commercial_status, payment_status, fulfillment_status, total_cents, created_at')
+          .gte('created_at', start30.toISOString())
+          .order('created_at', { ascending: false }),
         count('profiles'),
-        count('inventory', q => q.in('status', ['low', 'out'])),
+        client.from('inventory').select('status, quantity_on_hand, quantity_reserved'),
         count('inquiries', q => q.eq('status', 'new')),
-        client.from('orders').select('total_cents').eq('payment_status', 'captured')
-          .then(({ data }) => (data || []).reduce((s, o) => s + Number(o.total_cents || 0), 0))
-          .catch(() => 0),
-        count('orders', q => q.eq('commercial_status', 'confirmed').in('fulfillment_status', ['unfulfilled', 'reserved', 'processing', 'ready']))
+        client.from('products').select('status, compliance_status')
       ]);
-      return `<h2>Overview</h2><p class="panel-sub">Business snapshot — live from the Everlume data model.</p>
-        <div class="stat-row">
-          <div class="stat-tile"><b>${money(captured)}</b><span>Revenue (captured)</span></div>
-          <div class="stat-tile"><b>${orders}</b><span>Orders</span></div>
-          <div class="stat-tile"><b>${awaiting}</b><span>Awaiting fulfillment</span></div>
-          <div class="stat-tile"><b>${customers}</b><span>Customers</span></div>
-          <div class="stat-tile"><b>${newInquiries}</b><span>New inquiries</span></div>
-          <div class="stat-tile"><b>${low}</b><span>Low / out of stock</span></div>
+      const orders = orderResult.data || [];
+      const inventory = inventoryResult.data || [];
+      const products = complianceResult.data || [];
+      const capturedOrders = orders.filter(o => o.payment_status === 'captured');
+      const captured = capturedOrders.reduce((sum, order) => sum + Number(order.total_cents || 0), 0);
+      const awaiting = orders.filter(o => o.commercial_status === 'confirmed' && ['unfulfilled', 'reserved', 'processing', 'ready'].includes(o.fulfillment_status)).length;
+      const low = inventory.filter(item => ['low', 'out'].includes(item.status)).length;
+      const availableUnits = inventory.reduce((sum, item) => sum + Math.max(0, Number(item.quantity_on_hand || 0) - Number(item.quantity_reserved || 0)), 0);
+      const pendingCompliance = products.filter(product => product.compliance_status !== 'approved').length;
+      const current7 = orders.filter(o => new Date(o.created_at) >= start7).length;
+      const prior7 = orders.filter(o => new Date(o.created_at) >= startPrior7 && new Date(o.created_at) < start7).length;
+      const aov = capturedOrders.length ? Math.round(captured / capturedOrders.length) : 0;
+      const days = Array.from({ length: 14 }, (_, index) => {
+        const date = new Date(start14); date.setDate(date.getDate() + index);
+        const key = dayKey(date);
+        const dayOrders = orders.filter(order => dayKey(order.created_at) === key);
+        return { date, count: dayOrders.length, revenue: dayOrders.filter(order => order.payment_status === 'captured').reduce((sum, order) => sum + Number(order.total_cents || 0), 0) };
+      });
+      const maxDaily = Math.max(1, ...days.map(day => day.count));
+      const latest = orders.slice(0, 5);
+      const readiness = [
+        { label: 'Inventory available', value: availableUnits > 0 ? `${availableUnits} units` : 'Blocked', tone: availableUnits > 0 ? 'good' : 'bad' },
+        { label: 'Product compliance', value: pendingCompliance ? `${pendingCompliance} pending` : 'Clear', tone: pendingCompliance ? 'warn' : 'good' },
+        { label: 'Fulfillment queue', value: awaiting ? `${awaiting} open` : 'Clear', tone: awaiting ? 'warn' : 'good' },
+        { label: 'New inquiries', value: Number(newInquiries) ? `${newInquiries} waiting` : 'Clear', tone: Number(newInquiries) ? 'warn' : 'good' }
+      ];
+
+      return `<div class="command-heading">
+          <div><p class="command-kicker">Everlume operating view</p><h2>Business overview</h2><p class="panel-sub">Thirty-day performance, current operational risk, and the work requiring attention.</p></div>
+          <div class="freshness"><span class="live-dot"></span>Live from Supabase<small>Updated ${esc(now.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }))}</small></div>
         </div>
-        <p class="empty-note">Revenue reflects captured payments only — authorized-but-uncaptured amounts are not counted as revenue.</p>`;
+        <div class="command-kpis">
+          <article class="command-kpi command-kpi-primary"><span>Captured revenue · 30 days</span><b>${money(captured)}</b><small>${capturedOrders.length} captured payment${capturedOrders.length === 1 ? '' : 's'}</small></article>
+          <article class="command-kpi"><span>Orders · 30 days</span><b>${orders.length}</b><small>${esc(relativeDelta(current7, prior7))}</small></article>
+          <article class="command-kpi"><span>Average order value</span><b>${money(aov)}</b><small>Captured orders only</small></article>
+          <article class="command-kpi"><span>Customers</span><b>${customers}</b><small>Registered profiles</small></article>
+        </div>
+        <div class="command-grid">
+          <section class="command-card command-chart-card">
+            <div class="card-heading"><div><span>Order movement</span><h3>Last 14 days</h3></div><small>${current7} orders in the latest 7 days</small></div>
+            <div class="mini-chart" aria-label="Orders by day for the last fourteen days">${days.map(day => `<div class="mini-day" title="${esc(shortDay(day.date))}: ${day.count} orders, ${compactMoney(day.revenue)} captured"><div class="mini-bar-wrap"><span class="mini-bar" style="height:${Math.max(day.count ? 10 : 2, Math.round((day.count / maxDaily) * 100))}%"></span></div><small>${esc(day.date.toLocaleDateString(undefined, { weekday: 'narrow' }))}</small></div>`).join('')}</div>
+            <div class="chart-legend"><span><i></i>Order count</span><span>Hover bars for daily captured revenue</span></div>
+          </section>
+          <section class="command-card command-readiness">
+            <div class="card-heading"><div><span>Release posture</span><h3>Operating readiness</h3></div></div>
+            <div class="readiness-list">${readiness.map(item => `<div><span>${esc(item.label)}</span><strong class="readiness-${item.tone}">${esc(item.value)}</strong></div>`).join('')}</div>
+            <p>Production commerce remains controlled separately from this dashboard.</p>
+          </section>
+        </div>
+        <section class="command-card command-recent">
+          <div class="card-heading"><div><span>Current flow</span><h3>Recent orders</h3></div><small>${awaiting} awaiting fulfillment</small></div>
+          ${latest.length ? `<div class="data-list">${latest.map(order => `<div class="row row-order"><div><strong>${esc(order.order_number || order.id.slice(0, 8))}</strong><small>${esc(new Date(order.created_at).toLocaleString())} · ${money(order.total_cents)}</small></div><div class="pill-stack"><span class="pill-label">payment</span>${pill(order.payment_status)}<span class="pill-label">fulfillment</span>${pill(order.fulfillment_status)}</div></div>`).join('')}</div>` : '<p class="empty-note">No orders recorded in the last 30 days.</p>'}
+        </section>
+        <p class="metric-note">Revenue includes captured payments only. Order, inventory, customer, inquiry, and compliance values are read directly from their respective Supabase tables; unavailable sources display an em dash rather than sample data.</p>`;
     },
     async orders() {
       // Three independent machines per contract 01 / ruling D-1. They are shown
