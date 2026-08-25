@@ -2372,3 +2372,10 @@ html{overflow-x:hidden}
 .category-card h3{margin-top:142px}
 @media(max-width:620px){.category-card-visual{top:22px;width:104px;height:128px}.category-card h3{margin-top:130px}}
 @media(prefers-reduced-motion:reduce){.product-wheel,.product-wheel>span>img,.lume-vial{animation:none}.product-wheel>span>img{transform:translateX(-50%) rotate(var(--counter-start))}.lume-vial{transform:translate(-50%,-50%)}}
+
+/* Final art-direction pass: centered card halos and an unobstructed signature. */
+.category-card::after{right:50%;top:-64px;width:190px;height:190px;transform:translateX(50%);opacity:.055}
+.category-card-visual{opacity:.17;filter:grayscale(.12) sepia(.16) drop-shadow(0 16px 20px rgba(64,44,25,.16))}
+.category-card:hover .category-card-visual{opacity:.29}
+.lume-stage>p{z-index:6;bottom:-13%;padding:7px 26px;background:radial-gradient(ellipse,rgba(70,47,43,.3),transparent 72%);white-space:nowrap}
+@media(max-width:800px){.lume-stage>p{bottom:-8%}}
