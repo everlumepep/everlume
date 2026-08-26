@@ -10,7 +10,8 @@
       { label: 'Payments', value: 'Held', detail: 'Billing disabled', tone: 'warn' },
       { label: 'Inventory', value: 'Client input required', detail: 'No real quantities recorded', tone: 'warn' }
     ],
-    orders: [], inventory: [], income: [], expenses: [], catalog: [], exceptions: [], handoffs: [], affiliates: [], commissions: [], audit: []
+    orders: [], inventory: [], income: [], expenses: [], catalog: [], exceptions: [], handoffs: [], affiliates: [], commissions: [], audit: [],
+    shipping: { provider: 'Shippo', plan: 'Starter', status: 'connected', labelFormat: '4 × 6 thermal', monthlyAllowance: 'Up to 30 labels' }
   };
   let data = fixture;
   const esc = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
@@ -71,7 +72,7 @@
     return header('Module 07', 'Exceptions', 'Blocking conditions remain visible until an authorized person resolves them.') + tools() + table(['Type', 'Order', 'Detail', 'State'], data.exceptions.map(row => [esc(row[0]), `<strong>${esc(row[1])}</strong>`, esc(row[2]), pill(row[3], row[3] === 'Resolved' ? 'good' : 'warn')]), 'No order exceptions are open.');
   }
   function handoffs() {
-    return header('Module 08', 'Handoffs & access', 'Access is derived from authenticated Supabase profiles, not a visual role switch.') + `<section class="panel"><h2>Workspace access</h2><p class="panel-sub">Signed in as <strong>${esc(data.identity?.name || '—')}</strong> · ${esc(data.identity?.role || '—')}</p>` + table(['Name', 'Email', 'Role', 'Account'], data.handoffs.map(row => [esc(row.name), esc(row.email), pill(row.role, ['admin', 'manager'].includes(row.role) ? 'good' : 'neutral'), pill(row.status, row.status === 'active' ? 'good' : 'warn')]), 'No staff profiles have been created.') + `<div class="callout" style="margin-top:18px">Invitations, role changes, and account recovery remain deliberate administrative actions.</div></section>`;
+    return header('Module 08', 'Handoffs & access', 'Business ownership and authenticated system access are recorded separately.') + `<div class="layout-2"><section class="panel"><p class="eyebrow">Business ownership</p><h2>Equal ownership</h2><div class="ownership-list"><div><span>DP</span><p><strong>Denisha Phillips</strong><small>Co-owner · 50%</small></p></div><div><span>VW</span><p><strong>Veronicah Williams</strong><small>Co-owner · 50%</small></p></div></div><div class="callout">The shared company service login is <strong>everlume.admin@gmail.com</strong>. Ownership does not automatically grant a separate system session.</div></section><section class="panel"><h2>Workspace access</h2><p class="panel-sub">Signed in as <strong>${esc(data.identity?.name || '—')}</strong> · ${esc(data.identity?.role || '—')}</p>` + table(['Name', 'Email', 'Role', 'Account'], data.handoffs.map(row => [esc(row.name), esc(row.email), pill(row.role, ['admin', 'manager'].includes(row.role) ? 'good' : 'neutral'), pill(row.status, row.status === 'active' ? 'good' : 'warn')]), 'No staff profiles have been created.') + `<div class="callout" style="margin-top:18px">Invitations, role changes, and account recovery remain deliberate administrative actions.</div></section></div>`;
   }
   function affiliates() {
     const canReview = ['manager', 'admin'].includes(data.identity?.role);
@@ -81,7 +82,13 @@
       table(['Applicant', 'Channel', 'Status', 'Code', 'Review'], data.affiliates.map(row => { const channel = safeLink(row.channel_url); return [esc(`${row.display_name} · ${row.email}`), channel ? `<a href="${channel}" rel="noopener noreferrer" target="_blank">Open link</a>` : '—', pill(row.status, row.status === 'approved' ? 'good' : row.status === 'declined' ? 'bad' : 'warn'), esc(row.affiliate_code || '—'), row.status === 'pending' && canReview ? `<button class="affiliate-review" data-id="${esc(row.id)}" data-decision="approved">Approve</button> <button class="affiliate-review" data-id="${esc(row.id)}" data-decision="declined">Decline</button>` : '—']; }), 'No affiliate applications have been submitted.') +
       `<div class="callout" style="margin-top:18px"><strong>Pilot boundary</strong><br>No payout, bank account, tax, tier, payable, or automated settlement capability is included.</div>`;
   }
-  const views = { overview, orders, inventory, income, expenses, catalog, exceptions, handoffs, affiliates };
+  function shipping() {
+    const connected = data.shipping?.status === 'connected';
+    return header('Module 10', 'Shipping', 'Compare carriers and prepare thermal labels in the client-owned Shippo workspace.') +
+      `<div class="metric-grid"><div class="metric"><span class="label">Provider</span><span class="value">${esc(data.shipping?.provider || 'Shippo')}</span><span class="delta">Multi-carrier workspace</span></div><div class="metric"><span class="label">Plan</span><span class="value">${esc(data.shipping?.plan || 'Starter')}</span><span class="delta">No monthly subscription fee</span></div><div class="metric"><span class="label">Workspace</span><span class="value">${connected ? 'Ready' : 'Pending'}</span><span class="delta">${connected ? 'Client-controlled account' : 'Owner setup not completed'}</span></div><div class="metric"><span class="label">Label format</span><span class="value">4 × 6</span><span class="delta">Thermal-printer ready</span></div></div>` +
+      `<div class="layout-2"><section class="panel"><p class="eyebrow">Fulfillment workspace</p><h2>Shippo Starter</h2><p class="panel-sub">Compare available USPS, UPS, FedEx, and DHL rates, purchase postage, print labels, and follow tracking from one shipping workspace.</p><a class="shipping-launch" href="https://apps.goshippo.com/" target="_blank" rel="noopener noreferrer">Open Shippo securely <span aria-hidden="true">↗</span></a><p class="shipping-boundary">Postage and optional services are charged only when the authorized account owner purchases them in Shippo. This dashboard does not store a password or payment method.</p></section><section class="panel"><p class="eyebrow">Readiness</p><h2>${connected ? 'Connected for staff use' : 'Account setup pending'}</h2><div class="health-list"><div><span>Monthly platform fee</span>${pill('$0', 'good')}</div><div><span>Starter allowance</span>${pill(esc(data.shipping?.monthlyAllowance || 'Up to 30 labels'), 'neutral')}</div><div><span>Thermal labels</span>${pill(esc(data.shipping?.labelFormat || '4 × 6 thermal'), 'good')}</div><div><span>Production fulfillment</span>${pill('Held', 'warn')}</div></div><div class="callout"><strong>Release boundary</strong><br>Creating the workspace does not approve products, inventory, destinations, postage purchases, or production commerce.</div></section></div>`;
+  }
+  const views = { overview, orders, inventory, income, expenses, catalog, exceptions, handoffs, affiliates, shipping };
   function wireTools(view) {
     const search = main.querySelector('.table-search');
     if (search) search.addEventListener('input', () => {
@@ -169,7 +176,8 @@
       handoffs: (profilesResult.data || []).map(row => ({ name: `${row.first_name || ''} ${row.last_name || ''}`.trim() || '—', email: row.email, role: row.role, status: row.account_status })),
       affiliates: affiliateResult.data || [],
       commissions: commissionResult.data || [],
-      audit: (auditResult.data || []).map(row => [formatDate(row.created_at), row.action, row.entity_type, row.entity_id])
+      audit: (auditResult.data || []).map(row => [formatDate(row.created_at), row.action, row.entity_type, row.entity_id]),
+      shipping: { provider: 'Shippo', plan: 'Starter', status: 'connected', labelFormat: '4 × 6 thermal', monthlyAllowance: 'Up to 30 labels' }
     };
     connectionState.innerHTML = '<i aria-hidden="true"></i> Live Supabase connected'; modeBadge.textContent = 'LIVE DATA · READ ONLY';
     identity.textContent = `${data.identity.name} · ${data.identity.role}`;

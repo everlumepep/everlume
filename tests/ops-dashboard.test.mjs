@@ -11,9 +11,26 @@ const css = fs.readFileSync(path.join(root, 'ops-dashboard/ops.css'), 'utf8');
 test('operations surface is private-by-default and has every governed module', () => {
   assert.match(html, /noindex,nofollow,noarchive/);
   assert.match(html, /NO CLIENT DATA LOADED/);
-  for (const view of ['overview', 'orders', 'inventory', 'income', 'expenses', 'catalog', 'exceptions', 'handoffs', 'affiliates']) {
+  for (const view of ['overview', 'orders', 'inventory', 'income', 'expenses', 'catalog', 'exceptions', 'handoffs', 'affiliates', 'shipping']) {
     assert.match(html, new RegExp(`data-view="${view}"`));
   }
+});
+
+test('shipping module is client-controlled, thermal-ready, and cannot purchase postage', () => {
+  assert.match(html, /data-view="shipping"/);
+  assert.match(js, /Shippo Starter/);
+  assert.match(js, /4 × 6/);
+  assert.match(js, /No monthly subscription fee/);
+  assert.match(js, /does not store a password or payment method/);
+  assert.match(js, /Production fulfillment/);
+  assert.doesNotMatch(js, /SHIPPO_API|SHIPPO_TOKEN|shippo_token|createLabel\s*\(|purchaseLabel\s*\(/i);
+});
+
+test('equal Everlume ownership is separate from system access', () => {
+  assert.match(js, /Denisha Phillips/);
+  assert.match(js, /Veronicah Williams/);
+  assert.match(js, /Co-owner · 50%/);
+  assert.match(js, /Ownership does not automatically grant a separate system session/);
 });
 
 test('dashboard loads the shared Supabase runtime without privileged credentials', () => {
