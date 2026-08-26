@@ -11,7 +11,7 @@ const css = fs.readFileSync(path.join(root, 'ops-dashboard/ops.css'), 'utf8');
 test('operations surface is private-by-default and has every governed module', () => {
   assert.match(html, /noindex,nofollow,noarchive/);
   assert.match(html, /NO CLIENT DATA LOADED/);
-  for (const view of ['overview', 'orders', 'inventory', 'income', 'expenses', 'catalog', 'exceptions', 'handoffs']) {
+  for (const view of ['overview', 'orders', 'inventory', 'income', 'expenses', 'catalog', 'exceptions', 'handoffs', 'affiliates']) {
     assert.match(html, new RegExp(`data-view="${view}"`));
   }
 });
@@ -20,7 +20,7 @@ test('dashboard loads the shared Supabase runtime without privileged credentials
   for (const source of ['runtime-config.js', 'vendor/supabase.js', 'config.js', 'supabase-client.js', 'ops.js']) {
     assert.match(html, new RegExp(source.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
   }
-  for (const table of ['profiles', 'products', 'inventory', 'orders', 'order_items', 'order_exceptions', 'audit_events']) {
+  for (const table of ['profiles', 'products', 'inventory', 'orders', 'order_items', 'order_exceptions', 'affiliate_applications', 'affiliate_commissions', 'audit_events']) {
     assert.match(js, new RegExp(`from\\('${table}'\\)`));
   }
   assert.doesNotMatch(js, /service_role|SUPABASE_SERVICE|STRIPE_SECRET|WEBHOOK_SECRET/);
@@ -35,8 +35,10 @@ test('authentication, staff authorization, and fail-closed behavior are explicit
   assert.match(html, /read-only operations desk/i);
 });
 
-test('dashboard performs no database writes and contains no unsafe calculator language', () => {
-  assert.doesNotMatch(js, /\.insert\s*\(|\.update\s*\(|\.delete\s*\(|\.upsert\s*\(|\.rpc\s*\(/);
+test('dashboard permits only the governed affiliate review action and no commerce writes', () => {
+  assert.doesNotMatch(js, /\.insert\s*\(|\.update\s*\(|\.delete\s*\(|\.upsert\s*\(/);
+  assert.match(js, /\.rpc\('review_affiliate_application'/);
+  assert.doesNotMatch(js, /requestPayout|createPayout|payout_account|bank_account|status:\s*['"]paid/i);
   assert.doesNotMatch(js, /dose calculator|injection|reconstitution|prescrib|treatment/i);
   assert.match(js, /Counts are never inferred/);
   assert.match(js, /cannot enable commerce or change inventory/);

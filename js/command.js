@@ -48,7 +48,7 @@
     unfulfilled: 'neutral', reserved: 'warn', processing: 'warn',
     ready: 'warn', partially_fulfilled: 'warn', fulfilled: 'good',
     // commercial
-    confirmed: 'good', closed: 'neutral', cancelled: 'bad',
+    confirmed: 'good', closed: 'neutral', canceled: 'bad', cancelled: 'bad',
     // inventory
     ok: 'good', low: 'warn', out: 'bad',
     // inquiries

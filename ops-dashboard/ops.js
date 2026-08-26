@@ -10,7 +10,7 @@
       { label: 'Payments', value: 'Held', detail: 'Billing disabled', tone: 'warn' },
       { label: 'Inventory', value: 'Client input required', detail: 'No real quantities recorded', tone: 'warn' }
     ],
-    orders: [], inventory: [], income: [], expenses: [], catalog: [], exceptions: [], handoffs: [], audit: []
+    orders: [], inventory: [], income: [], expenses: [], catalog: [], exceptions: [], handoffs: [], affiliates: [], commissions: [], audit: []
   };
   let data = fixture;
   const esc = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
@@ -18,6 +18,7 @@
   const formatMoney = value => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(value || 0);
   const formatDate = value => value ? new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(new Date(value)) : '—';
   const pill = (value, tone = 'neutral') => `<span class="pill ${tone}">${esc(value)}</span>`;
+  const safeLink = value => { try { const url = new URL(value); return ['http:', 'https:'].includes(url.protocol) ? esc(url.href) : ''; } catch { return ''; } };
   const main = document.getElementById('main');
   const nav = Array.from(document.querySelectorAll('.nav-item'));
   const toast = document.getElementById('toast');
@@ -72,7 +73,15 @@
   function handoffs() {
     return header('Module 08', 'Handoffs & access', 'Access is derived from authenticated Supabase profiles, not a visual role switch.') + `<section class="panel"><h2>Workspace access</h2><p class="panel-sub">Signed in as <strong>${esc(data.identity?.name || '—')}</strong> · ${esc(data.identity?.role || '—')}</p>` + table(['Name', 'Email', 'Role', 'Account'], data.handoffs.map(row => [esc(row.name), esc(row.email), pill(row.role, ['admin', 'manager'].includes(row.role) ? 'good' : 'neutral'), pill(row.status, row.status === 'active' ? 'good' : 'warn')]), 'No staff profiles have been created.') + `<div class="callout" style="margin-top:18px">Invitations, role changes, and account recovery remain deliberate administrative actions.</div></section>`;
   }
-  const views = { overview, orders, inventory, income, expenses, catalog, exceptions, handoffs };
+  function affiliates() {
+    const canReview = ['manager', 'admin'].includes(data.identity?.role);
+    const pendingTotal = data.commissions.filter(row => row.status === 'pending').reduce((sum, row) => sum + Number(row.amount_cents || 0), 0);
+    return header('Module 09', 'Affiliate pilot', 'Applications are manually reviewed. Commission entries are pending estimates only; payouts are excluded.') +
+      `<div class="metric-grid"><div class="metric"><span class="label">Applications</span><span class="value">${data.affiliates.length}</span><span class="delta">All pilot records</span></div><div class="metric"><span class="label">Pending estimates</span><span class="value">${formatMoney(cash(pendingTotal))}</span><span class="delta">Not a payable balance</span></div></div>` + tools() +
+      table(['Applicant', 'Channel', 'Status', 'Code', 'Review'], data.affiliates.map(row => { const channel = safeLink(row.channel_url); return [esc(`${row.display_name} · ${row.email}`), channel ? `<a href="${channel}" rel="noopener noreferrer" target="_blank">Open link</a>` : '—', pill(row.status, row.status === 'approved' ? 'good' : row.status === 'declined' ? 'bad' : 'warn'), esc(row.affiliate_code || '—'), row.status === 'pending' && canReview ? `<button class="affiliate-review" data-id="${esc(row.id)}" data-decision="approved">Approve</button> <button class="affiliate-review" data-id="${esc(row.id)}" data-decision="declined">Decline</button>` : '—']; }), 'No affiliate applications have been submitted.') +
+      `<div class="callout" style="margin-top:18px"><strong>Pilot boundary</strong><br>No payout, bank account, tax, tier, payable, or automated settlement capability is included.</div>`;
+  }
+  const views = { overview, orders, inventory, income, expenses, catalog, exceptions, handoffs, affiliates };
   function wireTools(view) {
     const search = main.querySelector('.table-search');
     if (search) search.addEventListener('input', () => {
@@ -90,7 +99,14 @@
   }
   function render(name) {
     nav.forEach(button => { const active = button.dataset.view === name; button.classList.toggle('active', active); button.setAttribute('aria-current', active ? 'page' : 'false'); });
-    main.innerHTML = views[name](); wireTools(name); main.focus({ preventScroll: true });
+    main.innerHTML = views[name](); wireTools(name);
+    main.querySelectorAll('.affiliate-review').forEach(button => button.addEventListener('click', async () => {
+      button.disabled = true;
+      const { error } = await window.everlumeSupabase.rpc('review_affiliate_application', { p_application_id: button.dataset.id, p_decision: button.dataset.decision });
+      if (error) { announce('Affiliate review could not be saved.'); button.disabled = false; return; }
+      announce(`Affiliate application ${button.dataset.decision}.`); await connect(); render('affiliates');
+    }));
+    main.focus({ preventScroll: true });
   }
   function showAccess(title, message, action = '') {
     nav.forEach(button => { button.disabled = true; });
@@ -117,16 +133,18 @@
     if (!['staff', 'manager', 'admin'].includes(profile.role) || profile.account_status !== 'active') {
       showAccess('Access restricted', 'This account does not have an active Everlume operations role.'); return;
     }
-    const [productsResult, inventoryResult, ordersResult, itemsResult, exceptionsResult, profilesResult, auditResult] = await Promise.all([
+    const [productsResult, inventoryResult, ordersResult, itemsResult, exceptionsResult, profilesResult, affiliateResult, commissionResult, auditResult] = await Promise.all([
       client.from('products').select('id,slug,name,dose_label,price_cents,status,compliance_status').order('name'),
       client.from('inventory').select('product_id,sku,quantity_on_hand,quantity_reserved,reorder_threshold,status,updated_at').order('sku'),
       client.from('orders').select('id,order_number,total_cents,currency,commercial_status,payment_status,fulfillment_status,created_at').order('created_at', { ascending: false }).limit(200),
       client.from('order_items').select('order_id,product_name,sku,quantity').limit(1000),
       client.from('order_exceptions').select('order_id,reason,detail,blocking,resolved_at,opened_at').order('opened_at', { ascending: false }).limit(200),
       client.from('profiles').select('email,first_name,last_name,role,account_status').order('first_name'),
+      client.from('affiliate_applications').select('id,display_name,email,channel_url,status,affiliate_code,created_at').order('created_at', { ascending: false }),
+      client.from('affiliate_commissions').select('affiliate_user_id,amount_cents,status,created_at').order('created_at', { ascending: false }),
       client.from('audit_events').select('action,entity_type,entity_id,created_at').order('created_at', { ascending: false }).limit(100)
     ]);
-    const failures = [productsResult, inventoryResult, ordersResult, itemsResult, exceptionsResult, profilesResult, auditResult].filter(result => result.error);
+    const failures = [productsResult, inventoryResult, ordersResult, itemsResult, exceptionsResult, profilesResult, affiliateResult, commissionResult, auditResult].filter(result => result.error);
     if (failures.length) throw failures[0].error;
     const products = productsResult.data || [];
     const productById = new Map(products.map(product => [product.id, product]));
@@ -149,6 +167,8 @@
       catalog: products.filter(product => product.status !== 'archived').map(product => { const stock = inventoryByProduct.get(product.id) || {}; return { sku: stock.sku || '—', name: product.name, format: product.dose_label, price: product.price_cents, compliance: product.compliance_status }; }),
       exceptions: (exceptionsResult.data || []).map(row => [row.reason, orderNumberById.get(row.order_id) || row.order_id, row.detail || (row.blocking ? 'Blocking' : 'Non-blocking'), row.resolved_at ? 'Resolved' : 'Open']),
       handoffs: (profilesResult.data || []).map(row => ({ name: `${row.first_name || ''} ${row.last_name || ''}`.trim() || '—', email: row.email, role: row.role, status: row.account_status })),
+      affiliates: affiliateResult.data || [],
+      commissions: commissionResult.data || [],
       audit: (auditResult.data || []).map(row => [formatDate(row.created_at), row.action, row.entity_type, row.entity_id])
     };
     connectionState.innerHTML = '<i aria-hidden="true"></i> Live Supabase connected'; modeBadge.textContent = 'LIVE DATA · READ ONLY';

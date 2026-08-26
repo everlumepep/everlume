@@ -11,6 +11,7 @@
   const passwordField = document.getElementById('passwordField');
   let mode = 'signin';
   const requestedNext = new URLSearchParams(location.search).get('next');
+  const affiliateCode = String(new URLSearchParams(location.search).get('affiliate') || '').trim().toUpperCase().slice(0, 24);
   const safeNext = requestedNext && requestedNext.startsWith('/') && !requestedNext.startsWith('//')
     ? requestedNext
     : './';
@@ -66,7 +67,7 @@
           email, password,
           options: {
             emailRedirectTo: new URL('./', location.href).href,
-            data: { first_name: data.get('first_name') || '', referral_code: String(data.get('referral_code') || '').trim().toUpperCase() }
+            data: { first_name: data.get('first_name') || '', referral_code: String(data.get('referral_code') || '').trim().toUpperCase(), affiliate_code: affiliateCode }
           }
         });
         if (error) return fail('We could not create the account. ' + (error.message || ''));

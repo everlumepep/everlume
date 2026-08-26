@@ -86,6 +86,28 @@
           <span class="pill">${t.points > 0 ? '+' : ''}${Number(t.points).toLocaleString()}</span></div>`).join('')}</div>`
         : '<p class="empty-note">Refer a friend for $10 credit after their first completed purchase. Six qualifying purchases unlock one complimentary eligible item.</p>');
     },
+    async affiliate() {
+      const [{ data: application }, { data: commissions }] = await Promise.all([
+        client.from('affiliate_applications').select('*').maybeSingle(),
+        client.from('affiliate_commissions').select('id,amount_cents,status,note,created_at').order('created_at', { ascending: false })
+      ]);
+      const rows = commissions || [];
+      const pending = rows.filter(row => row.status === 'pending').reduce((sum, row) => sum + Number(row.amount_cents || 0), 0);
+      if (!application) return `<h2>Affiliate Pilot</h2><p class="panel-sub">Apply for Everlume’s limited, manually reviewed affiliate pilot.</p>
+        <form id="affiliateForm" class="portal-card" style="box-shadow:none;border:0;padding:0;width:100%">
+          <label>Public name<input name="display_name" required minlength="2" maxlength="100" value="${esc([profile?.first_name, profile?.last_name].filter(Boolean).join(' '))}"></label>
+          <label>Website or social link <span>(optional)</span><input name="channel_url" type="url" maxlength="300" placeholder="https://"></label>
+          <label>Tell us briefly about your audience <span>(optional)</span><textarea name="audience_note" maxlength="1000" rows="4"></textarea></label>
+          <p class="form-status" id="affiliateStatus" role="status" aria-live="polite"></p>
+          <button class="btn btn-dark" type="submit">Submit application</button>
+        </form><p class="empty-note">Applications require manual approval. This pilot does not include payouts, bank details, tax processing, tiers, or automated settlement.</p>`;
+      const link = application.affiliate_code ? `${location.origin}/account/signin.html?affiliate=${encodeURIComponent(application.affiliate_code)}` : '';
+      return `<h2>Affiliate Pilot</h2><p class="panel-sub">A limited pilot with manual review and pending commission estimates.</p>
+        <div class="stat-row"><div class="stat-tile"><b>${esc(application.status)}</b><span>Application</span></div><div class="stat-tile"><b>${money(pending)}</b><span>Pending estimate</span></div><div class="stat-tile"><b>${esc(application.affiliate_code || 'Not issued')}</b><span>Affiliate code</span></div></div>
+        ${link ? `<div class="data-list"><div class="row"><div>Your unique link<small>${esc(link)}</small></div><button class="btn affiliate-copy" type="button" data-copy="${esc(link)}">Copy link</button></div></div>` : '<p class="empty-note">Your application is awaiting manual review. A unique code and link are issued only after approval.</p>'}
+        ${rows.length ? `<div class="data-list">${rows.map(row => `<div class="row"><div>${esc(row.note || 'Affiliate commission estimate')}<small>${esc(when(row.created_at))}</small></div><span class="pill">${esc(row.status)} · ${money(row.amount_cents)}</span></div>`).join('')}</div>` : '<p class="empty-note">No commission estimates have been recorded.</p>'}
+        <p class="empty-note"><strong>Pending estimates are not payable balances.</strong> Payouts, banking, tax processing, and automated settlement are outside this pilot.</p>`;
+    },
     async subscriptions() {
       const {data}=await client.from('subscriptions').select('*,products(name,dose_label)').order('created_at',{ascending:false}); const rows=data||[];
       return `<h2>Subscriptions</h2><p class="panel-sub">Manage Everlume Reserve deliveries and billing.</p>${rows.length?`<div class="data-list">${rows.map(s=>`<div class="row"><div>${esc(s.products?.name||'Everlume Reserve')}<small>${esc(s.products?.dose_label||'')} · every ${esc(s.cadence_days)} days · renews ${esc(when(s.current_period_end))}</small></div><span class="pill">${esc(s.status)}</span></div>`).join('')}</div><button class="btn btn-dark" id="billingPortalBtn" type="button">Manage billing &amp; subscription</button><p id="billingPortalStatus" role="status"></p>`:'<p class="empty-note">No active subscriptions yet.</p>'}`;
@@ -125,7 +147,30 @@
     try { panel.innerHTML = await sections[name](); }
     catch { panel.innerHTML = '<p class="empty-note">We could not load this section. Please refresh.</p>'; }
     if (name === 'profile') bindProfileForm();
+    if (name === 'affiliate') bindAffiliatePilot();
     document.getElementById('billingPortalBtn')?.addEventListener('click', async event=>{const button=event.currentTarget,status=document.getElementById('billingPortalStatus');button.disabled=true;status.textContent='Opening secure billing…';const {data:{session}}=await client.auth.getSession();try{const response=await fetch('/.netlify/functions/customer-portal',{method:'POST',headers:{authorization:`Bearer ${session.access_token}`}});const result=await response.json();if(!response.ok)throw new Error(result.error);location.href=result.url;}catch(error){status.textContent=error.message||'Billing portal unavailable.';button.disabled=false;}});
+  }
+
+  function bindAffiliatePilot() {
+    document.querySelector('.affiliate-copy')?.addEventListener('click', async event => {
+      await navigator.clipboard.writeText(event.currentTarget.dataset.copy);
+      event.currentTarget.textContent = 'Copied';
+    });
+    const form = document.getElementById('affiliateForm');
+    form?.addEventListener('submit', async event => {
+      event.preventDefault();
+      const values = new FormData(form);
+      const status = document.getElementById('affiliateStatus');
+      const { error } = await client.from('affiliate_applications').insert({
+        user_id: user.id,
+        email: user.email,
+        display_name: String(values.get('display_name') || '').trim(),
+        channel_url: String(values.get('channel_url') || '').trim(),
+        audience_note: String(values.get('audience_note') || '').trim()
+      });
+      if (error) { status.textContent = 'We could not submit the application. Please review the form and try again.'; return; }
+      await render('affiliate');
+    });
   }
 
   function bindProfileForm() {
