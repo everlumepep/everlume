@@ -3,12 +3,16 @@
 ## Completed
 
 - Preview 5 website and read-only operations dashboard prepared for client review
-- Denisha Phillips (`everlume.admin@gmail.com`) verified and authorized as an active Everlume admin
+- Shared company service account `everlume.admin@gmail.com` verified, renamed to **Everlume Admin**, and authorized for the read-only operations desk
+- Business ownership recorded as Denisha Phillips (co-owner, 50%) and Veronicah Williams (co-owner, 50%)
 - Supabase and Netlify preview credentials aligned to the Everlume project
 - Stripe test-mode integration present and fail-closed when preview billing is disabled
 - Client-confirmed catalog entries recorded: Semax available at $30; Lipo C available at $45
 - Affiliate Pilot added with application, manual approval, unique code/link, and pending-estimate view
 - Affiliate payouts and complex settlement functions explicitly excluded
+- Client-controlled Shippo Starter workspace created under the Everlume company login and linked from the operations desk
+- Shipping module records the $0 monthly platform fee, up-to-30-label Starter allowance, multi-carrier rate comparison, and 4 × 6 thermal-label target
+- Postage purchases, sender/return-address entry, saved payment methods, carrier contracts, and production fulfillment remain owner-controlled actions
 - Final automated proofread guard added for known errors and U.S. English policy variants
 - Full site validation and database migration/invariant verification passed before publication
 
@@ -22,10 +26,11 @@
 
 ## Awaiting human completion
 
-1. Provide Veronicah Williams’s exact email address; she then creates or verifies her individual login before an authorized role is assigned.
-2. Everlume returns written acceptance of Preview 5 using `EVERLUME-PREVIEW-5-ACCEPTANCE.md` or equivalent email language.
-3. The client enters verified real inventory.
-4. Production commerce, product publication/compliance approval, production-domain release, shipping service purchase, and affiliate payouts remain separately held.
+1. Everlume returns written acceptance of Preview 5 using `EVERLUME-PREVIEW-5-ACCEPTANCE.md` or equivalent email language.
+2. The client enters verified real inventory.
+3. Confirm the sender/return address and phone number before entering either into Shippo; then select the owners’ physical 4 × 6 thermal printer model when available.
+4. Locate or recover the Cloudflare account that actually controls `myeverlume.com`, export the live DNS zone, establish an Everlume-controlled destination account, and complete a witnessed registrar/zone handoff without disrupting the website or email.
+5. Production commerce, product publication/compliance approval, production-domain release, postage purchases, carrier contracts, and affiliate payouts remain separately held.
 
 ## Support handoff
 

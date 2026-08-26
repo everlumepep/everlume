@@ -8,7 +8,7 @@ Xenth remains Everlume’s account manager and coordinates technical support and
 
 - Correction of reproducible defects in the accepted Preview 5 baseline
 - Correction of verified spelling, grammar, broken links, and material layout regressions introduced by the accepted build
-- Reasonable assistance with Denisha Phillips’s and Veronicah Williams’s existing Everlume account access
+- Reasonable assistance with the shared Everlume company service account used by co-owners Denisha Phillips and Veronicah Williams
 - Clarification of the dashboard, Affiliate Pilot, and release controls documented in the closure evidence
 
 ## Separate work
@@ -21,7 +21,7 @@ Support requests should identify the page, account, device, and steps needed to 
 
 ## Security and access
 
-Each founder uses an individual verified login. Passwords, passkeys, one-time codes, secret keys, and recovery codes are never shared through support messages. Role changes and recovery actions are logged and require authorized owner direction.
+The company service login is `everlume.admin@gmail.com` and is labeled **Everlume Admin** rather than either founder’s personal name. Denisha Phillips and Veronicah Williams are recorded as equal co-owners. Passwords, passkeys, one-time codes, secret keys, and recovery codes are never shared through support messages. Role changes, recovery actions, and any later migration to individual `@myeverlume.com` identities require authorized owner direction and are logged.
 
 ## Service boundaries
 
