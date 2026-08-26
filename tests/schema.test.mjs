@@ -154,6 +154,14 @@ test('commerce flag is an additional gate, never a bypass', () => {
   }
 });
 
+test('customer-facing policy copy follows approved U.S. English corrections', () => {
+  const refund = readFileSync(new URL('../refund.html', import.meta.url), 'utf8');
+  const privacy = readFileSync(new URL('../privacy.html', import.meta.url), 'utf8');
+  assert.doesNotMatch(refund, /authorisation|unauthorised/i);
+  assert.match(refund, /written return authorization; unauthorized returns/);
+  assert.match(privacy, /Effective July 22, 2026, this notice/);
+});
+
 test('cart and checkout refuse direct URL access when commerce is closed', () => {
   const cartPage = readFileSync(new URL('../js/cart-page.js', import.meta.url), 'utf8');
   const checkout = readFileSync(new URL('../js/checkout.js', import.meta.url), 'utf8');
@@ -170,6 +178,10 @@ test('subscription creation is gated server-side and Pep Talk describes preview 
     'billing authorization must be derived from a server environment variable');
   assert.match(billing, /if \(!billingEnabled\(\)\) return json\(503/,
     'the subscription endpoint must fail closed before authentication or Stripe calls');
+  assert.match(billing, /quantity_on_hand,quantity_reserved,status/,
+    'subscription checkout must verify live inventory');
+  assert.match(billing, /available<=0/,
+    'subscription checkout must fail closed when no units are available');
   assert.match(pepTalk, /deterministic catalog guidance/i,
     'Pep Talk must identify its actual non-AI behavior');
   assert.match(pepTalk, /Subscriptions are not active on this preview/,
