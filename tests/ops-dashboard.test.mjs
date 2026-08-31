@@ -32,10 +32,10 @@ test('shipping module is client-controlled, thermal-ready, and cannot purchase p
 });
 
 test('equal Everlume ownership is separate from system access', () => {
-  assert.match(js, /Denisha Phillips/);
-  assert.match(js, /Veronicah Williams/);
-  assert.match(js, /Co-owner · 50%/);
-  assert.match(js, /Ownership does not automatically grant a separate system session/);
+  assert.match(js, /Two co-owners · 50% each/);
+  assert.match(js, /Everlume Admin/);
+  assert.match(js, /Shared company workspace/);
+  assert.doesNotMatch(js, /Denisha Phillips|Veronicah Williams/);
 });
 
 test('dashboard loads the shared Supabase runtime without privileged credentials', () => {
