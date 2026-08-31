@@ -119,7 +119,7 @@
     const submit = document.getElementById('submitOrder');
 
     if (!form.checkValidity()) {
-      status.textContent = 'Please complete the required fields and acknowledgements.';
+      status.textContent = 'Please complete the required fields and acknowledgments.';
       form.reportValidity();
       return;
     }

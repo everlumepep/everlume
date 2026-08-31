@@ -82,7 +82,7 @@ function template() {
 
 function messageFor(reasons) {
   if (reasons.includes('invalid_dob')) return 'Please enter a valid date of birth.';
-  if (reasons.some(r => r.startsWith('missing_ack'))) return 'Please review and confirm each acknowledgement to continue.';
+  if (reasons.some(r => r.startsWith('missing_ack'))) return 'Please review and confirm each acknowledgment to continue.';
   return 'Please complete the form to continue.';
 }
 
