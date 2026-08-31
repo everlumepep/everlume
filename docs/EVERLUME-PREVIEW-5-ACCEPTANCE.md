@@ -10,7 +10,7 @@ I have reviewed Everlume Preview 5 and accept the website presentation, customer
 
 This acceptance does not authorize production commerce, publish unapproved products, confirm legal or regulatory compliance, supply inventory quantities, activate affiliate payouts, or release the production domain. Those remain separate owner-controlled decisions.
 
-Written acceptance starts the included 14-calendar-day Xenth transition-support period. Beginning on day 15, ongoing maintenance requires an active paid Xenth maintenance subscription or a separately approved written scope. No maintenance subscription begins without separate written approval of its price and terms.
+The included 14-calendar-day Xenth transition-support period runs from September 1 through September 14, 2026. Beginning September 15, 2026, ongoing maintenance requires an active paid Xenth maintenance subscription or a separately approved written scope. No maintenance subscription begins without separate written approval of its price and terms.
 
 Client representative: ______________________________  
 Title: ______________________________  

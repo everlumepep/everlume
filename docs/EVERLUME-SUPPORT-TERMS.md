@@ -6,9 +6,9 @@ Xenth remains Everlume’s account manager and coordinates technical support and
 
 ## 14-day transition support
 
-The included transition-support period begins on the date Everlume provides written acceptance of Preview 5 and continues for 14 consecutive calendar days. During this period, Xenth provides the included closeout support listed below without requiring a maintenance subscription.
+The included transition-support period begins September 1, 2026, and continues through September 14, 2026, for 14 consecutive calendar days. During this period, Xenth provides the included closeout support listed below without requiring a maintenance subscription.
 
-Beginning on calendar day 15, ongoing website, dashboard, integration, account, monitoring, content, or operational maintenance requires an active paid Xenth maintenance subscription or a separately approved written scope. Work is not performed automatically, and no subscription begins without Everlume's written approval of its price and terms.
+Beginning September 15, 2026, ongoing website, dashboard, integration, account, monitoring, content, or operational maintenance requires an active paid Xenth maintenance subscription or a separately approved written scope. Work is not performed automatically, and no subscription begins without Everlume's written approval of its price and terms.
 
 An eligible defect reported in writing during the 14-day period remains eligible for resolution after the period ends, provided it is reproducible and belongs to the accepted Preview 5 baseline.
 

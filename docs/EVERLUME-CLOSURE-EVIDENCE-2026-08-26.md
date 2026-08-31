@@ -37,4 +37,4 @@
 
 ## Support handoff
 
-Support is governed by `EVERLUME-SUPPORT-TERMS.md`. Xenth remains Everlume’s account manager. Written acceptance begins a 14-calendar-day included transition-support period; beginning on day 15, ongoing maintenance requires an active paid Xenth maintenance subscription or separately approved written scope.
+Support is governed by `EVERLUME-SUPPORT-TERMS.md`. Xenth remains Everlume’s account manager. The 14-calendar-day included transition-support period runs from September 1 through September 14, 2026; beginning September 15, 2026, ongoing maintenance requires an active paid Xenth maintenance subscription or separately approved written scope.

@@ -31,7 +31,7 @@ Prepared: August 31, 2026
 
 ## Xenth support window
 
-Written acceptance of Preview 5 starts a 14-calendar-day included transition-support period. Beginning on day 15, ongoing maintenance requires an active paid Xenth maintenance subscription or a separately approved written scope. Subscription pricing and terms require separate written approval.
+The included 14-calendar-day transition-support period runs from September 1 through September 14, 2026. Beginning September 15, 2026, ongoing maintenance requires an active paid Xenth maintenance subscription or a separately approved written scope. Subscription pricing and terms require separate written approval.
 
 ## Handoff package
 
