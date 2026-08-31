@@ -54,17 +54,17 @@
 
 ## Client closeout checklist
 
-1. Review the website and dashboard links above.
-2. Sign or email the Preview 5 acceptance statement.
-3. Enter verified inventory quantities.
-4. Add and verify Shippo sender/return address, phone number, and postage payment method.
-5. Choose the physical 4 × 6 thermal printer when ready.
-6. Recover/transfer `myeverlume.com` custody to an Everlume-controlled Cloudflare account.
-7. Obtain product publication/compliance approval.
-8. Give separate written authorization for production commerce and release.
-9. Before September 15, 2026, decide whether to activate a paid Xenth maintenance subscription for ongoing support.
-10. Complete the Stripe founder replacement sequence in `EVERLUME-CUSTODY-PRIVACY-AUDIT-2026-08-31.md`: add and verify Everlume banking, replace the legal representative, record both 50/50 owners, complete the outstanding Stripe review, test access and payouts, and only then remove Xenth banking and identity information.
-11. Add an Everlume-owned Cloudflare payment method and billing address before removing the existing personal card so domain renewal is not interrupted.
+1. **Priority #1 — Stripe founder replacement:** complete the sequence in `EVERLUME-CUSTODY-PRIVACY-AUDIT-2026-08-31.md`. Add and verify Everlume banking, replace the legal representative, record both 50/50 owners, complete Stripe's outstanding review before its displayed deadline, test access and payouts, and only then remove Xenth banking and identity information.
+2. Add an Everlume-owned Cloudflare payment method and billing address before removing the existing personal card so domain renewal is not interrupted.
+3. Review the website and dashboard links above.
+4. Sign or email the Preview 5 acceptance statement.
+5. Enter verified inventory quantities.
+6. Add and verify Shippo sender/return address, phone number, and postage payment method.
+7. Choose the physical 4 × 6 thermal printer when ready.
+8. Confirm `myeverlume.com` custody and recovery remain controlled through the Everlume Cloudflare account.
+9. Obtain product publication/compliance approval.
+10. Give separate written authorization for production commerce and release.
+11. Before September 15, 2026, decide whether to activate a paid Xenth maintenance subscription for ongoing support.
 
 ## Included records
 

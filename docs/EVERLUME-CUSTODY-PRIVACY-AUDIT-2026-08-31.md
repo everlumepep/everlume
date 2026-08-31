@@ -30,6 +30,8 @@ Equal business ownership does not prove equal administrator access inside every 
 
 ## Stripe founder replacement instructions
 
+**Priority #1 for client handoff.**
+
 The existing payout destination and Xenth legal representative have **not** been removed. A founder must complete the following directly in Stripe before Xenth information can be safely deleted:
 
 1. Denisha Phillips or Veronicah Williams signs in through the Everlume-controlled account.
@@ -41,6 +43,8 @@ The existing payout destination and Xenth legal representative have **not** been
 7. Only after those checks pass, remove the prior payout bank, Xenth representative record, personal recovery method, and any Xenth security credential.
 
 No bank number, government identifier, password, passkey, recovery code, or authentication code belongs in this handoff package.
+
+The Xenth backup email removal was initiated on August 31, 2026, but Stripe requires the account owner to complete its verification prompt before the deletion can be certified.
 
 ## Removal rule
 
