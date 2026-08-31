@@ -54,13 +54,34 @@
         </fieldset>
 
         <fieldset>
+          <legend>Delivery preference</legend>
+          <div class="delivery-options" role="radiogroup" aria-label="Delivery preference">
+            <label class="delivery-option"><input type="radio" name="delivery_method" value="shipping" checked> <span><strong>Ship my order</strong><small>Shipping is quoted after review.</small></span></label>
+            <label class="delivery-option"><input type="radio" name="delivery_method" value="local"> <span><strong>Local pickup or arranged drop-off</strong><small>Available only after Everlume confirms the postal code, location, and handoff time.</small></span></label>
+          </div>
+          <p class="delivery-note" id="localDeliveryNote" hidden>Enter the postal code where the handoff would occur. Selecting this preference does not guarantee local eligibility or a delivery radius; Everlume will confirm the arrangement before payment.</p>
+        </fieldset>
+
+        <fieldset id="shippingFields">
           <legend>Shipping information</legend>
-          <label>Address line 1<input name="address1" required autocomplete="address-line1"></label>
+          <label>Address line 1<input name="address1" data-shipping-required required autocomplete="address-line1"></label>
           <label>Address line 2<input name="address2" autocomplete="address-line2"></label>
-          <label>City<input name="city" required autocomplete="address-level2"></label>
-          <label>State / Region<input name="region" required autocomplete="address-level1"></label>
-          <label>Postal code<input name="postal" required autocomplete="postal-code"></label>
-          <label>Country<input name="country" required autocomplete="country-name" value="United States"></label>
+          <label>City<input name="city" data-shipping-required required autocomplete="address-level2"></label>
+          <label>State / Region<input name="region" data-shipping-required required autocomplete="address-level1"></label>
+          <label>Postal code<input name="postal" data-shipping-required required autocomplete="postal-code"></label>
+          <label>Country<input name="country" data-shipping-required required autocomplete="country-name" value="United States"></label>
+        </fieldset>
+
+        <fieldset id="localFields" hidden>
+          <legend>Local handoff area</legend>
+          <label>Handoff postal code<input name="local_postal" inputmode="numeric" autocomplete="postal-code" pattern="[0-9]{5}(-[0-9]{4})?"></label>
+          <label>Preferred arrangement
+            <select name="local_preference">
+              <option value="pickup">Pickup</option>
+              <option value="dropoff">Arranged drop-off</option>
+              <option value="either">Either option</option>
+            </select>
+          </label>
         </fieldset>
 
         <fieldset>

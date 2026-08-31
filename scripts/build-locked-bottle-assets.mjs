@@ -5,15 +5,16 @@ import crypto from 'node:crypto';
 const root = process.cwd();
 const outDir = path.join(root, 'assets/products/locked-v1');
 const basePath = path.join(root, 'assets/products/everlume-vial-master-v1.png');
+const logoPath = path.join(root, 'assets/everlume-logo-client-lockup.png');
 const referencePath = path.join(root, 'assets/products/labels/tirzepatide-20mg-bottle-locked-reference-v1.png');
 fs.mkdirSync(outDir, { recursive: true });
 
 const products = [
-  ['tirzepatide-10mg','TIRZEPATIDE','10MG'], ['tirzepatide-20mg','TIRZEPATIDE','20MG'],
-  ['tirzepatide-30mg','TIRZEPATIDE','30MG'], ['tirzepatide-40mg','TIRZEPATIDE','40MG'],
-  ['tirzepatide-50mg','TIRZEPATIDE','50MG'], ['retatrutide-10mg','RETATRUTIDE','10MG'],
-  ['retatrutide-20mg','RETATRUTIDE','20MG'], ['retatrutide-30mg','RETATRUTIDE','30MG'],
-  ['retatrutide-40mg','RETATRUTIDE','40MG'], ['retatrutide-50mg','RETATRUTIDE','50MG'],
+  ['tirzepatide-10mg','TR-10',''], ['tirzepatide-20mg','TR-20',''],
+  ['tirzepatide-30mg','TR-30',''], ['tirzepatide-40mg','TR-40',''],
+  ['tirzepatide-50mg','TR-50',''], ['retatrutide-10mg','RT-10',''],
+  ['retatrutide-20mg','RT-20',''], ['retatrutide-30mg','RT-30',''],
+  ['retatrutide-40mg','RT-40',''], ['retatrutide-50mg','RT-50',''],
   ['tesamorelin','TESAMORELIN','10MG'], ['selank-10mg','SELANK','10MG'],
   ['kisspeptin-5mg','KISSPEPTIN','5MG'], ['semax','SEMAX',''], ['ghk-cu','GHK-CU','50MG/100MG'],
   ['glutathione-1200mg','GLUTATHIONE','1200MG'], ['klow-blend','KLOW BLEND','BLEND'],
@@ -24,6 +25,7 @@ const products = [
 
 const esc = value => String(value).replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&apos;' }[c]));
 const base = fs.readFileSync(basePath).toString('base64');
+const logo = fs.readFileSync(logoPath).toString('base64');
 const refHash = crypto.createHash('sha256').update(fs.readFileSync(referencePath)).digest('hex');
 
 function asset(slug, name, dose) {
@@ -36,9 +38,7 @@ function asset(slug, name, dose) {
   <desc id="desc">${esc(title)}. For research purposes only.</desc>
   <image x="0" y="0" width="1122" height="1402" preserveAspectRatio="none" href="data:image/png;base64,${base}"/>
   <g aria-hidden="true" text-anchor="middle">
-    <text x="561" y="700" fill="#a88451" font-family="Cormorant Garamond, Georgia, serif" font-size="116" letter-spacing="4">EL</text>
-    <text x="561" y="766" fill="#a88451" font-family="Jost, Arial, sans-serif" font-size="34" letter-spacing="11">EVERLUME</text>
-    <line x1="402" y1="800" x2="720" y2="800" stroke="#a88451" stroke-width="2" opacity=".62"/>
+    <image x="395" y="560" width="332" height="260" preserveAspectRatio="xMidYMid meet" href="data:image/png;base64,${logo}" style="mix-blend-mode:multiply"/>
     <text x="561" y="${dose ? 878 : 918}" fill="#2d2925" font-family="Cormorant Garamond, Georgia, serif" font-size="${nameSize}" font-weight="600" letter-spacing="1.5">${esc(name)}</text>
     ${dose ? `<text x="561" y="${doseY + 10}" fill="#2d2925" font-family="Cormorant Garamond, Georgia, serif" font-size="46" font-weight="600" letter-spacing="2">${esc(dose)}</text>` : ''}
     <text x="561" y="1030" fill="#2d2925" font-family="Jost, Arial, sans-serif" font-size="20" font-weight="600" letter-spacing="3">FOR RESEARCH</text>

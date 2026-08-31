@@ -1,9 +1,11 @@
 # Everlume — (X) MASTER Release Candidate
 
 **Audit date:** 2026-08-20  
-**Certified source:** `everlumepep/everlume` · `mderby5/everlume-photographic-vials` · `494835ad6ab24fb9107a8117426439d179be45e7`
-**Connected preview:** Netlify deploy `6a87431c8d0cee0008ef716c` · `https://deploy-preview-5--everlume1.netlify.app`
-**Release recommendation:** **NO-GO.** The exact technical preview passes, including authenticated administrator COMMAND. Custody/recovery, Firefox and physical-device coverage, keyboard/screen-reader evidence, real recovery-email delivery, data restoration, proactive monitoring, legal, and Founder gates remain open. Commerce remains stopped.
+**Deployed review head:** `everlumepep/everlume` · `mderby5/everlume-photographic-vials` · `dfcf8e3991fc1e769a75a109024e0f5e9fe971b4`
+**Immediate parent:** `087a56e3a00a9282811afbff181de18d75970397`
+**Underlying technical payload:** `494835ad6ab24fb9107a8117426439d179be45e7`
+**Connected preview:** Netlify deploy `6a88ff89843d050007f2e35e` · `https://deploy-preview-5--everlume1.netlify.app`
+**Release recommendation:** **NO-GO.** The exact technical preview passes, including authenticated administrator COMMAND and the deployed keyboard-honeypot regression. Physical-device and Founder-observed VoiceOver evidence, Cloudflare custody, independent recovery ownership, proactive monitoring, legal approval, and Founder authorization remain open. Commerce remains stopped.
 
 This is the authoritative completion board for Directive 03. `PASS` means evidence was collected. `BLOCKED` and `UNTESTED` never mean pass.
 
@@ -13,11 +15,11 @@ This is the authoritative completion board for Directive 03. `PASS` means eviden
 
 - Source identity reverified: canonical folder, remote, branch, and baseline commit all match.
 - The directive's `b5b9034` is the hardened security baseline. Git ancestry proves the linear chain `b5b9034 → 4e7e746 → e3c1fe5 → 2e94ab4 → 4d5def5 → 14619fa → 195cbf7 → 801b956 → 494835a`.
-- Scoped working tree reverified at pushed candidate `494835a`; unrelated `AGENTS.md` and `supabase/.temp/` remain excluded.
+- Safari accessibility correction pushed at review head `dfcf8e3`; its immediate parent is `087a56e`; the logo candidate ancestor is `7b6b8e66`; the underlying technical payload remains `494835a`; unrelated receipt drafts, `AGENTS.md`, and `supabase/.temp/` remain excluded.
 - Source suite: **PASS — 23/23** after adding the COMMAND identity regression guard.
 - Offline migrations and security invariants: **PASS — 43/43** across 13 ordered migrations, including the locally uncommitted performance-advisor remediation.
 - Dependency audit: **PASS — 0 known vulnerabilities**.
-- Exact PR #5 preview network battery: **PASS — 60/60** at commit `494835a`, Netlify deployment `6a87431c8d0cee0008ef716c`.
+- Exact PR #5 preview network battery: **PASS — 61/61** at review head `dfcf8e3`, Netlify deployment `6a88ff89843d050007f2e35e`.
 - Dedicated backend: **PASS for connection/schema boundary** — preview-only Netlify variables resolve to Supabase `Everlume` (`zyerhqcqxcjdnfmdbutg`); production values remain empty; the project is `ACTIVE_HEALTHY`, has 13 live migrations, 18 public tables, and RLS on all 18.
 - Security advisor: **7 WARN** — anonymous and authenticated execution exposure for `is_staff`, `is_manager`, and `is_admin`, plus authenticated execution for the intentionally role-checking/audited `adjust_inventory` RPC. No advisor warning is silently treated as a pass.
 - Performance advisor remediation: **APPLIED LIVE / COMMITTED** at `494835a` — all 10 unindexed foreign-key and all 14 per-row Auth/RLS notices cleared. Remaining: 35 intentional overlapping-policy notices and 24 unused-index notices on an almost-empty preview database.
@@ -26,11 +28,11 @@ This is the authoritative completion board for Directive 03. `PASS` means eviden
 - Auth configuration: **PASS** — Site URL `https://myeverlume.com`; exact PR preview and Netlify deploy wildcard allowed; email sign-up enabled; confirmation required; anonymous sign-in disabled. Default templates are active; custom SMTP/branding is not configured.
 - Authenticated live RLS battery: **PASS for tested customer/staff/manager/admin boundaries** — three `.invalid` accounts established sessions; customer isolation, privilege escalation refusal, staff visibility, manager inventory enforcement/attribution, and admin role-management/restore passed. Account deletion was not run because deletion was explicitly prohibited.
 - Password recovery: **PARTIAL** — approved redirect configured; Supabase correctly refused reserved `.invalid`/`example.com` delivery addresses, so real delivery remains unproved without authorization to send to an owned inbox.
-- Authenticated browser: customer sign-in/account portal and ordinary-customer COMMAND refusal passed. Administrator COMMAND passed in exact deploy `6a87431c8d0cee0008ef716c` after scoping the profile query to the signed-in user; regression coverage passes.
+- Authenticated browser: customer sign-in/account portal and ordinary-customer COMMAND refusal passed. Administrator COMMAND passed in technical deploy `6a87431c8d0cee0008ef716c`. The exact review head `dfcf8e3` / deploy `6a88ff89843d050007f2e35e` passes 61/61 public certification. Live Safari AX inspection confirms the Netlify honeypot is absent while the real inquiry controls remain exposed. Safari desktop, semantic traversal, 200% reflow, OS-level reduced motion, and Firefox entrance rendering passed for their recorded scopes; actual Founder-observed VoiceOver and physical-device review remain open.
 - Netlify ownership: **PASS** — `everlume.admin@gmail.com` / DENISHA P is the sole Owner; rollback/deploy history is accessible. Recovery is **FAIL** because the sole owner has no 2FA and no second recovery owner.
 - GitHub custody: **PARTIAL** — authenticated viewer `XENTHGRP` has WRITE to `everlumepep/everlume`; repository-owner/admin custody remains unproved.
 - Cloudflare: authoritative nameservers verified; account/zone custody remains unproved.
-- Monitoring: Netlify observability and GitHub deploy checks exist; email failure alerts require a paid plan and no form-delivery webhook is configured. Escalation owner is not formally approved.
+- Monitoring: Netlify observability and GitHub deploy checks exist. `Everlume Preview Watch` now checks exact preview availability, PR state/head and deploy identity every 30 minutes. Auth/database/form alerts and an independent escalation owner remain open.
 - Production hosting was not changed during this run. Commerce remains disabled.
 
 The stop conditions in Directive 04 remain active after publication. Release work resumes only after restored browser access, authenticated Netlify ownership, preview-only backend/Auth configuration, live certification, and the required approvals.
@@ -70,11 +72,13 @@ The authenticated `adjust_inventory` warning is formally accepted for controlled
 | GitHub | `https://github.com/everlumepep/everlume.git` | PASS |
 | Active branch | `mderby5/everlume-photographic-vials` | PASS |
 | Hardened baseline | `b5b9034` | PASS — superseded |
-| Current candidate | `494835ad6ab24fb9107a8117426439d179be45e7` | PASS |
-| Pull request | PR #5 open and unmerged; head `494835a` | PASS — review only |
+| Deployed review head | `dfcf8e3991fc1e769a75a109024e0f5e9fe971b4` | PASS |
+| Immediate parent | `087a56e3a00a9282811afbff181de18d75970397` | PASS |
+| Underlying technical payload | `494835ad6ab24fb9107a8117426439d179be45e7` | PASS |
+| Pull request | PR #5 open and unmerged; head `dfcf8e3` | PASS — review only |
 | Netlify project | `everlume1`, team `everlume-admin`, owner `everlume.admin@gmail.com` | PASS |
 | Production source | `main` merge `780249bf46e0b1e7ddd43ce26899833141f99f28`; deploy `6a871f9299c9d8000863e666` | OBSERVED — not promoted during this run |
-| Preview source | PR #5 head `494835a`; connected deploy `6a87431c8d0cee0008ef716c` | PASS |
+| Preview source | PR #5 head `dfcf8e3`; connected deploy `6a88ff89843d050007f2e35e` | PASS |
 | Production domain | `myeverlume.com` | PASS |
 | DNS / registrar | Cloudflare; `nick.ns.cloudflare.com`, `uma.ns.cloudflare.com`; routes to Netlify | PASS |
 | Preview/backend boundary | only Deploy Previews have Supabase URL/publishable key; production is empty; billing false | PASS |
@@ -85,7 +89,7 @@ Authoritative chain today:
 
 Candidate chain:
 
-`GitHub PR #5 / branch@494835a → Netlify 6a87431c8d0cee0008ef716c → Supabase Everlume zyerhqcqxcjdnfmdbutg (preview-only)`
+`GitHub PR #5 / branch@dfcf8e3 (parent 087a56e; logo candidate ancestor 7b6b8e66; underlying technical payload 494835a) → Netlify 6a88ff89843d050007f2e35e → Supabase Everlume zyerhqcqxcjdnfmdbutg (preview-only)`
 
 ## 2. Current product definition
 
@@ -112,13 +116,13 @@ The strongest honest immediate release is **A. Controlled Preview**. It is a pre
 
 | Priority | Owner | Surface | Evidence | Acceptance criteria / verification | Status |
 | --- | --- | --- | --- | --- | --- |
-| P0 | XENTH release owner | candidate identity | preview `801b956` / `6a873a67c7878a5bdba432ff`; production merge `780249b` / `6a871f9299c9d8000863e666` | Founder must decide against the exact recorded identities; no further production action before approvals | PASS identity / NO-GO release |
+| P0 | XENTH release owner | candidate identity | review head `dfcf8e3`, parent `087a56e`, logo candidate ancestor `7b6b8e66`, underlying technical payload `494835a`, preview `6a88ff89843d050007f2e35e`; production merge `780249b` / `6a871f9299c9d8000863e666` | Founder must decide against all exact recorded identities; no further production action before approvals | PASS identity / NO-GO release |
 | P0 | XENTH / Supabase owner | accounts, saved data, COMMAND | dedicated project is connected to preview only; 13 migrations; 18/18 RLS; anonymous refusal probes pass | configure Auth URLs/email and pass authenticated live verification | IN PROGRESS |
 | P0 | Founder / legal | terms and public authority | Terms v1.0 is marked draft | written approval and final policy version | BLOCKED |
 | P0 | Founder / commercial owner | commerce | products pending review; inventory zero; processor approval and credentials unverified | every commercial gate in Directive 03 passes | BLOCKED / commerce closed |
 | P0 | Engineering | subscription authorization | endpoint has a server billing gate; preview and production runtime both report billing false | `BILLING_ENABLED` must remain false until separate commerce approval | PASS at `801b956` |
 | P1 | Engineering / content | Pep Talk | deterministic UI claimed unavailable account/order/subscription value | identify deterministic behavior, retain medical refusal, state preview limitations | PASS at `b5b9034` |
-| P1 | Engineering | keyboard accessibility | dialog returned focus but did not contain focus | Tab and Shift+Tab remain within open dialog; Escape closes and restores focus | FIXED LOCALLY; browser check BLOCKED |
+| P1 | Engineering | keyboard accessibility | Safari traversal found a visually hidden Netlify honeypot in the focus and AX surface | Exact head `dfcf8e3` excludes it through native hidden state; deployed regression and live Safari AX inspection pass | FIXED AND DEPLOYED; full Founder-observed journey HOLD |
 | P1 | XENTH admin | Netlify ownership | `everlume.admin@gmail.com` / DENISHA P is sole Owner; deploy and rollback history accessible | add 2FA and independent recovery owner | PARTIAL — custody pass, recovery fail |
 | P1 | XENTH admin | Cloudflare ownership | DNS and registrar are Cloudflare; local CLI is not authenticated | confirm destination account and zone access without changing DNS | BLOCKED |
 | P1 | Operations | inquiry delivery | form blueprint and endpoint certify; notification recipient not visible | submit marked test, confirm receipt, delete test record | BLOCKED — external side effect/owner access |
@@ -182,7 +186,7 @@ No analytics, monitoring, email-provider, or fixed production-origin variables a
 | Static validation | Prior PASS — current repository contains 51 required files / 16 pages |
 | Offline migrations / invariants | PASS — 43/43 after performance remediation |
 | Dependency audit | PASS — 0 known vulnerabilities |
-| Exact connected PR preview public certification | PASS — 60/60 at `801b956`; deploy `6a873a67c7878a5bdba432ff` |
+| Exact connected PR preview public certification | PASS — 61/61 at review head `dfcf8e3`; deploy `6a88ff89843d050007f2e35e` |
 | Production identity | OBSERVED — merge `780249b`, deploy `6a871f9299c9d8000863e666`; not altered during this run |
 | Authentication / password recovery | Auth URL/email policy PASS; recovery redirect configured; delivery to an owned inbox remains blocked |
 | Customer isolation / privilege refusal | PASS offline and live for customer/staff/manager/admin test boundaries |
@@ -190,7 +194,7 @@ No analytics, monitoring, email-provider, or fixed production-origin variables a
 | Order creation | PASS offline; BLOCKED live |
 | Stripe payment / webhook / refund / reconciliation | BLOCKED |
 | Account deletion | PASS offline; BLOCKED live |
-| Desktop / tablet / mobile / keyboard / browser console | Chromium sign-in/account/customer-refusal PASS; deployed admin COMMAND FAIL due identity-query bug; Safari/Firefox/iPhone/tablet/screen-reader matrix BLOCKED |
+| Desktop / tablet / mobile / keyboard / browser console | Chromium sign-in/account/customer-refusal and deployed admin COMMAND PASS; Safari and Firefox desktop scopes PASS; OS-level reduced motion and 200% Safari reflow PASS; exact deployed honeypot keyboard regression PASS; physical iPhone/tablet and Founder-observed VoiceOver remain HOLD |
 | Broken public surfaces and protected paths | PASS in 60-check network battery |
 | Metadata / no-index / security headers | PASS |
 | Performance | Advisor material findings remediated; Lighthouse and representative-load measurements remain open |
@@ -240,8 +244,8 @@ No analytics, monitoring, email-provider, or fixed production-origin variables a
 
 ## 15. Rollback plan
 
-Current production identity: Netlify deploy `6a871f9299c9d8000863e666`, Git merge `780249bf46e0b1e7ddd43ce26899833141f99f28`. Preserved prior production rollback: Netlify deploy `6a8682629962070009eaf22c`, Git commit `65a2ac8f61d3595e5258cd3c5a747be4d651307e`. Connected preview rollback: deploy `6a871c4b471fef0008980754` at `801b956` before preview environment variables; current connected preview is `6a873a67c7878a5bdba432ff`. Netlify Owner access can reach deploy history, but no rollback was executed. If a future authorized production smoke fails, restore the explicitly approved prior deploy without changing DNS, rerun the public battery, and keep commerce disabled. The database performance migration is additive/equivalent-policy work; database restore or rollback remains separately blocked pending a tested export/restore procedure and Founder approval.
+Current production identity: Netlify deploy `6a871f9299c9d8000863e666`, Git merge `780249bf46e0b1e7ddd43ce26899833141f99f28`. Preserved prior production rollback: Netlify deploy `6a8682629962070009eaf22c`, Git commit `65a2ac8f61d3595e5258cd3c5a747be4d651307e`. Immediate review rollback is parent `087a56e` / deploy `6a88ff456d359a00087b46de`; logo candidate rollback is `7b6b8e66` / deploy `6a88f8989229080008f456fb`; prior documentation review rollback is `f321174` / deploy `6a87834e2df9c200073681d9`; prior technical review rollback is `494835a` / deploy `6a87431c8d0cee0008ef716c`; earlier connected preview rollback is `801b956` / deploy `6a873a67c7878a5bdba432ff`. Current connected preview is review head `dfcf8e3` / deploy `6a88ff89843d050007f2e35e`. Netlify Owner access can reach deploy history, but no rollback was executed. If a future authorized production smoke fails, restore the explicitly approved prior deploy without changing DNS, rerun the public battery, and keep commerce disabled. The database performance migration is additive/equivalent-policy work; database restore or rollback requires separate Founder approval, while the completed encrypted export and isolated-restore receipt remains preserved.
 
 ## 16. Final recommendation
 
-**NO-GO.** The exact connected preview is `801b956` / `6a873a67c7878a5bdba432ff`. Do not perform any further production release action until Supabase Auth/email configuration, authenticated RLS isolation, cross-browser/device/accessibility, inquiry delivery, monitoring/escalation, backup restore, Cloudflare custody, legal approval, and Founder approval are evidenced. Commerce V1 remains a separate no-go decision and stays disabled.
+**NO-GO.** The exact connected review artifact is head `dfcf8e3`, immediate parent `087a56e`, logo candidate ancestor `7b6b8e66`, underlying technical payload `494835a`, and deploy `6a88ff89843d050007f2e35e`. Do not perform any further engineering or production release action until Cloudflare custody, independent recovery ownership, remaining human/device/accessibility evidence, monitoring/escalation, legal approval, and exact-artifact Founder approval are evidenced. Commerce V1 remains a separate no-go decision and stays disabled.

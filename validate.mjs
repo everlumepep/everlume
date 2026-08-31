@@ -125,7 +125,7 @@ for (const file of tracked) {
 }
 
 // Structural exposure: non-site files that ship because publish = "."
-const SITE = /^(index|catalog|404|privacy|terms|research-use|forms 2|cart|product|checkout|shipping|refund|contact)\.html$|^account\/|^command\/|^assets\/|^js\/|^vendor\/|^(styles|logo|premium-theme|gate|portal)\.css$|^(app|boot|policy)\.js$|^favicon\.svg$|^robots\.txt$|^netlify\.toml$/;
+const SITE = /^(index|catalog|404|privacy|terms|research-use|forms 2|cart|product|checkout|shipping|refund|contact)\.html$|^account\/|^command\/|^ops-dashboard\/(index\.html|ops\.css|ops\.js)$|^assets\/|^js\/|^vendor\/|^(styles|logo|premium-theme|gate|portal)\.css$|^(app|boot|policy)\.js$|^favicon\.svg$|^robots\.txt$|^netlify\.toml$/;
 // Every non-site file must be refused by a forced 404 redirect. Without
 // force = true Netlify serves the static file and the rule never fires, so the
 // flag is checked explicitly rather than assumed from the rule's presence.

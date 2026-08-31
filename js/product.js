@@ -97,6 +97,11 @@
     const variants = products.filter(item => item.name === product.name && item.category === product.category);
     const profile = categoryProfiles[product.category] || categoryProfiles.peptide;
     const materialProfile = materialProfiles[product.slug] || null;
+    const interactiveProfile = {
+      identity: ['Material identity', `${product.name} is presented as ${product.dose_label || 'the listed format'} under reference ${product.sku}.`],
+      context: ['Research lens', profile.intro],
+      documentation: ['Documentation', 'Current source, lot, storage, and handling records are confirmed through inquiry when available.']
+    };
     const related = products.filter(item => item.category === product.category && item.name !== product.name)
       .filter((item, index, list) => list.findIndex(other => other.name === item.name) === index)
       .slice(0, 3);
@@ -144,12 +149,12 @@
       </a>`).join('')}</div>
     </section>` : '';
 
-    const hotspots = materialProfile ? `<div class="pd-hotspots" aria-label="Tesamorelin information points">
-      <button class="pd-signal pd-signal-one" type="button" data-hotspot="what" aria-expanded="false">What it is</button>
-      <button class="pd-signal pd-signal-two" type="button" data-hotspot="context" aria-expanded="false">Research context</button>
-      <button class="pd-signal pd-signal-three" type="button" data-hotspot="limits" aria-expanded="false">Important limits</button>
-      <div class="pd-hotspot-card" id="pdHotspotCard" aria-live="polite"><strong>Explore the material</strong><p>Hover, focus, or tap an information point.</p></div>
-    </div>` : `<span class="pd-signal pd-signal-one">Identity</span><span class="pd-signal pd-signal-two">Format</span><span class="pd-signal pd-signal-three">Documentation</span>`;
+    const hotspots = `<div class="pd-hotspots" aria-label="Interactive material information">
+      <button class="pd-signal pd-signal-one" type="button" data-hotspot="identity" aria-expanded="false">Identity</button>
+      <button class="pd-signal pd-signal-two" type="button" data-hotspot="context" aria-expanded="false">Research lens</button>
+      <button class="pd-signal pd-signal-three" type="button" data-hotspot="documentation" aria-expanded="false">Documentation</button>
+      <div class="pd-hotspot-card" id="pdHotspotCard" aria-live="polite"><strong>Inspect the material</strong><p>Select a marker to explore the research record.</p></div>
+    </div>`;
 
     const materialBlock = materialProfile ? `<section class="pd-material-profile" aria-labelledby="pdMaterialTitle">
       <div class="pd-material-intro"><p class="eyebrow">Material profile</p><h2 id="pdMaterialTitle">Tesamorelin, in context.</h2><p>A plain-language research profile designed to answer the essential questions before inquiry.</p></div>
@@ -162,10 +167,11 @@
     </section>` : '';
 
     detail.innerHTML = `<div class="pd-layout">
-      <div class="pd-visual pd-visual-${escapeHtml(product.category)}">
+      <div class="pd-visual pd-visual-${escapeHtml(product.category)}" tabindex="0" aria-label="Interactive ${name} bottle presentation. Move the pointer to examine the bottle and select an information marker.">
         <span class="pd-orbit pd-orbit-one" aria-hidden="true"></span><span class="pd-orbit pd-orbit-two" aria-hidden="true"></span>
       <div class="mini-vial${isReferenceLock ? ' has-label-art' : ''}">${isReferenceLock ? `<img class="vial-locked-asset" src="${labelAsset}" alt="Everlume ${name} ${vialDose}" width="1122" height="1402">` : `<img src="assets/products/everlume-vial-master-v1.png" alt="" width="1024" height="1365">${vialLabel}`}</div>
         ${hotspots}
+        <p class="pd-inspect-hint">Move to inspect · select a marker</p>
       </div>
       <div class="pd-copy">
         <p class="eyebrow">${escapeHtml(product.category)} research</p>
@@ -207,12 +213,8 @@
 
     const addBtn = document.getElementById('pdAdd');
     const hotspotCard = document.getElementById('pdHotspotCard');
-    if (hotspotCard && materialProfile) {
-      const hotspotCopy = {
-        what: ['What it is', materialProfile.what],
-        context: ['Research context', materialProfile.context],
-        limits: ['Important limits', materialProfile.limits]
-      };
+    if (hotspotCard) {
+      const hotspotCopy = interactiveProfile;
       document.querySelectorAll('[data-hotspot]').forEach(button => {
         const show = () => {
           const [title, copy] = hotspotCopy[button.dataset.hotspot];
@@ -232,6 +234,26 @@
         if (event.key !== 'Escape') return;
         hotspotCard.classList.remove('is-visible');
         document.querySelectorAll('[data-hotspot]').forEach(item => item.setAttribute('aria-expanded', 'false'));
+      });
+    }
+    const visual = document.querySelector('.pd-visual');
+    const visualVial = visual?.querySelector('.mini-vial');
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (visual && visualVial && !reducedMotion) {
+      visual.addEventListener('pointermove', event => {
+        const box = visual.getBoundingClientRect();
+        const rotateY = ((event.clientX - box.left) / box.width - .5) * 12;
+        const rotateX = (((event.clientY - box.top) / box.height - .5) * -8);
+        visualVial.style.setProperty('--pd-rotate-x', `${rotateX.toFixed(2)}deg`);
+        visualVial.style.setProperty('--pd-rotate-y', `${rotateY.toFixed(2)}deg`);
+      });
+      visual.addEventListener('pointerleave', () => {
+        visualVial.style.removeProperty('--pd-rotate-x');
+        visualVial.style.removeProperty('--pd-rotate-y');
+      });
+      visual.addEventListener('click', event => {
+        if (event.target.closest('[data-hotspot]')) return;
+        visual.classList.toggle('is-inspecting');
       });
     }
     const saveBtn = document.getElementById('pdSaveList');

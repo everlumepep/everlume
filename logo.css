@@ -3,6 +3,8 @@
   width: 116px;
   height: 106px;
   object-fit: contain;
+  mix-blend-mode: multiply;
+  opacity: .88;
 }
 
 .site-header:has(.brand-monogram) {
@@ -28,6 +30,9 @@
   height: 150px;
   object-fit: contain;
   border-radius: 2px;
+  mix-blend-mode: screen;
+  filter: invert(1) sepia(.28) saturate(.65) brightness(1.08);
+  opacity: .86;
 }
 
 .footer-brand span {

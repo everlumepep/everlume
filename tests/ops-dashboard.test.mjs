@@ -21,6 +21,11 @@ test('shipping module is client-controlled, thermal-ready, and cannot purchase p
   assert.match(js, /Shippo Starter/);
   assert.match(js, /4 × 6/);
   assert.match(js, /No monthly subscription fee/);
+  assert.match(js, /Manual workspace ready/);
+  assert.match(js, /API order sync/);
+  assert.match(js, /Pickup or arranged drop-off/);
+  assert.match(js, /Automatic mileage approval/);
+  assert.match(js, /sender\/return address/);
   assert.match(js, /does not store a password or payment method/);
   assert.match(js, /Production fulfillment/);
   assert.doesNotMatch(js, /SHIPPO_API|SHIPPO_TOKEN|shippo_token|createLabel\s*\(|purchaseLabel\s*\(/i);

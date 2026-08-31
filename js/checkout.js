@@ -14,6 +14,24 @@
   const blocked = document.getElementById('checkoutBlocked');
   const cart = window.everlumeCart;
   const catalog = window.everlumeCatalog;
+  const shippingFields = document.getElementById('shippingFields');
+  const localFields = document.getElementById('localFields');
+  const localDeliveryNote = document.getElementById('localDeliveryNote');
+
+  function updateDeliveryFields() {
+    const method = form.elements.delivery_method?.value || 'shipping';
+    const isLocal = method === 'local';
+    shippingFields.hidden = isLocal;
+    localFields.hidden = !isLocal;
+    localDeliveryNote.hidden = !isLocal;
+    shippingFields.querySelectorAll('[data-shipping-required]').forEach(input => {
+      input.required = !isLocal;
+    });
+    const localPostal = form.elements.local_postal;
+    if (localPostal) localPostal.required = isLocal;
+    const shippingSummary = document.getElementById('ckShipping');
+    if (shippingSummary) shippingSummary.textContent = isLocal ? 'Confirmed after local review' : 'Quoted after review';
+  }
 
   const PAYMENT_STATES = {
     PENDING_PROVIDER: {
@@ -129,8 +147,13 @@
     status.textContent = 'Order request received. Everlume will confirm availability and totals by email.';
   });
 
+  form.addEventListener('change', event => {
+    if (event.target.name === 'delivery_method') updateDeliveryFields();
+  });
+
   (async function init() {
     renderPaymentPane();
+    updateDeliveryFields();
     await renderSummary();
     const year = document.getElementById('year');
     if (year) year.textContent = new Date().getFullYear();

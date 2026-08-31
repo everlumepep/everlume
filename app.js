@@ -187,6 +187,20 @@
     });
   }
 
+  // The Light Table is a small, intentional interaction: it reveals the
+  // documentation cues without changing the approved bottle asset or opening
+  // an external surface.
+  const lightToggle = document.querySelector('.hero-light-toggle');
+  const heroArt = document.querySelector('.hero-art');
+  if (lightToggle && heroArt) {
+    lightToggle.addEventListener('click', () => {
+      const revealed = heroArt.classList.toggle('is-revealed');
+      lightToggle.setAttribute('aria-pressed', String(revealed));
+      lightToggle.querySelector('span').textContent = revealed ? '✓' : '✦';
+      lightToggle.lastChild.textContent = revealed ? ' Standard revealed' : ' Reveal the standard';
+    });
+  }
+
   // ── Reveal animations ────────────────────────────────────────────────────
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if ('IntersectionObserver' in window && !reducedMotion) {

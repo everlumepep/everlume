@@ -7,53 +7,53 @@
   "assets": {
     "tirzepatide-10mg": {
       "file": "assets/products/locked-v1/tirzepatide-10mg.svg",
-      "name": "TIRZEPATIDE",
-      "dose": "10MG"
+      "name": "TR-10",
+      "dose": ""
     },
     "tirzepatide-20mg": {
       "file": "assets/products/locked-v1/tirzepatide-20mg.svg",
-      "name": "TIRZEPATIDE",
-      "dose": "20MG"
+      "name": "TR-20",
+      "dose": ""
     },
     "tirzepatide-30mg": {
       "file": "assets/products/locked-v1/tirzepatide-30mg.svg",
-      "name": "TIRZEPATIDE",
-      "dose": "30MG"
+      "name": "TR-30",
+      "dose": ""
     },
     "tirzepatide-40mg": {
       "file": "assets/products/locked-v1/tirzepatide-40mg.svg",
-      "name": "TIRZEPATIDE",
-      "dose": "40MG"
+      "name": "TR-40",
+      "dose": ""
     },
     "tirzepatide-50mg": {
       "file": "assets/products/locked-v1/tirzepatide-50mg.svg",
-      "name": "TIRZEPATIDE",
-      "dose": "50MG"
+      "name": "TR-50",
+      "dose": ""
     },
     "retatrutide-10mg": {
       "file": "assets/products/locked-v1/retatrutide-10mg.svg",
-      "name": "RETATRUTIDE",
-      "dose": "10MG"
+      "name": "RT-10",
+      "dose": ""
     },
     "retatrutide-20mg": {
       "file": "assets/products/locked-v1/retatrutide-20mg.svg",
-      "name": "RETATRUTIDE",
-      "dose": "20MG"
+      "name": "RT-20",
+      "dose": ""
     },
     "retatrutide-30mg": {
       "file": "assets/products/locked-v1/retatrutide-30mg.svg",
-      "name": "RETATRUTIDE",
-      "dose": "30MG"
+      "name": "RT-30",
+      "dose": ""
     },
     "retatrutide-40mg": {
       "file": "assets/products/locked-v1/retatrutide-40mg.svg",
-      "name": "RETATRUTIDE",
-      "dose": "40MG"
+      "name": "RT-40",
+      "dose": ""
     },
     "retatrutide-50mg": {
       "file": "assets/products/locked-v1/retatrutide-50mg.svg",
-      "name": "RETATRUTIDE",
-      "dose": "50MG"
+      "name": "RT-50",
+      "dose": ""
     },
     "tesamorelin": {
       "file": "assets/products/locked-v1/tesamorelin.svg",

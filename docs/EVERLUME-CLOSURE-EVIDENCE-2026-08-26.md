@@ -12,13 +12,16 @@
 - Affiliate payouts and complex settlement functions explicitly excluded
 - Client-controlled Shippo Starter workspace created under the Everlume company login and linked from the operations desk
 - Shipping module records the $0 monthly platform fee, up-to-30-label Starter allowance, multi-carrier rate comparison, and 4 × 6 thermal-label target
+- Shipping module includes a four-step manual fulfillment workflow, identifies API order sync as not connected, and records local pickup/arranged drop-off as owner-confirmed
+- Checkout records shipping or local pickup/arranged drop-off preference without promising automatic mileage eligibility
+- Requested public catalog presentation uses `TR` and `RT` abbreviations while governed internal records retain full product names
 - Postage purchases, sender/return-address entry, saved payment methods, carrier contracts, and production fulfillment remain owner-controlled actions
 - Final automated proofread guard added for known errors and U.S. English policy variants
 - Full site validation and database migration/invariant verification passed before publication
 
 ## Evidence
 
-- Application test suite: 46 tests passed
+- Application test suite: 50 tests passed
 - Database/invariant verification: 46 checks passed
 - Static validation: 53 required files and 16 pages passed
 - Live Supabase verification: `affiliate_applications` and `affiliate_commissions` tables present; public and private review functions present; migration `20260826105743` recorded

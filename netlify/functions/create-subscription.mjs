@@ -9,6 +9,10 @@ export async function handler(event) {
     const rows=await rest(`products?slug=eq.${encodeURIComponent(slug)}&select=id,name,dose_label,price_cents,status,compliance_status`);
     const product=rows?.[0];
     if(!product || product.status!=='active' || product.compliance_status!=='approved' || !(product.price_cents>0)) return json(409,{error:'This format is not currently eligible for subscription'});
+    const stockRows=await rest(`inventory?product_id=eq.${product.id}&select=quantity_on_hand,quantity_reserved,status`);
+    const stock=stockRows?.[0];
+    const available=Math.max(0,Number(stock?.quantity_on_hand||0)-Number(stock?.quantity_reserved||0));
+    if(!stock || stock.status==='out' || available<=0) return json(409,{error:'This format is not currently in stock'});
     const profiles=await rest(`profiles?id=eq.${user.id}&select=stripe_customer_id`);
     let customer=profiles?.[0]?.stripe_customer_id;
     const client=stripe();

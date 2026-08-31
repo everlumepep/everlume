@@ -8,6 +8,17 @@
 // state: every product is pending_review with no price.
 (function () {
   const SUPPORT_EMAIL = 'hello@myeverlume.com';
+  // The full material name remains in the governed internal record. Public
+  // catalog surfaces use the client-approved family code plus format. This is
+  // presentation only and never changes publication or commerce approval.
+  function publicProducts(products) {
+    return products.map(product => {
+      const dose = String(product.dose_label || '').replace(/\s*mg\b/i, '');
+      if (product.slug.startsWith('tirzepatide-')) return { ...product, name: `TR-${dose}`, dose_label: '' };
+      if (product.slug.startsWith('retatrutide-')) return { ...product, name: `RT-${dose}`, dose_label: '' };
+      return product;
+    });
+  }
 
   // Physical label sheet order is the presentation order for the storefront.
   // Products not represented on the current sheet remain available after this
@@ -159,7 +170,7 @@
     if (cache) return cache;
     const client = window.everlumeSupabase;
     if (!client) {
-      cache = { products: orderByLabelSheet(SEED), source: 'fallback' };
+      cache = { products: orderByLabelSheet(publicProducts(SEED)), source: 'fallback' };
       return cache;
     }
     try {
@@ -186,13 +197,13 @@
           inventory_status: (inv && inv.status) || 'out'
         };
       });
-      cache = { products: orderByLabelSheet(products), source: 'supabase' };
+      cache = { products: orderByLabelSheet(publicProducts(products)), source: 'supabase' };
       return cache;
     } catch (error) {
       // Never fail the storefront open. A backend error must not turn into a
       // catalog with unknown authorization state, so fall back to the seed —
       // which is pending_review, i.e. not purchasable.
-      cache = { products: orderByLabelSheet(SEED), source: 'fallback-after-error' };
+      cache = { products: orderByLabelSheet(publicProducts(SEED)), source: 'fallback-after-error' };
       return cache;
     }
   }
