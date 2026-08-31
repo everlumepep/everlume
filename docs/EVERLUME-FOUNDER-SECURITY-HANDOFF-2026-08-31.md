@@ -6,6 +6,7 @@
 - Display name: **Everlume Admin**
 - Denisha Phillips: co-owner, 50%
 - Veronicah Williams: co-owner, 50%
+- Standard business address: **19415 Nalancia Way, Riverside, CA 92508-9835**
 
 This package contains no passwords, passkeys, authenticator seeds, one-time codes, recovery codes, bank details, or card details.
 
@@ -25,7 +26,7 @@ Complete this together from devices controlled by the founders:
 ## Provider-specific items
 
 - **Stripe:** automatic payouts are disabled. Complete owner verification; remove the Xenth backup email; replace the sole default settlement bank and legal representative; record Denisha and Veronicah as 50/50 owners; then delete the legacy passkey.
-- **Cloudflare:** replace the remaining Xenth billing address; add Everlume's payment method before renewal; verify the domain remains active and auto-renew remains enabled.
+- **Cloudflare:** the Xenth card was removed and the billing address was standardized; add Everlume's payment method before renewal; verify the domain remains active and auto-renew remains enabled.
 - **Google:** replace recovery information, create founder passkeys/2FA, generate new recovery codes, and sign out legacy devices.
 - **Netlify, Supabase, Shippo, and GitHub:** verify the company identity, founder recovery coverage, roles, and fresh sign-in.
 
@@ -38,7 +39,7 @@ Complete this together from devices controlled by the founders:
 - [ ] New recovery codes stored securely
 - [ ] Xenth recovery and security methods removed
 - [ ] Stripe identity and payout details replaced
-- [ ] Cloudflare billing address replaced
+- [x] Cloudflare billing address replaced
 - [ ] Everlume payment method added before renewal
 - [ ] Unrecognized sessions signed out
 

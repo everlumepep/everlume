@@ -5,6 +5,7 @@
 - Website: https://deploy-preview-5--everlume1.netlify.app/
 - Operations dashboard: https://deploy-preview-5--everlume1.netlify.app/ops-dashboard/
 - Company service identity: `everlume.admin@gmail.com` — display name **Everlume Admin**
+- Standard business address: **19415 Nalancia Way, Riverside, CA 92508-9835**
 
 ## Ownership and support
 
@@ -42,6 +43,7 @@
 - Clear four-step fulfillment guide
 - Manual local pickup/arranged drop-off workflow
 - API order synchronization is not connected and is not required for the initial manual workflow
+- Sender and return identity is configured as Everlume at the standard Riverside address; Shippo normalizes the postal code to 92508
 
 ## Verified release state
 
@@ -55,11 +57,11 @@
 ## Client closeout checklist
 
 1. **Priority #1 — Stripe founder replacement:** complete the sequence in `EVERLUME-CUSTODY-PRIVACY-AUDIT-2026-08-31.md`. Replace the payout bank and legal representative, record both 50/50 owners, complete Stripe's outstanding review, and finish Stripe's owner verification so the Xenth backup email can be removed.
-2. In Cloudflare, add Everlume's legal billing address and an Everlume-owned payment method before the next renewal. The Xenth card was removed on August 31, 2026. `myeverlume.com` is active, auto-renew is enabled, and Cloudflare displays an expiration date of **July 21, 2027**.
+2. In Cloudflare, add an Everlume-owned payment method before the next renewal. The Xenth card was removed and the billing address was standardized on August 31, 2026. `myeverlume.com` is active, auto-renew is enabled, and Cloudflare displays an expiration date of **July 21, 2027**.
 3. Review the website and dashboard links above.
 4. Sign or email the Preview 5 acceptance statement.
 5. Enter verified inventory quantities.
-6. Add and verify Shippo sender/return address, phone number, and postage payment method.
+6. Add an Everlume-owned Shippo postage payment method before purchasing the first label. The sender/return address and phone number are already configured.
 7. Choose the physical 4 × 6 thermal printer when ready.
 8. Complete the founder security ceremony in `EVERLUME-FOUNDER-SECURITY-HANDOFF-2026-08-31.md`: both founders create their own passkey/2FA methods, replace recovery information, store new recovery codes securely, and test sign-in before deleting legacy methods.
 9. Obtain product publication/compliance approval.

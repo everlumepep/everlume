@@ -6,6 +6,7 @@
 - Veronicah Williams — co-owner, 50%
 - Shared company identity — `everlume.admin@gmail.com`, displayed as **Everlume Admin**
 - Xenth — account manager and scoped technical collaborator, not a business owner or billing owner
+- Standard business address — 19415 Nalancia Way, Riverside, CA 92508-9835
 
 Equal business ownership does not prove equal administrator access inside every third-party provider. Provider access must be verified separately.
 
@@ -23,8 +24,8 @@ Equal business ownership does not prove equal administrator access inside every 
 |---|---|---|
 | Netlify | Confirm Everlume identity, plan, invoices, and stored payment method | Verified August 31: **Everlume Admin**, Free plan, no card saved, no invoices, and no overdue balance |
 | Stripe | Replace the payout bank, account representative, ownership details, personal recovery data, and any Xenth security method | **Open:** automatic payouts were disabled and the schedule was changed to manual on August 31. Stripe does not offer removal of the sole default settlement bank from this screen; the bank and Xenth legal representative require founder replacement. No Stripe invoice history was present |
-| Shippo | Confirm account owner, billing method, invoices, sender/return identity, and recovery | Verified August 31: Everlume Google access connected; no payment method or invoice present. Sender/return details still require client entry |
-| Cloudflare | Remove Xenth billing information and document renewal | **Partially complete:** Xenth card removed August 31; no payment method remains. Xenth billing address still requires replacement with Everlume's legal address. Domain is active, auto-renew is on, and expiration is July 21, 2027 |
+| Shippo | Confirm account owner, billing method, invoices, sender/return identity, and recovery | Verified August 31: **Everlume Admin** Google access connected; Everlume company identity, website, phone, and sender/default-return address configured; no payment method or invoice present. Shippo normalized ZIP+4 to 92508 |
+| Cloudflare | Remove Xenth billing information and document renewal | **Address and card cleanup complete:** Xenth card removed August 31; no payment method remains; billing identity and address standardized to Everlume at the Riverside address. Domain is active, auto-renew is on, and expiration is July 21, 2027 |
 | GitHub organization | Confirm Denisha and Veronicah have the intended owner/admin access and recovery coverage | Repository owner organization verified; individual org ownership unverified |
 | Google | Confirm both co-owners control recovery and MFA for the shared company account | Shared identity recorded; recovery/MFA sharing unverified |
 
@@ -52,4 +53,4 @@ No password, passkey, authenticator seed, one-time code, or recovery code is inc
 
 ## Removal rule
 
-The Xenth Cloudflare payment card was removed at the owner's direction. Provider-required legal identity, billing address, recovery, bank, passkey, and 2FA changes must be completed by the founders inside the provider's secure flow. Each replacement must be followed by a fresh sign-in or access test and recorded evidence.
+The Xenth Cloudflare payment card was removed at the owner's direction, and the Cloudflare billing address was standardized to Everlume's Riverside address. Stripe's account and public support addresses were also standardized; Stripe's personal legal representative/KYC address remains a founder-controlled verification item and was not overwritten with a business address. Provider-required legal identity, recovery, bank, passkey, and 2FA changes must be completed by the founders inside the provider's secure flow. Each replacement must be followed by a fresh sign-in or access test and recorded evidence.

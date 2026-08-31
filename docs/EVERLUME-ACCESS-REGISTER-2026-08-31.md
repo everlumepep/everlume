@@ -7,6 +7,7 @@ This register records custody without passwords, passkeys, secret keys, recovery
 - Company service login: `everlume.admin@gmail.com`
 - Display name: Everlume Admin
 - Business owners: Denisha Phillips (50%) and Veronicah Williams (50%)
+- Standard business address: 19415 Nalancia Way, Riverside, CA 92508-9835
 - Shared-account use should be replaced with individual `@myeverlume.com` identities when the owners approve and fund managed email.
 
 ## Service register
@@ -18,8 +19,8 @@ This register records custody without passwords, passkeys, secret keys, recovery
 | Netlify | Preview hosting | Preview 5 available | Keep production promotion held until written authorization |
 | Supabase | Auth and operational data | Everlume Admin authorized | Create individual founder accounts later if desired |
 | Stripe | Test payment foundation | Test/readiness only; Xenth backup removal awaits owner verification | Replace payout bank and representative, record both 50/50 owners, create founder security methods, and authorize production separately |
-| Shippo | Shipping workspace | Starter workspace connected through dashboard | Add sender/return address, phone, and payment method before first label |
-| Cloudflare | Domain and DNS custody | Everlume account verified; domain active; auto-renew on; expires July 21, 2027; no card saved | Replace Xenth billing address, add Everlume payment before renewal, and complete founder security setup |
+| Shippo | Shipping workspace | Starter workspace connected; Everlume company identity, sender/return address, phone, and website configured | Add an Everlume-owned postage payment method before first label |
+| Cloudflare | Domain and DNS custody | Everlume account verified; Riverside billing address configured; domain active; auto-renew on; expires July 21, 2027; no card saved | Add Everlume payment before renewal and complete founder security setup |
 
 ## Security boundary
 

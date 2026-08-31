@@ -19,16 +19,17 @@ Prepared: August 31, 2026
 - Limited Affiliate Pilot with manual approval and pending commission estimates
 - Stripe test-mode foundation, with production commerce separately held
 - Supabase-backed access and operational records
+- Standard business address: 19415 Nalancia Way, Riverside, CA 92508-9835
 
 ## Required client actions before production
 
 1. Return written acceptance of Preview 5.
 2. Enter and verify real inventory.
-3. Add the sender/return address, phone number, and payment method inside the client-owned Shippo workspace.
+3. Add an Everlume-owned postage payment method inside Shippo before purchasing the first label. The sender/return address and phone number are already configured.
 4. Complete product publication/compliance approval separately.
 5. Complete the founder security ceremony: create founder-controlled passkeys and 2FA, replace recovery methods, store new recovery codes securely, and test fresh sign-in for both owners.
 6. Complete Stripe ownership, representative, payout-bank, and owner-verification steps; then remove the remaining Xenth recovery and security information.
-7. Replace the remaining Xenth Cloudflare billing address and add an Everlume payment method before renewal. `myeverlume.com` is active, auto-renew is enabled, and Cloudflare displays expiration on July 21, 2027.
+7. Add an Everlume-owned Cloudflare payment method before renewal. The Xenth card was removed and the billing address was standardized. `myeverlume.com` is active, auto-renew is enabled, and Cloudflare displays expiration on July 21, 2027.
 8. Authorize production commerce and release in writing.
 
 ## Xenth support window
