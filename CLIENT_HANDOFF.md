@@ -29,6 +29,10 @@ Prepared: August 31, 2026
 5. Recover and transfer custody of `myeverlume.com` to an Everlume-controlled Cloudflare account.
 6. Authorize production commerce and release in writing.
 
+## Xenth support window
+
+Written acceptance of Preview 5 starts a 14-calendar-day included transition-support period. Beginning on day 15, ongoing maintenance requires an active paid Xenth maintenance subscription or a separately approved written scope. Subscription pricing and terms require separate written approval.
+
 ## Handoff package
 
 The consolidated client package is documented in `docs/EVERLUME-CLIENT-HANDOFF-PACKAGE-2026-08-31.md`. Access, acceptance, domain custody, closure evidence, and support terms remain separate records so that ownership and release decisions are explicit.

@@ -4,7 +4,15 @@
 
 Xenth remains Everlume’s account manager and coordinates technical support and governed access after handoff.
 
-## Included closeout support
+## 14-day transition support
+
+The included transition-support period begins on the date Everlume provides written acceptance of Preview 5 and continues for 14 consecutive calendar days. During this period, Xenth provides the included closeout support listed below without requiring a maintenance subscription.
+
+Beginning on calendar day 15, ongoing website, dashboard, integration, account, monitoring, content, or operational maintenance requires an active paid Xenth maintenance subscription or a separately approved written scope. Work is not performed automatically, and no subscription begins without Everlume's written approval of its price and terms.
+
+An eligible defect reported in writing during the 14-day period remains eligible for resolution after the period ends, provided it is reproducible and belongs to the accepted Preview 5 baseline.
+
+## Included closeout support during the 14-day period
 
 - Correction of reproducible defects in the accepted Preview 5 baseline
 - Correction of verified spelling, grammar, broken links, and material layout regressions introduced by the accepted build
@@ -13,7 +21,7 @@ Xenth remains Everlume’s account manager and coordinates technical support and
 
 ## Separate work
 
-New features, expanded affiliate automation, payouts, accounting integrations, carrier purchases, production commerce activation, product publication, compliance or legal review, inventory entry, content rewrites, and third-party subscription costs require separate written scope and approval.
+New features, expanded affiliate automation, payouts, accounting integrations, carrier purchases, production commerce activation, product publication, compliance or legal review, inventory entry, content rewrites, and third-party subscription costs require separate written scope and approval, including during the 14-day transition period.
 
 ## Response and resolution
 
@@ -26,3 +34,7 @@ The company service login is `everlume.admin@gmail.com` and is labeled **Everlum
 ## Service boundaries
 
 Supabase, Netlify, Stripe, email, domain, carrier, and other third-party availability is outside Xenth’s direct control. Xenth does not provide legal, medical, regulatory, tax, or accounting advice and does not guarantee a regulatory outcome or uninterrupted third-party service.
+
+## Maintenance after day 14
+
+If Everlume does not activate a maintenance subscription, Xenth remains the account manager of record but has no standing obligation to monitor, update, operate, or maintain the website or connected services after the transition period. Emergency response, 24/7 coverage, hosting fees, third-party fees, and production changes are not included unless expressly stated in a later signed agreement.

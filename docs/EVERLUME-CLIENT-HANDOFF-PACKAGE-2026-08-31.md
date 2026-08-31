@@ -11,6 +11,8 @@
 - Denisha Phillips — co-owner, 50%
 - Veronicah Williams — co-owner, 50%
 - Xenth — account manager and technical support coordinator; not a business or domain owner
+- Included Xenth transition support runs for 14 calendar days beginning on written acceptance of Preview 5
+- Beginning on day 15, ongoing maintenance requires an active paid Xenth maintenance subscription or separately approved written scope
 
 ## What is ready
 
@@ -59,6 +61,7 @@
 6. Recover/transfer `myeverlume.com` custody to an Everlume-controlled Cloudflare account.
 7. Obtain product publication/compliance approval.
 8. Give separate written authorization for production commerce and release.
+9. Before the 14-day transition period ends, decide whether to activate a paid Xenth maintenance subscription for ongoing support.
 
 ## Included records
 
