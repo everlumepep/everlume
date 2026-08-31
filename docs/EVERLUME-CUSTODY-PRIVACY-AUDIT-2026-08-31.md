@@ -22,7 +22,7 @@ Equal business ownership does not prove equal administrator access inside every 
 | Provider | Required check | Current result |
 |---|---|---|
 | Netlify | Confirm Everlume identity, plan, invoices, and stored payment method | Verified August 31: **Everlume Admin**, Free plan, no card saved, no invoices, and no overdue balance |
-| Stripe | Replace the payout bank, account representative, ownership details, personal recovery data, and any Xenth security method | **Open:** payout bank and Xenth legal representative remain until a founder supplies verified replacements; no Stripe invoice history was present |
+| Stripe | Replace the payout bank, account representative, ownership details, personal recovery data, and any Xenth security method | **Open:** automatic payouts were disabled and the schedule was changed to manual on August 31. Stripe does not offer removal of the sole default settlement bank from this screen; the bank and Xenth legal representative require founder replacement. No Stripe invoice history was present |
 | Shippo | Confirm account owner, billing method, invoices, sender/return identity, and recovery | Verified August 31: Everlume Google access connected; no payment method or invoice present. Sender/return details still require client entry |
 | Cloudflare | Remove Xenth billing information and document renewal | **Partially complete:** Xenth card removed August 31; no payment method remains. Xenth billing address still requires replacement with Everlume's legal address. Domain is active, auto-renew is on, and expiration is July 21, 2027 |
 | GitHub organization | Confirm Denisha and Veronicah have the intended owner/admin access and recovery coverage | Repository owner organization verified; individual org ownership unverified |

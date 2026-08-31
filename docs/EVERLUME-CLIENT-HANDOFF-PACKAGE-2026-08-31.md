@@ -45,7 +45,7 @@
 
 ## Verified release state
 
-- Stripe remains in test/readiness mode; production billing is held
+- Stripe remains in test/readiness mode; production billing is held and automatic payouts are disabled
 - Real inventory is not inferred and must be entered by the client
 - Product publication/compliance approval is separate from price, availability, or display approval
 - Postage purchases and Shippo payment details remain owner-controlled

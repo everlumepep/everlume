@@ -24,7 +24,7 @@ Complete this together from devices controlled by the founders:
 
 ## Provider-specific items
 
-- **Stripe:** complete owner verification; remove the Xenth backup email; replace the payout bank and legal representative; record Denisha and Veronicah as 50/50 owners; then delete the legacy passkey.
+- **Stripe:** automatic payouts are disabled. Complete owner verification; remove the Xenth backup email; replace the sole default settlement bank and legal representative; record Denisha and Veronicah as 50/50 owners; then delete the legacy passkey.
 - **Cloudflare:** replace the remaining Xenth billing address; add Everlume's payment method before renewal; verify the domain remains active and auto-renew remains enabled.
 - **Google:** replace recovery information, create founder passkeys/2FA, generate new recovery codes, and sign out legacy devices.
 - **Netlify, Supabase, Shippo, and GitHub:** verify the company identity, founder recovery coverage, roles, and fresh sign-in.
