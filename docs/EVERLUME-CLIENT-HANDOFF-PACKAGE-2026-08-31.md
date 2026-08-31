@@ -54,14 +54,14 @@
 
 ## Client closeout checklist
 
-1. **Priority #1 — Stripe founder replacement:** complete the sequence in `EVERLUME-CUSTODY-PRIVACY-AUDIT-2026-08-31.md`. Add and verify Everlume banking, replace the legal representative, record both 50/50 owners, complete Stripe's outstanding review before its displayed deadline, test access and payouts, and only then remove Xenth banking and identity information.
-2. Add an Everlume-owned Cloudflare payment method and billing address before removing the existing personal card so domain renewal is not interrupted.
+1. **Priority #1 — Stripe founder replacement:** complete the sequence in `EVERLUME-CUSTODY-PRIVACY-AUDIT-2026-08-31.md`. Replace the payout bank and legal representative, record both 50/50 owners, complete Stripe's outstanding review, and finish Stripe's owner verification so the Xenth backup email can be removed.
+2. In Cloudflare, add Everlume's legal billing address and an Everlume-owned payment method before the next renewal. The Xenth card was removed on August 31, 2026. `myeverlume.com` is active, auto-renew is enabled, and Cloudflare displays an expiration date of **July 21, 2027**.
 3. Review the website and dashboard links above.
 4. Sign or email the Preview 5 acceptance statement.
 5. Enter verified inventory quantities.
 6. Add and verify Shippo sender/return address, phone number, and postage payment method.
 7. Choose the physical 4 × 6 thermal printer when ready.
-8. Confirm `myeverlume.com` custody and recovery remain controlled through the Everlume Cloudflare account.
+8. Complete the founder security ceremony in `EVERLUME-FOUNDER-SECURITY-HANDOFF-2026-08-31.md`: both founders create their own passkey/2FA methods, replace recovery information, store new recovery codes securely, and test sign-in before deleting legacy methods.
 9. Obtain product publication/compliance approval.
 10. Give separate written authorization for production commerce and release.
 11. Before September 15, 2026, decide whether to activate a paid Xenth maintenance subscription for ongoing support.
@@ -75,3 +75,4 @@
 - `EVERLUME-SUPPORT-TERMS.md`
 - `EVERLUME-CUSTODY-PRIVACY-AUDIT-2026-08-31.md`
 - `EVERLUME-THREE-PASS-QA-STANDARD.md`
+- `EVERLUME-FOUNDER-SECURITY-HANDOFF-2026-08-31.md`

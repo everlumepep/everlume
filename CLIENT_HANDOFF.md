@@ -26,8 +26,10 @@ Prepared: August 31, 2026
 2. Enter and verify real inventory.
 3. Add the sender/return address, phone number, and payment method inside the client-owned Shippo workspace.
 4. Complete product publication/compliance approval separately.
-5. Recover and transfer custody of `myeverlume.com` to an Everlume-controlled Cloudflare account.
-6. Authorize production commerce and release in writing.
+5. Complete the founder security ceremony: create founder-controlled passkeys and 2FA, replace recovery methods, store new recovery codes securely, and test fresh sign-in for both owners.
+6. Complete Stripe ownership, representative, payout-bank, and owner-verification steps; then remove the remaining Xenth recovery and security information.
+7. Replace the remaining Xenth Cloudflare billing address and add an Everlume payment method before renewal. `myeverlume.com` is active, auto-renew is enabled, and Cloudflare displays expiration on July 21, 2027.
+8. Authorize production commerce and release in writing.
 
 ## Xenth support window
 
@@ -35,7 +37,7 @@ The included 14-calendar-day transition-support period runs from September 1 thr
 
 ## Handoff package
 
-The consolidated client package is documented in `docs/EVERLUME-CLIENT-HANDOFF-PACKAGE-2026-08-31.md`. Access, acceptance, domain custody, closure evidence, and support terms remain separate records so that ownership and release decisions are explicit.
+The consolidated client package is documented in `docs/EVERLUME-CLIENT-HANDOFF-PACKAGE-2026-08-31.md`. Access, acceptance, domain custody, founder security, closure evidence, and support terms remain separate records so that ownership and release decisions are explicit.
 
 ## Quality assurance
 

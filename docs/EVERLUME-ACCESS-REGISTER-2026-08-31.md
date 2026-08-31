@@ -13,13 +13,13 @@ This register records custody without passwords, passkeys, secret keys, recovery
 
 | Service | Current role | Handoff state | Owner action |
 |---|---|---|---|
-| Google | Company service identity | Active | Maintain recovery methods and MFA |
+| Google | Company service identity | Active | Both founders create passkeys/2FA, replace recovery methods, and test fresh sign-in |
 | GitHub | Source repository | Everlume organization repository present | Confirm both owners have appropriate organization access |
 | Netlify | Preview hosting | Preview 5 available | Keep production promotion held until written authorization |
 | Supabase | Auth and operational data | Everlume Admin authorized | Create individual founder accounts later if desired |
-| Stripe | Test payment foundation | Test/readiness only | Complete live business verification and authorize production separately |
+| Stripe | Test payment foundation | Test/readiness only; Xenth backup removal awaits owner verification | Replace payout bank and representative, record both 50/50 owners, create founder security methods, and authorize production separately |
 | Shippo | Shipping workspace | Starter workspace connected through dashboard | Add sender/return address, phone, and payment method before first label |
-| Cloudflare | Domain and DNS custody | Controlling account not yet verified | Recover source account, export DNS, and transfer to Everlume custody |
+| Cloudflare | Domain and DNS custody | Everlume account verified; domain active; auto-renew on; expires July 21, 2027; no card saved | Replace Xenth billing address, add Everlume payment before renewal, and complete founder security setup |
 
 ## Security boundary
 

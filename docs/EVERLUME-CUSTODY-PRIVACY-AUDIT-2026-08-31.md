@@ -24,7 +24,7 @@ Equal business ownership does not prove equal administrator access inside every 
 | Netlify | Confirm Everlume identity, plan, invoices, and stored payment method | Verified August 31: **Everlume Admin**, Free plan, no card saved, no invoices, and no overdue balance |
 | Stripe | Replace the payout bank, account representative, ownership details, personal recovery data, and any Xenth security method | **Open:** payout bank and Xenth legal representative remain until a founder supplies verified replacements; no Stripe invoice history was present |
 | Shippo | Confirm account owner, billing method, invoices, sender/return identity, and recovery | Verified August 31: Everlume Google access connected; no payment method or invoice present. Sender/return details still require client entry |
-| Cloudflare | Replace personal payment and billing information without interrupting domain renewal | **Open:** the only invoice shown is paid; one Xenth card and billing address remain because no Everlume replacement card is on file |
+| Cloudflare | Remove Xenth billing information and document renewal | **Partially complete:** Xenth card removed August 31; no payment method remains. Xenth billing address still requires replacement with Everlume's legal address. Domain is active, auto-renew is on, and expiration is July 21, 2027 |
 | GitHub organization | Confirm Denisha and Veronicah have the intended owner/admin access and recovery coverage | Repository owner organization verified; individual org ownership unverified |
 | Google | Confirm both co-owners control recovery and MFA for the shared company account | Shared identity recorded; recovery/MFA sharing unverified |
 
@@ -44,8 +44,12 @@ The existing payout destination and Xenth legal representative have **not** been
 
 No bank number, government identifier, password, passkey, recovery code, or authentication code belongs in this handoff package.
 
-The Xenth backup email removal was initiated on August 31, 2026, but Stripe requires the account owner to complete its verification prompt before the deletion can be certified.
+The Xenth backup email removal was initiated on August 31, 2026, but Stripe requires the account owner to complete its verification prompt before the deletion can be certified. The shared Stripe login still has a legacy passkey labeled for Denisha; the founders must create and verify their own replacement authentication methods before deleting it.
+
+## Founder security setup
+
+No password, passkey, authenticator seed, one-time code, or recovery code is included in this package. Denisha Phillips and Veronicah Williams must create their own passkeys and two-factor authentication methods directly with each provider. Follow `EVERLUME-FOUNDER-SECURITY-HANDOFF-2026-08-31.md` and remove every legacy Xenth method only after both founders complete fresh sign-in tests.
 
 ## Removal rule
 
-Do not remove a billing owner, payment method, recovery channel, domain custodian, or sole administrator until the Everlume-owned replacement is verified. Each removal must be followed by a fresh sign-in or access test and recorded evidence.
+The Xenth Cloudflare payment card was removed at the owner's direction. Provider-required legal identity, billing address, recovery, bank, passkey, and 2FA changes must be completed by the founders inside the provider's secure flow. Each replacement must be followed by a fresh sign-in or access test and recorded evidence.
