@@ -36,3 +36,7 @@ The included 14-calendar-day transition-support period runs from September 1 thr
 ## Handoff package
 
 The consolidated client package is documented in `docs/EVERLUME-CLIENT-HANDOFF-PACKAGE-2026-08-31.md`. Access, acceptance, domain custody, closure evidence, and support terms remain separate records so that ownership and release decisions are explicit.
+
+## Quality assurance
+
+Every Everlume release and handoff revision requires three recorded quality-assurance passes: content and presentation, functional and security verification, and exact release/handoff verification. The governing checklist is `docs/EVERLUME-THREE-PASS-QA-STANDARD.md`.

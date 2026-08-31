@@ -50,6 +50,7 @@
 - Product publication/compliance approval is separate from price, availability, or display approval
 - Postage purchases and Shippo payment details remain owner-controlled
 - Production domain and commerce release require separate written authorization
+- Every release and handoff revision requires the documented three-pass quality-assurance standard
 
 ## Client closeout checklist
 
@@ -70,3 +71,5 @@
 - `EVERLUME-CLOSURE-EVIDENCE-2026-08-26.md`
 - `EVERLUME-DOMAIN-HANDOFF-REGISTER-2026-08-26.md`
 - `EVERLUME-SUPPORT-TERMS.md`
+- `EVERLUME-CUSTODY-PRIVACY-AUDIT-2026-08-31.md`
+- `EVERLUME-THREE-PASS-QA-STANDARD.md`

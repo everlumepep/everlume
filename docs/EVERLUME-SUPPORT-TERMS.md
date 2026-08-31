@@ -31,6 +31,10 @@ Support requests should identify the page, account, device, and steps needed to 
 
 The company service login is `everlume.admin@gmail.com` and is labeled **Everlume Admin** rather than either founder’s personal name. Denisha Phillips and Veronicah Williams are recorded as equal co-owners. Passwords, passkeys, one-time codes, secret keys, and recovery codes are never shared through support messages. Role changes, recovery actions, and any later migration to individual `@myeverlume.com` identities require authorized owner direction and are logged.
 
+## Three-pass quality assurance
+
+Every client-facing release, handoff revision, and production change must complete the three passes defined in `EVERLUME-THREE-PASS-QA-STANDARD.md`: content and presentation; functional and security verification; and exact release/handoff verification. A later change that affects a completed pass requires that pass to be repeated.
+
 ## Service boundaries
 
 Supabase, Netlify, Stripe, email, domain, carrier, and other third-party availability is outside Xenth’s direct control. Xenth does not provide legal, medical, regulatory, tax, or accounting advice and does not guarantee a regulatory outcome or uninterrupted third-party service.

@@ -24,3 +24,5 @@ This register records custody without passwords, passkeys, secret keys, recovery
 ## Security boundary
 
 No credential is included in this package. Passwords, passkeys, API keys, one-time codes, recovery codes, and payment information must be exchanged only through the provider’s secure account and recovery flows.
+
+The live custody and payment-method verification status is maintained in `EVERLUME-CUSTODY-PRIVACY-AUDIT-2026-08-31.md`. Equal 50/50 business ownership must not be confused with verified owner/admin access in each provider.
