@@ -21,12 +21,26 @@ Equal business ownership does not prove equal administrator access inside every 
 
 | Provider | Required check | Current result |
 |---|---|---|
-| Netlify | Confirm Everlume owner identity, billing owner, payment method, recovery, and Xenth access level | Unverified — local session signed out |
-| Stripe | Confirm business representative, owners, bank/payout account, billing contacts, payment methods, recovery, and remove Xenth personal data where replacement ownership is established | Unverified |
-| Shippo | Confirm account owner, sender/return identity, billing method, recovery, and remove Xenth personal or payment data | Unverified |
-| Cloudflare | Recover the controlling account, confirm domain owner, billing method, recovery, and remove Xenth ownership/payment responsibility after safe transfer | Blocked pending account recovery |
+| Netlify | Confirm Everlume identity, plan, invoices, and stored payment method | Verified August 31: **Everlume Admin**, Free plan, no card saved, no invoices, and no overdue balance |
+| Stripe | Replace the payout bank, account representative, ownership details, personal recovery data, and any Xenth security method | **Open:** payout bank and Xenth legal representative remain until a founder supplies verified replacements; no Stripe invoice history was present |
+| Shippo | Confirm account owner, billing method, invoices, sender/return identity, and recovery | Verified August 31: Everlume Google access connected; no payment method or invoice present. Sender/return details still require client entry |
+| Cloudflare | Replace personal payment and billing information without interrupting domain renewal | **Open:** the only invoice shown is paid; one Xenth card and billing address remain because no Everlume replacement card is on file |
 | GitHub organization | Confirm Denisha and Veronicah have the intended owner/admin access and recovery coverage | Repository owner organization verified; individual org ownership unverified |
 | Google | Confirm both co-owners control recovery and MFA for the shared company account | Shared identity recorded; recovery/MFA sharing unverified |
+
+## Stripe founder replacement instructions
+
+The existing payout destination and Xenth legal representative have **not** been removed. A founder must complete the following directly in Stripe before Xenth information can be safely deleted:
+
+1. Denisha Phillips or Veronicah Williams signs in through the Everlume-controlled account.
+2. Add and verify an Everlume-owned payout bank account.
+3. Replace the account representative with the appropriate founder and provide Stripe's legally required identity information directly to Stripe.
+4. Record both founders' 50/50 ownership wherever Stripe requests beneficial-owner information.
+5. Complete Stripe's outstanding business-information review before its displayed deadline.
+6. Test access and confirm the new payout destination is active.
+7. Only after those checks pass, remove the prior payout bank, Xenth representative record, personal recovery method, and any Xenth security credential.
+
+No bank number, government identifier, password, passkey, recovery code, or authentication code belongs in this handoff package.
 
 ## Removal rule
 

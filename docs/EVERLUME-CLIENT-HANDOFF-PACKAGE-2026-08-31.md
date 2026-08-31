@@ -63,6 +63,8 @@
 7. Obtain product publication/compliance approval.
 8. Give separate written authorization for production commerce and release.
 9. Before September 15, 2026, decide whether to activate a paid Xenth maintenance subscription for ongoing support.
+10. Complete the Stripe founder replacement sequence in `EVERLUME-CUSTODY-PRIVACY-AUDIT-2026-08-31.md`: add and verify Everlume banking, replace the legal representative, record both 50/50 owners, complete the outstanding Stripe review, test access and payouts, and only then remove Xenth banking and identity information.
+11. Add an Everlume-owned Cloudflare payment method and billing address before removing the existing personal card so domain renewal is not interrupted.
 
 ## Included records
 
