@@ -18,17 +18,16 @@
 
 ## Custody status
 
-The Everlume-controlled Cloudflare account using `everlume.admin@gmail.com` contains `myeverlume.com`. The domain is active, auto-renew is enabled, and Cloudflare displays expiration on July 21, 2027. The Xenth payment card was removed on August 31, 2026; no payment method remains. The remaining Xenth billing address must be replaced with Everlume's legal billing address by a founder.
+The Everlume-controlled Cloudflare account using `everlume.admin@gmail.com` contains `myeverlume.com`. The domain is active, auto-renew is enabled, and Cloudflare displays expiration on July 21, 2027. The Xenth payment card was removed on August 31, 2026; no payment method remains. The billing identity and address were standardized to Everlume at 19415 Nalancia Way, Riverside, CA 92508-9835.
 
 ## Safe handoff sequence
 
-1. Replace the remaining Xenth billing address with Everlume's legal billing address.
-2. Add an Everlume-owned payment method before July 21, 2027 if the founders want uninterrupted automatic renewal.
-3. Have both founders create their own passkey and 2FA methods and securely store new recovery codes.
-4. Test Cloudflare access from a fresh browser session for both founders.
-5. Review registrar lock, DNSSEC, nameservers, and all website, email, verification, and service records without changing them.
-6. Remove any remaining Xenth recovery or security method after founder access is verified.
-7. Reconfirm website, email, SSL, redirects, Netlify routing, renewal, and recovery access.
+1. Add an Everlume-owned payment method before July 21, 2027 if the founders want uninterrupted automatic renewal.
+2. Have both founders create their own passkey and 2FA methods and securely store new recovery codes.
+3. Test Cloudflare access from a fresh browser session for both founders.
+4. Review registrar lock, DNSSEC, nameservers, and all website, email, verification, and service records without changing them.
+5. Remove any remaining Xenth recovery or security method after founder access is verified.
+6. Reconfirm website, email, SSL, redirects, Netlify routing, renewal, and recovery access.
 
 ## Release boundary
 
