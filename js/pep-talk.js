@@ -10,10 +10,10 @@
     [/contact|help|person|support/i, 'For account, order, or documentation support, use the contact form and the Everlume team can follow up.']
   ];
   const root = document.createElement('div');
-  root.innerHTML = `<button class="pep-launcher" id="pepTalkLauncher" type="button" aria-haspopup="dialog" aria-controls="pepTalkPanel">
-      <span class="pep-launcher-mark" aria-hidden="true">EL</span>
-      <span class="pep-launcher-copy"><small>Everlume concierge</small><strong>Pep Talk</strong></span>
-      <span class="pep-launcher-arrow" aria-hidden="true">↗</span>
+  root.innerHTML = `<button class="pep-launcher" id="pepTalkLauncher" type="button" aria-haspopup="dialog" aria-controls="pepTalkPanel" aria-label="Open Pep Talk, your Everlume catalog concierge">
+      <span class="pep-launcher-aura" aria-hidden="true"><span class="pep-launcher-mark">EL</span></span>
+      <span class="pep-launcher-copy"><small><i aria-hidden="true"></i>Need a little clarity?</small><strong>Ask Pep <em>Talk</em></strong></span>
+      <span class="pep-launcher-arrow" aria-hidden="true"><b>Ask</b>↗</span>
     </button>
     <div class="pep-backdrop" id="pepTalkBackdrop" hidden></div>
     <aside class="pep-panel" id="pepTalkPanel" role="dialog" aria-modal="true" aria-labelledby="pepTalkTitle" hidden>

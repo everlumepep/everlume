@@ -1,0 +1,134 @@
+{
+  "version": "locked-v1",
+  "sourceReference": "assets/products/labels/tirzepatide-20mg-bottle-locked-reference-v1.png",
+  "sourceReferenceSha256": "fe082b8de61304ac0c237df69e1893d3a323fc2a0f53e342111984340239b32e",
+  "bottleMaster": "assets/products/everlume-vial-master-v1.png",
+  "policy": "No page may draw a bottle; pages consume only manifest-listed assets.",
+  "assets": {
+    "tirzepatide-10mg": {
+      "file": "assets/products/locked-v1/tirzepatide-10mg.svg",
+      "name": "TIRZEPATIDE",
+      "dose": "10MG"
+    },
+    "tirzepatide-20mg": {
+      "file": "assets/products/locked-v1/tirzepatide-20mg.svg",
+      "name": "TIRZEPATIDE",
+      "dose": "20MG"
+    },
+    "tirzepatide-30mg": {
+      "file": "assets/products/locked-v1/tirzepatide-30mg.svg",
+      "name": "TIRZEPATIDE",
+      "dose": "30MG"
+    },
+    "tirzepatide-40mg": {
+      "file": "assets/products/locked-v1/tirzepatide-40mg.svg",
+      "name": "TIRZEPATIDE",
+      "dose": "40MG"
+    },
+    "tirzepatide-50mg": {
+      "file": "assets/products/locked-v1/tirzepatide-50mg.svg",
+      "name": "TIRZEPATIDE",
+      "dose": "50MG"
+    },
+    "retatrutide-10mg": {
+      "file": "assets/products/locked-v1/retatrutide-10mg.svg",
+      "name": "RETATRUTIDE",
+      "dose": "10MG"
+    },
+    "retatrutide-20mg": {
+      "file": "assets/products/locked-v1/retatrutide-20mg.svg",
+      "name": "RETATRUTIDE",
+      "dose": "20MG"
+    },
+    "retatrutide-30mg": {
+      "file": "assets/products/locked-v1/retatrutide-30mg.svg",
+      "name": "RETATRUTIDE",
+      "dose": "30MG"
+    },
+    "retatrutide-40mg": {
+      "file": "assets/products/locked-v1/retatrutide-40mg.svg",
+      "name": "RETATRUTIDE",
+      "dose": "40MG"
+    },
+    "retatrutide-50mg": {
+      "file": "assets/products/locked-v1/retatrutide-50mg.svg",
+      "name": "RETATRUTIDE",
+      "dose": "50MG"
+    },
+    "tesamorelin": {
+      "file": "assets/products/locked-v1/tesamorelin.svg",
+      "name": "TESAMORELIN",
+      "dose": "10MG"
+    },
+    "selank-10mg": {
+      "file": "assets/products/locked-v1/selank-10mg.svg",
+      "name": "SELANK",
+      "dose": "10MG"
+    },
+    "kisspeptin-5mg": {
+      "file": "assets/products/locked-v1/kisspeptin-5mg.svg",
+      "name": "KISSPEPTIN",
+      "dose": "5MG"
+    },
+    "semax": {
+      "file": "assets/products/locked-v1/semax.svg",
+      "name": "SEMAX",
+      "dose": ""
+    },
+    "ghk-cu": {
+      "file": "assets/products/locked-v1/ghk-cu.svg",
+      "name": "GHK-CU",
+      "dose": "50MG/100MG"
+    },
+    "glutathione-1200mg": {
+      "file": "assets/products/locked-v1/glutathione-1200mg.svg",
+      "name": "GLUTATHIONE",
+      "dose": "1200MG"
+    },
+    "klow-blend": {
+      "file": "assets/products/locked-v1/klow-blend.svg",
+      "name": "KLOW BLEND",
+      "dose": "BLEND"
+    },
+    "kpv": {
+      "file": "assets/products/locked-v1/kpv.svg",
+      "name": "KPV",
+      "dose": "10MG"
+    },
+    "bpc-157": {
+      "file": "assets/products/locked-v1/bpc-157.svg",
+      "name": "BPC-157",
+      "dose": "10MG"
+    },
+    "tb-500": {
+      "file": "assets/products/locked-v1/tb-500.svg",
+      "name": "TB-500",
+      "dose": ""
+    },
+    "nad-plus-1000mg": {
+      "file": "assets/products/locked-v1/nad-plus-1000mg.svg",
+      "name": "NAD+",
+      "dose": "1000MG"
+    },
+    "mots-c": {
+      "file": "assets/products/locked-v1/mots-c.svg",
+      "name": "MOTS-C",
+      "dose": "10MG"
+    },
+    "ss31-10mg": {
+      "file": "assets/products/locked-v1/ss31-10mg.svg",
+      "name": "SS-31",
+      "dose": "10MG"
+    },
+    "5-am": {
+      "file": "assets/products/locked-v1/5-am.svg",
+      "name": "5-AM",
+      "dose": "5MG"
+    },
+    "l-carnitine-600mg": {
+      "file": "assets/products/locked-v1/l-carnitine-600mg.svg",
+      "name": "L-CARNITINE",
+      "dose": "600MG/10ML"
+    }
+  }
+}

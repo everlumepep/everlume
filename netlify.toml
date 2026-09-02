@@ -7,6 +7,18 @@
 # artifacts must be refused explicitly. force = true is required: without it
 # Netlify serves the matching static file and never reaches the rule.
 [[redirects]]
+  from = "/command/*"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/command"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
   from = "/docs/*"
   to = "/404.html"
   status = 404

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 300" role="img" aria-labelledby="title desc">
+  <title id="title">Everlume</title>
+  <desc id="desc">Everlume white EL monogram and wordmark</desc>
+  <g fill="none" stroke="#fffaf0" stroke-width="2" opacity=".9">
+    <path d="M62 245h296" opacity=".42"/>
+    <path d="M205 237v16" opacity=".42"/>
+  </g>
+  <g fill="#fffaf0" font-family="Georgia, 'Times New Roman', serif">
+    <text x="88" y="155" font-size="156" letter-spacing="-18">E</text>
+    <text x="174" y="214" font-size="156" letter-spacing="-18">L</text>
+  </g>
+  <path fill="#fffaf0" d="M281 65l5 15 15 5-15 5-5 15-5-15-15-5 15-5z"/>
+  <text x="210" y="286" text-anchor="middle" fill="#fffaf0" font-family="Georgia, 'Times New Roman', serif" font-size="25" letter-spacing="9">EVERLUME</text>
+</svg>

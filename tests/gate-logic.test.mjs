@@ -1,5 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import { parseDob, ageOn, evaluateGate, needsReconsent, makeGateRecord } from '../js/gate-logic.mjs';
 
 const config = {
@@ -83,4 +84,11 @@ test('the gate record retains no date of birth (data minimization)', () => {
   }
   assert.deepEqual(Object.keys(record).sort(),
     ['acceptedAt', 'gateVersion', 'minAgeMet', 'policyVersions']);
+});
+
+test('mobile date fields cannot force the entry gate wider than the viewport', () => {
+  const css = readFileSync(new URL('../gate.css', import.meta.url), 'utf8');
+  assert.match(css, /grid-template-columns:\s*repeat\(3,\s*minmax\(0,\s*1fr\)\)/);
+  assert.match(css, /\.gate-dob label\s*\{[^}]*min-width:\s*0/s);
+  assert.match(css, /\.gate-dob input\s*\{[^}]*min-width:\s*0/s);
 });

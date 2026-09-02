@@ -66,7 +66,7 @@ node validate.mjs
 After Netlify deploys, verify:
 
 1. homepage, policy, privacy, and 404 pages return successfully;
-2. `assets/everlume-mark-v3.svg` loads;
+2. `assets/everlume-logo-client-lockup.png` loads;
 3. styles and scripts load without browser-console errors;
 4. mobile menu opens, closes, and responds to Escape;
 5. product filters and inquiry buttons work;
@@ -76,4 +76,4 @@ After Netlify deploys, verify:
 
 ## Brand assets
 
-The production website uses `assets/everlume-mark-v3.svg`. Stacked and horizontal V3 logo files remain source assets for social, collateral, and future layouts but are not required by the deployed website.
+The website uses the client-approved artwork preserved byte-for-byte at `assets/everlume-logo-client-master.png`. `assets/everlume-logo-client-lockup.png` and `assets/everlume-logo-client-monogram.png` are non-destructive crop windows onto that locked master for site and favicon placements; they do not redraw, recolor, or alter the supplied logo.

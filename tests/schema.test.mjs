@@ -3,7 +3,7 @@
 // service-role credential may ever appear in the codebase.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync, readdirSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 
 const dir = new URL('../supabase/migrations/', import.meta.url).pathname;
@@ -68,7 +68,7 @@ test('no credential material (JWTs, Supabase secrets) anywhere in the repo sourc
   // JWT prefix, Supabase secret/personal-access-token prefixes.
   // (built from parts so this file does not match its own pattern)
   const credential = new RegExp('eyJ' + 'hbGciOi|sb_' + 'secret_|sbp_' + '[0-9a-f]{20,}');
-  const roots = ['js', 'account', 'command', 'supabase/migrations', 'tests'];
+  const roots = ['js', 'account', 'supabase/migrations', 'tests'];
   const offenders = [];
   const scan = path => {
     for (const entry of readdirSync(path, { withFileTypes: true })) {
@@ -177,19 +177,12 @@ test('subscription creation is gated server-side and Pep Talk describes preview 
   assert.match(pepTalk, /Ordering is not active on this preview/,
     'Pep Talk must not claim unavailable order functionality');
 });
-test('COMMAND resolves only the signed-in staff profile', () => {
-  const command = readFileSync(new URL('../js/command.js', import.meta.url), 'utf8');
-  assert.match(command, /\.eq\('id',\s*session\.user\.id\)/,
-    'COMMAND identity lookup must target the session user; staff RLS can expose multiple profiles');
-});
-
-test('COMMAND labels the preview boundary and hides manager controls from staff', () => {
-  const command = readFileSync(new URL('../js/command.js', import.meta.url), 'utf8');
-  const page = readFileSync(new URL('../command/index.html', import.meta.url), 'utf8');
-  assert.match(page, /Non-production · Commerce disabled/,
-    'COMMAND must visibly identify its non-production commerce-disabled environment');
-  assert.match(command, /\['manager', 'admin'\]\.includes\(currentRole\)/,
-    'inventory adjustment controls must only render for manager or admin roles');
-  assert.match(command, /Commerce, payment collection, and live fulfillment are disabled/,
-    'COMMAND overview must preserve the release boundary');
+test('public COMMAND is removed and blocked at the deployment edge', () => {
+  const netlify = readFileSync(new URL('../netlify.toml', import.meta.url), 'utf8');
+  assert.ok(!existsSync(new URL('../command/index.html', import.meta.url)),
+    'website must not ship a COMMAND page');
+  assert.ok(!existsSync(new URL('../js/command.js', import.meta.url)),
+    'website must not ship COMMAND application code');
+  assert.match(netlify, /from\s*=\s*"\/command\/\*"[\s\S]*?status\s*=\s*404[\s\S]*?force\s*=\s*true/,
+    'Netlify must force /command/* to 404');
 });
